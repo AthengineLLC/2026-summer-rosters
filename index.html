@@ -51,6 +51,56 @@
     .team-arrow { font-size: 20px; color: var(--red); margin-top: auto; }
 
     footer { text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); font-size: 13px; letter-spacing: 1px; }
+
+    /* MOBILE FIXES */
+    @media (max-width: 600px) {
+      .container { padding: 20px 15px; }
+      .roster-section { padding: 20px 15px; border-radius: 8px; }
+      .roster-title { font-size: 28px; }
+      .roster-subtitle { font-size: 13px; }
+
+      /* Scrollable table on mobile */
+      .roster-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; }
+      .roster-table { font-size: 12px; min-width: 700px; }
+      .roster-table th { padding: 10px 8px; font-size: 10px; }
+      .roster-table td { padding: 10px 8px; }
+      .jersey-num { font-size: 13px; min-width: 36px; }
+
+      /* Schedule mobile fixes */
+      .sched-poster { padding: 30px 20px 25px; }
+      .sched-title { font-size: 48px; }
+      .sched-team-label { font-size: 18px; letter-spacing: 2px; }
+      .sched-event-banner { font-size: 18px; padding: 8px 30px; }
+      .sched-game-card { grid-template-columns: 90px 1fr !important; }
+      .sched-status { display: none !important; }
+      .sched-date-block .sched-month { font-size: 14px; }
+      .sched-date-block .sched-day { font-size: 34px; }
+      .sched-date-block .sched-tbd { font-size: 18px; }
+      .sched-game-info .sched-event-name { font-size: 16px; }
+      .sched-game-info .sched-venue { font-size: 13px; }
+      .sched-footer { flex-direction: column; gap: 16px; text-align: center; }
+      .sched-hashtag { font-size: 28px; }
+      .sched-footer-tag { font-size: 13px; justify-content: center; }
+
+      /* Nav mobile */
+      .nav-container { padding: 0 15px; }
+      .nav-menu { gap: 12px; }
+      .nav-link { font-size: 11px; letter-spacing: 0; }
+    }
+      /* Scroll hint on mobile */
+      @media (max-width: 600px) {
+        .roster-table-wrapper::before {
+          content: '← scroll to see all columns →';
+          display: block;
+          text-align: center;
+          font-size: 11px;
+          color: var(--text-muted);
+          padding: 6px;
+          background: #f9f9f9;
+          border-bottom: 1px solid #e0e0e0;
+          letter-spacing: 0.5px;
+        }
+      }
   </style>
 </head>
 <body>
@@ -94,8 +144,55 @@
           </ul>
         </li>
       </ul>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+  <div class="mobile-nav" id="mobileNav">
+    <div class="mobile-nav-section">
+      <div class="mobile-nav-year">2027 Teams</div>
+      <a href="olasin_roster.html" class="mobile-nav-link">Scout Olasin</a>
+      <a href="mccoy_roster.html" class="mobile-nav-link">Scout McCoy</a>
+      <a href="menendez_roster.html" class="mobile-nav-link">Scout Menendez</a>
+      <a href="thomas_roster.html" class="mobile-nav-link">United Thomas</a>
+    </div>
+    <div class="mobile-nav-section">
+      <div class="mobile-nav-year">2028 Teams</div>
+      <a href="scout_lawson_roster.html" class="mobile-nav-link">Scout Lawson</a>
+      <a href="scout_dibenedetto_roster.html" class="mobile-nav-link">Scout DiBenedetto</a>
+      <a href="united_merrell_roster.html" class="mobile-nav-link">United Merrell</a>
+      <a href="united_severidt_roster.html" class="mobile-nav-link">United Severidt</a>
+    </div>
+    <div class="mobile-nav-section">
+      <div class="mobile-nav-year">2029 Teams</div>
+      <a href="pascual_roster.html" class="mobile-nav-link">Scout Pascual</a>
+      <a href="wisser_roster.html" class="mobile-nav-link">Scout Wisser</a>
+      <a href="cates_roster.html" class="mobile-nav-link">United Cates</a>
+    </div>
+    <div class="mobile-nav-section">
+      <div class="mobile-nav-year">2030 Teams</div>
+      <a href="madsen_roster.html" class="mobile-nav-link">Scout Madsen</a>
+      <a href="chappell_roster.html" class="mobile-nav-link">Scout Chappell</a>
+      <a href="kirst_roster.html" class="mobile-nav-link">Scout Kirst</a>
+      <a href="santiago_roster.html" class="mobile-nav-link">United Santiago</a>
+    </div>
+  </div>
+  <script>
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileNav').classList.toggle('open');
+      document.body.style.overflow = document.getElementById('mobileNav').classList.contains('open') ? 'hidden' : '';
+    }
+    // Close menu when a link is clicked
+    document.querySelectorAll('.mobile-nav-link').forEach(function(link) {
+      link.addEventListener('click', function() {
+        document.getElementById('hamburger').classList.remove('open');
+        document.getElementById('mobileNav').classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  </script>
 
   <div class="hero">
     <div class="hero-content">
