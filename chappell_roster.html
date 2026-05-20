@@ -492,6 +492,22 @@
       transition: color 0.2s;
     }
     .full-sched-link:hover { color: #fff; }
+
+    /* MOBILE GAME TABLE FIX */
+    @media (max-width: 600px) {
+      .tourn-game-table { font-size: 13px; }
+      .tourn-game-table tr td:nth-child(4) { display: none; } /* hide venue on tiny screens */
+      .tourn-game-table tr td { padding: 10px 8px !important; font-size: 13px !important; }
+      .tourn-game-table tr[style*="background:#b91e2d"] td {
+        padding: 7px 10px !important;
+        font-size: 12px !important;
+      }
+      /* Stack opponent + venue vertically in one cell */
+      .game-opp-wrap { display: flex; flex-direction: column; gap: 2px; }
+      .game-opp-name { font-size: 14px; font-weight: 700; color: #fff; }
+      .game-venue-name { font-size: 11px; color: #aab4c8; text-transform: uppercase; letter-spacing: 0.5px; }
+      .tourn-schedule-btn { font-size: 13px; padding: 8px 12px; }
+    }
   </style>
 </head>
 <body>
@@ -884,13 +900,11 @@
             </tr><tr>
               <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">10:15 AM</td>
               <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#ff9800;font-family:'Barlow Condensed',sans-serif;">@</td>
-              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;">Southern Squeeze 14u</td>
-              <td style="padding:12px 14px;font-size:13px;color:#aab4c8;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.5px;">JetBlue Park · Red Sox 5</td>
+              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">Southern Squeeze 14u</span><span class="game-venue-name">JetBlue Park · Red Sox 5</span></div></td>
             </tr><tr>
               <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">12:30 PM</td>
               <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#4caf50;font-family:'Barlow Condensed',sans-serif;">vs.</td>
-              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;">West Boynton Cobras</td>
-              <td style="padding:12px 14px;font-size:13px;color:#aab4c8;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.5px;">JetBlue Park · Red Sox 5</td>
+              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">West Boynton Cobras</span><span class="game-venue-name">JetBlue Park · Red Sox 5</span></div></td>
             </tr>
             </tbody>
           </table>
