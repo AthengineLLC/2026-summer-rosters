@@ -254,14 +254,21 @@
     }
     
     .roster-table th {
-      padding: 18px 14px;
+      padding: 18px 10px;
       text-align: left;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12px;
       letter-spacing: 1px;
       text-transform: uppercase;
       border-right: 1px solid rgba(255, 255, 255, 0.1);
+      white-space: nowrap;
     }
+    .roster-table th:nth-child(2),
+    .roster-table th:nth-child(3) { min-width: 120px; }
+    .roster-table th:nth-child(4),
+    .roster-table th:nth-child(5) { min-width: 60px; }
+    .roster-table th:nth-child(6) { min-width: 50px; width: 50px; }
+    .roster-table td:nth-child(6) { white-space: nowrap; }
     
     .roster-table th:last-child {
       border-right: none;
@@ -295,6 +302,7 @@
     .player-name {
       font-weight: 600;
       color: var(--navy);
+      white-space: nowrap;
     }
     
     /* POSITION COLUMNS */
@@ -526,7 +534,7 @@
         <table class="roster-table">
           <thead>
             <tr>
-              <th>#</th><th>First Name</th><th>Last Name</th><th>Primary Position</th><th>Secondary Position</th><th>Bat</th><th>Throws</th><th>Height</th><th>Weight</th><th>City</th><th>State</th><th>High School</th><th>Committed To</th>
+              <th>#</th><th>First Name</th><th>Last Name</th><th>Primary Position</th><th>Secondary Position</th><th>B/T</th><th>Height</th><th>Weight</th><th>City</th><th>State</th><th>High School</th><th>Committed To</th>
             </tr>
           </thead>
           <tbody>
@@ -536,12 +544,11 @@
             <td class="player-name">Prieto</td>
             <td class="position">C</td>
             <td class="position">1B</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">5'10</td>
             <td class="attribute">178</td>
             <td>Tampa</td>
-            <td class="attribute">Florida</td>
+            <td class="attribute">FL</td>
             <td class="high-school">Jesuit</td>
             <td class="committed empty">—</td>
           </tr>
@@ -551,8 +558,7 @@
             <td class="player-name">Stembridge</td>
             <td class="position">PO</td>
             <td class="position">PO</td>
-            <td class="attribute">L</td>
-            <td class="attribute">R</td>
+            <td class="attribute">L/R</td>
             <td class="attribute">6'1</td>
             <td class="attribute">185</td>
             <td>Saint Augustine</td>
@@ -566,8 +572,7 @@
             <td class="player-name">Sharpe</td>
             <td class="position">2B</td>
             <td class="position">3B</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">5'10</td>
             <td class="attribute">176</td>
             <td>Jacksonville</td>
@@ -581,23 +586,21 @@
             <td class="player-name">Martinez</td>
             <td class="position">CF</td>
             <td class="position">2B</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">5'11</td>
             <td class="attribute">187</td>
             <td>Miami</td>
-            <td class="attribute">Florida</td>
+            <td class="attribute">FL</td>
             <td class="high-school">Homeschool</td>
             <td class="committed empty">—</td>
           </tr>
           <tr>
             <td class="jersey-num">8</td>
-            <td class="player-name">AJ</td>
+            <td class="player-name">Aj</td>
             <td class="player-name">Wright</td>
             <td class="position">PO</td>
             <td class="position">P</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">6'1</td>
             <td class="attribute">182</td>
             <td>Fort Lauderdale</td>
@@ -611,8 +614,7 @@
             <td class="player-name">Moody</td>
             <td class="position">PO</td>
             <td class="position">PO</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">6'0</td>
             <td class="attribute">155</td>
             <td>Fort Lauderdale</td>
@@ -626,12 +628,11 @@
             <td class="player-name">Dealy</td>
             <td class="position">RF</td>
             <td class="position">P</td>
-            <td class="attribute">R</td>
-            <td class="attribute">L</td>
+            <td class="attribute">R/L</td>
             <td class="attribute">6'0</td>
             <td class="attribute">170</td>
             <td>Port Orange</td>
-            <td class="attribute">Florida</td>
+            <td class="attribute">FL</td>
             <td class="high-school">New Smyrna Beach High School</td>
             <td class="committed empty">—</td>
           </tr>
@@ -641,8 +642,7 @@
             <td class="player-name">Woodward</td>
             <td class="position">PO</td>
             <td class="position">P</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">6'2</td>
             <td class="attribute">170</td>
             <td>Clermont</td>
@@ -656,12 +656,11 @@
             <td class="player-name">Hernandez</td>
             <td class="position">3B</td>
             <td class="position">2B</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">5'10</td>
             <td class="attribute">185</td>
             <td>Wesley Chapel</td>
-            <td class="attribute">Florida</td>
+            <td class="attribute">FL</td>
             <td class="high-school">Wesley Chapel Highschool</td>
             <td class="committed empty">—</td>
           </tr>
@@ -671,8 +670,7 @@
             <td class="player-name">Fineberg</td>
             <td class="position">C</td>
             <td class="position">1B</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">5'11</td>
             <td class="attribute">190</td>
             <td>Rye</td>
@@ -686,8 +684,7 @@
             <td class="player-name">Williams</td>
             <td class="position">1B</td>
             <td class="position">3B</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">5'10</td>
             <td class="attribute">190</td>
             <td>Saint Petersburg</td>
@@ -701,8 +698,7 @@
             <td class="player-name">Paredes</td>
             <td class="position">P</td>
             <td class="position">PO</td>
-            <td class="attribute">R</td>
-            <td class="attribute">L</td>
+            <td class="attribute">R/L</td>
             <td class="attribute">6'1</td>
             <td class="attribute">210</td>
             <td>Valrico</td>
@@ -716,12 +712,11 @@
             <td class="player-name">Martinez</td>
             <td class="position">1B</td>
             <td class="position">P</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">6'5</td>
             <td class="attribute">230</td>
             <td>Miami</td>
-            <td class="attribute">Florida</td>
+            <td class="attribute">FL</td>
             <td class="high-school">Homeschool</td>
             <td class="committed empty">—</td>
           </tr>
@@ -731,8 +726,7 @@
             <td class="player-name">Cohen</td>
             <td class="position">PO</td>
             <td class="position">PO</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">6'0</td>
             <td class="attribute">180</td>
             <td>Parkland</td>
@@ -746,13 +740,12 @@
             <td class="player-name">Gandarilla</td>
             <td class="position">CF</td>
             <td class="position">P</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">5'9</td>
             <td class="attribute">170</td>
             <td>Miramar</td>
-            <td class="attribute">Florida</td>
-            <td class="high-school">American heritage</td>
+            <td class="attribute">FL</td>
+            <td class="high-school">American Heritage</td>
             <td class="committed empty">—</td>
           </tr>
           <tr>
@@ -761,12 +754,11 @@
             <td class="player-name">Lavenia</td>
             <td class="position">SS</td>
             <td class="position">P</td>
-            <td class="attribute">S</td>
-            <td class="attribute">R</td>
+            <td class="attribute">S/R</td>
             <td class="attribute">5'10</td>
             <td class="attribute">155</td>
-            <td>Ft myers</td>
-            <td class="attribute">Florida</td>
+            <td>Ft Myers</td>
+            <td class="attribute">FL</td>
             <td class="high-school">Bishop Verot</td>
             <td class="committed empty">—</td>
           </tr>
@@ -776,12 +768,11 @@
             <td class="player-name">Lavenia</td>
             <td class="position">2B</td>
             <td class="position">P</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">5'10</td>
             <td class="attribute">180</td>
-            <td>Ft myers</td>
-            <td class="attribute">Florida</td>
+            <td>Ft Myers</td>
+            <td class="attribute">FL</td>
             <td class="high-school">Bishop Verot</td>
             <td class="committed empty">—</td>
           </tr>
@@ -791,8 +782,7 @@
             <td class="player-name">Chandler</td>
             <td class="position">PO</td>
             <td class="position">UT</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">5'11</td>
             <td class="attribute">155</td>
             <td>Fort Pierce</td>
@@ -806,13 +796,12 @@
             <td class="player-name">Suniaga</td>
             <td class="position">CF</td>
             <td class="position">SS</td>
-            <td class="attribute">R</td>
-            <td class="attribute">R</td>
+            <td class="attribute">R/R</td>
             <td class="attribute">5'10</td>
             <td class="attribute">170</td>
             <td>Brandon</td>
-            <td class="attribute">Florida</td>
-            <td class="high-school">Bloomingdale senior highschool</td>
+            <td class="attribute">FL</td>
+            <td class="high-school">Bloomingdale Senior Highschool</td>
             <td class="committed empty">—</td>
           </tr>
           <tr>
@@ -821,13 +810,12 @@
             <td class="player-name">Hanus</td>
             <td class="position">UT</td>
             <td class="position">P</td>
-            <td class="attribute">L</td>
-            <td class="attribute">R</td>
+            <td class="attribute">L/R</td>
             <td class="attribute">6'0</td>
             <td class="attribute">165</td>
             <td>Praha 9</td>
             <td class="attribute">Czech Republic</td>
-            <td class="high-school">1. ITG Praha</td>
+            <td class="high-school">1. Itg Praha</td>
             <td class="committed empty">—</td>
           </tr>
         </tbody>
