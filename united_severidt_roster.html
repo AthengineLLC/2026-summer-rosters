@@ -441,6 +441,52 @@
       border-left-color: var(--red);
       color: var(--red);
     }
+
+    /* EXPANDABLE TOURNAMENT SCHEDULE */
+    .tourn-schedule-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      padding: 7px 16px;
+      background: rgba(185,30,45,0.15);
+      border: 1px solid rgba(185,30,45,0.4);
+      border-radius: 6px;
+      color: #b91e2d;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tourn-schedule-btn:hover { background: rgba(185,30,45,0.25); border-color: #b91e2d; }
+    .tourn-schedule-btn .btn-arrow { transition: transform 0.3s; display: inline-block; }
+    .tourn-schedule-btn.open .btn-arrow { transform: rotate(180deg); }
+    .tourn-game-table {
+      display: none;
+      margin-top: 10px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .tourn-game-table.open { display: table; }
+    .full-sched-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #8a9ab8;
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .full-sched-link:hover { color: #fff; }
   </style>
 </head>
 <body>
@@ -774,7 +820,37 @@
     <div class="sched-games">
       <div class="sched-game-card">
         <div class="sched-date-block"><div class="sched-month">MAY</div><div class="sched-day">22</div></div>
-        <div class="sched-game-info"><div class="sched-event-name">PG Memorial</div><div class="sched-venue">Fort Myers, FL</div></div>
+        <div class="sched-game-info"><div class="sched-event-name">PG Memorial</div><div class="sched-venue">Fort Myers, FL</div>
+          <button class="tourn-schedule-btn" onclick="toggleGameSchedule(this, 'games_united_severidt_pgmemorial')">
+            ⚾ View PG Memorial Games <span class="btn-arrow">▼</span>
+          </button>
+          <table class="tourn-game-table" id="games_united_severidt_pgmemorial">
+            <tbody>
+            <tr style="background:rgba(13,26,51,0.6);">
+              <td colspan="4" style="padding:6px 12px;font-weight:800;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#b91e2d;">FRIDAY · May 22</td>
+            </tr><tr>
+              <td style="padding:10px 12px;font-weight:900;font-size:15px;color:#fff;white-space:nowrap;">8:30 PM</td>
+              <td style="padding:10px 12px;font-size:13px;font-weight:700;color:#ff9800;">@</td>
+              <td style="padding:10px 12px;font-size:14px;font-weight:700;color:#fff;">FL Burn 2028 Guthrie</td>
+              <td style="padding:10px 12px;font-size:12px;color:#8a9ab8;text-transform:uppercase;">Terry Park · Mack</td>
+            </tr><tr style="background:rgba(13,26,51,0.6);">
+              <td colspan="4" style="padding:6px 12px;font-weight:800;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#b91e2d;">SATURDAY · May 23</td>
+            </tr><tr>
+              <td style="padding:10px 12px;font-weight:900;font-size:15px;color:#fff;white-space:nowrap;">2:45 PM</td>
+              <td style="padding:10px 12px;font-size:13px;font-weight:700;color:#4caf50;">vs.</td>
+              <td style="padding:10px 12px;font-size:14px;font-weight:700;color:#fff;">USA Scout Nike Florida 16U</td>
+              <td style="padding:10px 12px;font-size:12px;color:#8a9ab8;text-transform:uppercase;">5 Plex · Field 2</td>
+            </tr><tr style="background:rgba(13,26,51,0.6);">
+              <td colspan="4" style="padding:6px 12px;font-weight:800;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#b91e2d;">SUNDAY · May 24</td>
+            </tr><tr>
+              <td style="padding:10px 12px;font-weight:900;font-size:15px;color:#fff;white-space:nowrap;">10:15 AM</td>
+              <td style="padding:10px 12px;font-size:13px;font-weight:700;color:#ff9800;">@</td>
+              <td style="padding:10px 12px;font-size:14px;font-weight:700;color:#fff;">SBA Bolts FL 2028 National</td>
+              <td style="padding:10px 12px;font-size:12px;color:#8a9ab8;text-transform:uppercase;">Lee Health · Twins 4</td>
+            </tr>
+            </tbody>
+          </table>
+          <a href="tournament_pg_memorial.html" class="full-sched-link">View full composite schedule →</a></div>
         <div class="sched-status"><div class="sched-tag">Event 1</div></div>
       </div>
       <div class="sched-game-card">
@@ -824,5 +900,11 @@
     </div>
 
   </div><!-- end container -->
+<script>
+  function toggleGameSchedule(btn, tableId) {
+    btn.classList.toggle('open');
+    document.getElementById(tableId).classList.toggle('open');
+  }
+</script>
 </body>
 </html>
