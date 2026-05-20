@@ -44,11 +44,21 @@
     .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     .team-card { background: var(--navy); border-radius: 12px; padding: 28px; text-decoration: none; border: 1px solid rgba(255,255,255,0.07); transition: all 0.3s; display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; }
     .team-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--red); transform: scaleY(0); transition: transform 0.3s; transform-origin: bottom; }
-    .team-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); border-color: rgba(185,30,45,0.3); }
+    .team-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+    /* Scout cards - powder blue hover */
+    .team-card.scout-card .team-arrow { color: #6daed4; }
+    .team-card.scout-card::before { background: #6daed4; }
+    .team-card.scout-card:hover { border-color: rgba(109,174,212,0.4); }
+    /* United cards - red hover */
+    .team-card.united-card .team-arrow { color: var(--red); }
+    .team-card.united-card::before { background: var(--red); }
+    .team-card.united-card:hover { border-color: rgba(185,30,45,0.4); }
     .team-card:hover::before { transform: scaleY(1); }
-    .team-type { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--red); }
+    .team-type { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; color: var(--red); }
+    .team-card .scout { color: #6daed4; }
+    .team-card .united { color: var(--red); }
     .team-name { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 900; color: var(--white); letter-spacing: 0.5px; }
-    .team-arrow { font-size: 20px; color: var(--red); margin-top: auto; }
+    .team-arrow { font-size: 20px; margin-top: auto; }
 
     footer { text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); font-size: 13px; letter-spacing: 1px; }
 
@@ -276,39 +286,39 @@
       <div class="year-title">2027 Teams</div>
       <div class="year-line"></div>
       <div class="team-grid">
-        <a href="olasin_roster.html" class="team-card"><div class="team-type">Scout Team</div><div class="team-name">Olasin</div><div class="team-arrow">→</div></a>
-        <a href="mccoy_roster.html" class="team-card"><div class="team-type">Scout Team</div><div class="team-name">McCoy</div><div class="team-arrow">→</div></a>
-        <a href="menendez_roster.html" class="team-card"><div class="team-type">Scout Team</div><div class="team-name">Menendez</div><div class="team-arrow">→</div></a>
-        <a href="thomas_roster.html" class="team-card"><div class="team-type">United</div><div class="team-name">Thomas</div><div class="team-arrow">→</div></a>
+        <a href="olasin_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">Olasin</div><div class="team-arrow">→</div></a>
+        <a href="mccoy_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">McCoy</div><div class="team-arrow">→</div></a>
+        <a href="menendez_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">Menendez</div><div class="team-arrow">→</div></a>
+        <a href="thomas_roster.html" class="team-card united-card"><div class="team-type united">United</div><div class="team-name">Thomas</div><div class="team-arrow">→</div></a>
       </div>
     </div>
     <div class="year-block">
       <div class="year-title">2028 Teams</div>
       <div class="year-line"></div>
       <div class="team-grid">
-        <a href="scout_lawson_roster.html" class="team-card"><div class="team-type">Scout Team</div><div class="team-name">Lawson</div><div class="team-arrow">→</div></a>
-        <a href="scout_dibenedetto_roster.html" class="team-card"><div class="team-type">Scout Team</div><div class="team-name">DiBenedetto</div><div class="team-arrow">→</div></a>
-        <a href="united_merrell_roster.html" class="team-card"><div class="team-type">United</div><div class="team-name">Merrell</div><div class="team-arrow">→</div></a>
-        <a href="united_severidt_roster.html" class="team-card"><div class="team-type">United</div><div class="team-name">Severidt</div><div class="team-arrow">→</div></a>
+        <a href="scout_lawson_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">Lawson</div><div class="team-arrow">→</div></a>
+        <a href="scout_dibenedetto_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">DiBenedetto</div><div class="team-arrow">→</div></a>
+        <a href="united_merrell_roster.html" class="team-card united-card"><div class="team-type united">United</div><div class="team-name">Merrell</div><div class="team-arrow">→</div></a>
+        <a href="united_severidt_roster.html" class="team-card united-card"><div class="team-type united">United</div><div class="team-name">Severidt</div><div class="team-arrow">→</div></a>
       </div>
     </div>
     <div class="year-block">
       <div class="year-title">2029 Teams</div>
       <div class="year-line"></div>
       <div class="team-grid">
-        <a href="pascual_roster.html" class="team-card"><div class="team-type">Scout Team</div><div class="team-name">Pascual</div><div class="team-arrow">→</div></a>
-        <a href="wisser_roster.html" class="team-card"><div class="team-type">Scout Team</div><div class="team-name">Wisser</div><div class="team-arrow">→</div></a>
-        <a href="cates_roster.html" class="team-card"><div class="team-type">United</div><div class="team-name">Cates</div><div class="team-arrow">→</div></a>
+        <a href="pascual_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">Pascual</div><div class="team-arrow">→</div></a>
+        <a href="wisser_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">Wisser</div><div class="team-arrow">→</div></a>
+        <a href="cates_roster.html" class="team-card united-card"><div class="team-type united">United</div><div class="team-name">Cates</div><div class="team-arrow">→</div></a>
       </div>
     </div>
     <div class="year-block">
       <div class="year-title">2030 Teams</div>
       <div class="year-line"></div>
       <div class="team-grid">
-        <a href="madsen_roster.html" class="team-card"><div class="team-type">Scout Team</div><div class="team-name">Madsen</div><div class="team-arrow">→</div></a>
-        <a href="chappell_roster.html" class="team-card"><div class="team-type">Scout Team</div><div class="team-name">Chappell</div><div class="team-arrow">→</div></a>
-        <a href="kirst_roster.html" class="team-card"><div class="team-type">Scout Team</div><div class="team-name">Kirst</div><div class="team-arrow">→</div></a>
-        <a href="santiago_roster.html" class="team-card"><div class="team-type">United</div><div class="team-name">Santiago</div><div class="team-arrow">→</div></a>
+        <a href="madsen_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">Madsen</div><div class="team-arrow">→</div></a>
+        <a href="chappell_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">Chappell</div><div class="team-arrow">→</div></a>
+        <a href="kirst_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">Kirst</div><div class="team-arrow">→</div></a>
+        <a href="santiago_roster.html" class="team-card united-card"><div class="team-type united">United</div><div class="team-name">Santiago</div><div class="team-arrow">→</div></a>
       </div>
     </div>
   </div>
