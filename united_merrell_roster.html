@@ -517,7 +517,8 @@
       /* Stack opponent + venue vertically in one cell */
       .game-opp-wrap { display: flex; flex-direction: column; gap: 2px; }
       .game-opp-name { font-size: 14px; font-weight: 700; color: #fff; }
-      .game-venue-name { font-size: 11px; color: #aab4c8; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-top: 3px; }
+      .game-venue-name { font-size: 13px; color: #aab4c8; text-transform: uppercase; letter-spacing: 0.5px; display: inline; }
+      .game-opp-name::after { content: " · "; color: #aab4c8; font-weight: 400; }
       .tourn-schedule-btn { font-size: 13px; padding: 8px 12px; }
     }
   </style>
