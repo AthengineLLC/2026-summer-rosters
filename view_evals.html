@@ -107,11 +107,11 @@
     const SUPABASE_URL = "https://lymuuvixgdjwczviejie.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bXV1dml4Z2Rqd2N6dmllamllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc0ODksImV4cCI6MjA5NTA2MzQ4OX0.YxJk28Zk3Lhv6MQe4z4PG3cVpp6cKLANRYtDwCX3Dt8";
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function loadAllEvals() {
       try {
-        const { data, error } = await supabase
+        const { data, error } = await dbClient
           .from('player_evaluations')
           .select('*')
           .order('created_at', { ascending: false });
@@ -130,7 +130,7 @@
       const directorName = document.getElementById('searchDirector').value.toLowerCase();
 
       try {
-        let query = supabase.from('player_evaluations').select('*');
+        let query = dbClient.from('player_evaluations').select('*');
 
         if (playerName) {
           query = query.or(`player_first_name.ilike.%${playerName}%,player_last_name.ilike.%${playerName}%`);

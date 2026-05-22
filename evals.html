@@ -283,7 +283,7 @@
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bXV1dml4Z2Rqd2N6dmllamllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc0ODksImV4cCI6MjA5NTA2MzQ4OX0.YxJk28Zk3Lhv6MQe4z4PG3cVpp6cKLANRYtDwCX3Dt8";
     const EVAL_PASSWORD = "redhatevals2026";
 
-    let supabase = null;
+    let dbClient = null;
     let isAuthenticated = false;
     let currentReports = { defensive: [], offensive: [], pitching: [] };
 
@@ -306,9 +306,9 @@
     };
 
     function initSupabase() {
-      if (!supabase && window.supabase) {
+      if (!dbClient && window.supabase) {
         try {
-          supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
           console.log("Supabase initialized");
         } catch (error) {
           console.error("Error initializing Supabase:", error);
@@ -469,7 +469,7 @@
     document.getElementById('evalForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      if (!supabase) {
+      if (!dbClient) {
         document.getElementById('errorMessage').innerHTML = `<div class="error-message">Supabase not initialized. Check your credentials.</div>`;
         return;
       }
@@ -494,7 +494,7 @@
       };
 
       try {
-        const { data, error } = await supabase
+        const { data, error } = await dbClient
           .from('player_evaluations')
           .insert([evalData]);
 
