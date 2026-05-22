@@ -108,12 +108,43 @@
       <h1 class="page-title">Coach Evaluations</h1>
 
       <div class="search-box">
-        <div class="search-row">
-          <input type="text" class="search-input" id="searchTeam" placeholder="Search by team..." />
-          <input type="text" class="search-input" id="searchDirector" placeholder="Search by director..." />
+        <!-- Dropdowns -->
+        <div class="search-row" style="margin-bottom:12px;">
+          <select class="search-input" id="filterTeam" onchange="searchEvals()">
+            <option value="">All Teams</option>
+            <option>2027 Olasin</option>
+            <option>2027 McCoy</option>
+            <option>2027 Menendez</option>
+            <option>2027 Thomas</option>
+            <option>2028 Lawson</option>
+            <option>2028 DiBenedetto</option>
+            <option>2028 Merrell</option>
+            <option>2028 Severidt</option>
+            <option>2029 Pascual</option>
+            <option>2029 Wisser</option>
+            <option>2029 Cates</option>
+            <option>2030 Madsen</option>
+            <option>2030 Chappell</option>
+            <option>2030 Kirst</option>
+            <option>2030 Santiago</option>
+          </select>
+          <select class="search-input" id="filterDirector" onchange="searchEvals()">
+            <option value="">All Directors</option>
+            <option>Wayne Stofsky</option>
+            <option>Addison Maruszak</option>
+            <option>Richie Warren</option>
+            <option>Nick James</option>
+            <option>Jason Pascual</option>
+            <option>Maddux Faber</option>
+          </select>
           <button class="search-btn" onclick="searchEvals()">Search</button>
         </div>
-        <button class="clear-btn" onclick="clearSearch()">Clear Filters</button>
+        <!-- Text Search -->
+        <div class="search-row" style="margin-bottom:12px;">
+          <input type="text" class="search-input" id="searchTeam" placeholder="Or type team name..." />
+          <input type="text" class="search-input" id="searchDirector" placeholder="Or type director name..." />
+          <button class="clear-btn" onclick="clearSearch()">Clear</button>
+        </div>
       </div>
 
       <div id="evalsGrid" class="evals-grid"></div>
@@ -262,12 +293,18 @@
     }
 
     async function searchEvals() {
-      const team = document.getElementById('searchTeam').value.toLowerCase();
-      const director = document.getElementById('searchDirector').value.toLowerCase();
+      const teamDropdown = document.getElementById('filterTeam').value;
+      const directorDropdown = document.getElementById('filterDirector').value;
+      const teamText = document.getElementById('searchTeam').value.trim();
+      const directorText = document.getElementById('searchDirector').value.trim();
+
+      const teamVal = teamDropdown || teamText;
+      const directorVal = directorDropdown || directorText;
+
       try {
         let query = dbClient.from('coach_evaluations').select('*');
-        if (team) query = query.ilike('team_name', `%${team}%`);
-        if (director) query = query.ilike('director_name', `%${director}%`);
+        if (teamVal) query = query.ilike('team_name', `%${teamVal}%`);
+        if (directorVal) query = query.ilike('director_name', `%${directorVal}%`);
         const { data, error } = await query.order('created_at', { ascending: false });
         if (error) throw error;
         renderEvals(data);
@@ -277,6 +314,8 @@
     }
 
     function clearSearch() {
+      document.getElementById('filterTeam').value = '';
+      document.getElementById('filterDirector').value = '';
       document.getElementById('searchTeam').value = '';
       document.getElementById('searchDirector').value = '';
       loadAllEvals();

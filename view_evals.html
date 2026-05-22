@@ -110,10 +110,44 @@
       <h1>Player Evaluations</h1>
 
       <div class="search-box">
+        <!-- Dropdowns Row -->
+        <div class="search-row" style="margin-bottom:12px;">
+          <select class="search-input" id="filterTeam" onchange="onTeamChange()">
+            <option value="">All Teams</option>
+            <option>2027 Olasin</option>
+            <option>2027 McCoy</option>
+            <option>2027 Menendez</option>
+            <option>2027 Thomas</option>
+            <option>2028 Lawson</option>
+            <option>2028 DiBenedetto</option>
+            <option>2028 Merrell</option>
+            <option>2028 Severidt</option>
+            <option>2029 Pascual</option>
+            <option>2029 Wisser</option>
+            <option>2029 Cates</option>
+            <option>2030 Madsen</option>
+            <option>2030 Chappell</option>
+            <option>2030 Kirst</option>
+            <option>2030 Santiago</option>
+          </select>
+          <select class="search-input" id="filterPlayer">
+            <option value="">All Players</option>
+          </select>
+          <select class="search-input" id="filterDirector">
+            <option value="">All Directors</option>
+            <option>Wayne Stofsky</option>
+            <option>Addison Maruszak</option>
+            <option>Richie Warren</option>
+            <option>Nick James</option>
+            <option>Jason Pascual</option>
+            <option>Maddux Faber</option>
+          </select>
+        </div>
+        <!-- Text Search Row -->
         <div class="search-row">
-          <input type="text" class="search-input" id="searchPlayer" placeholder="Search by player name..." />
-          <input type="text" class="search-input" id="searchTeam" placeholder="Search by team..." />
-          <input type="text" class="search-input" id="searchDirector" placeholder="Search by director..." />
+          <input type="text" class="search-input" id="searchPlayer" placeholder="Or type player name..." />
+          <input type="text" class="search-input" id="searchTeam" placeholder="Or type team name..." />
+          <input type="text" class="search-input" id="searchDirector" placeholder="Or type director name..." />
           <button class="search-btn" onclick="searchEvals()">Search</button>
         </div>
         <div class="search-row full">
@@ -137,6 +171,65 @@
 
     let dbClient = null;
 
+    // Player roster data for cascading dropdown
+    const playersByTeam = {
+      "2027 Olasin": [], "2027 McCoy": [], "2027 Menendez": [], "2027 Thomas": [],
+      "2028 Lawson": [], "2028 DiBenedetto": [], "2028 Merrell": [], "2028 Severidt": [],
+      "2029 Pascual": [], "2029 Wisser": [], "2029 Cates": [],
+      "2030 Madsen": [], "2030 Chappell": [], "2030 Kirst": [], "2030 Santiago": []
+    };
+
+    const teamMap = {
+      '2027 Olasin': 'olasin_roster.html', '2027 McCoy': 'mccoy_roster.html',
+      '2027 Menendez': 'menendez_roster.html', '2027 Thomas': 'thomas_roster.html',
+      '2028 Lawson': 'scout_lawson_roster.html', '2028 DiBenedetto': 'scout_dibenedetto_roster.html',
+      '2028 Merrell': 'united_merrell_roster.html', '2028 Severidt': 'united_severidt_roster.html',
+      '2029 Pascual': 'pascual_roster.html', '2029 Wisser': 'wisser_roster.html',
+      '2029 Cates': 'cates_roster.html', '2030 Madsen': 'madsen_roster.html',
+      '2030 Chappell': 'chappell_roster.html', '2030 Kirst': 'kirst_roster.html',
+      '2030 Santiago': 'santiago_roster.html'
+    };
+
+    async function loadRosterPlayers() {
+      for (const [teamName, file] of Object.entries(teamMap)) {
+        try {
+          const response = await fetch(file);
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const rows = doc.querySelectorAll('.roster-table tbody tr');
+          const players = [];
+          rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 3) {
+              const jersey = cells[0]?.textContent.trim();
+              const firstName = cells[1]?.textContent.trim();
+              const lastName = cells[2]?.textContent.trim();
+              if (firstName && lastName) players.push({ jersey, firstName, lastName });
+            }
+          });
+          players.sort((a, b) => parseInt(a.jersey) - parseInt(b.jersey));
+          playersByTeam[teamName] = players;
+        } catch (e) { console.error('Error loading', teamName, e); }
+      }
+    }
+
+    function onTeamChange() {
+      const team = document.getElementById('filterTeam').value;
+      const playerSelect = document.getElementById('filterPlayer');
+      playerSelect.innerHTML = '<option value="">All Players</option>';
+      if (team && playersByTeam[team]) {
+        playersByTeam[team].forEach(p => {
+          const opt = document.createElement('option');
+          opt.value = `${p.firstName} ${p.lastName}`;
+          opt.textContent = `#${p.jersey} — ${p.firstName} ${p.lastName}`;
+          playerSelect.appendChild(opt);
+        });
+      }
+      // Auto-search on dropdown change
+      searchEvals();
+    }
+
     function authenticate() {
       const name = document.getElementById('loginName').value.trim();
       const password = document.getElementById('loginPassword').value;
@@ -150,6 +243,7 @@
       localStorage.setItem('viewEvalsName', name);
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('mainScreen').style.display = 'block';
+      loadRosterPlayers();
       loadAllEvals();
     }
 
@@ -159,7 +253,6 @@
           .from('player_evaluations')
           .select('*')
           .order('created_at', { ascending: false });
-
         if (error) throw error;
         renderEvals(data || []);
       } catch (error) {
@@ -169,25 +262,31 @@
     }
 
     async function searchEvals() {
-      const playerName = document.getElementById('searchPlayer').value.toLowerCase();
-      const teamName = document.getElementById('searchTeam').value.toLowerCase();
-      const directorName = document.getElementById('searchDirector').value.toLowerCase();
+      // Combine dropdown + text inputs — dropdowns take priority
+      const teamDropdown = document.getElementById('filterTeam').value;
+      const playerDropdown = document.getElementById('filterPlayer').value;
+      const directorDropdown = document.getElementById('filterDirector').value;
+      const playerText = document.getElementById('searchPlayer').value.trim();
+      const teamText = document.getElementById('searchTeam').value.trim();
+      const directorText = document.getElementById('searchDirector').value.trim();
+
+      const teamVal = teamDropdown || teamText;
+      const directorVal = directorDropdown || directorText;
+      const playerVal = playerDropdown || playerText;
 
       try {
         let query = dbClient.from('player_evaluations').select('*');
-
-        if (playerName) {
-          query = query.or(`player_first_name.ilike.%${playerName}%,player_last_name.ilike.%${playerName}%`);
+        if (teamVal) query = query.ilike('team_name', `%${teamVal}%`);
+        if (directorVal) query = query.ilike('director_name', `%${directorVal}%`);
+        if (playerVal) {
+          const parts = playerVal.trim().split(' ');
+          if (parts.length >= 2) {
+            query = query.ilike('player_first_name', `%${parts[0]}%`).ilike('player_last_name', `%${parts[1]}%`);
+          } else {
+            query = query.or(`player_first_name.ilike.%${playerVal}%,player_last_name.ilike.%${playerVal}%`);
+          }
         }
-        if (teamName) {
-          query = query.ilike('team_name', `%${teamName}%`);
-        }
-        if (directorName) {
-          query = query.ilike('director_name', `%${directorName}%`);
-        }
-
         const { data, error } = await query.order('created_at', { ascending: false });
-
         if (error) throw error;
         renderEvals(data || []);
       } catch (error) {
@@ -196,6 +295,9 @@
     }
 
     function clearSearch() {
+      document.getElementById('filterTeam').value = '';
+      document.getElementById('filterPlayer').innerHTML = '<option value="">All Players</option>';
+      document.getElementById('filterDirector').value = '';
       document.getElementById('searchPlayer').value = '';
       document.getElementById('searchTeam').value = '';
       document.getElementById('searchDirector').value = '';
@@ -293,6 +395,7 @@
         dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('mainScreen').style.display = 'block';
+        loadRosterPlayers();
         loadAllEvals();
       }
       // Allow Enter key on login
