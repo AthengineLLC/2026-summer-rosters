@@ -10,7 +10,7 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --navy: #0d1a33; --navy-deep: #08101f; --red: #b91e2d; --white: #ffffff; }
-    body { font-family: 'Inter', sans-serif; background: var(--navy-deep); color: var(--white); min-height: 100vh; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy-deep); color: var(--white); min-height: 100vh; -webkit-text-size-adjust: 100%; }
 
     nav {
       background: var(--navy);
@@ -18,70 +18,121 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       position: sticky; top: 0; z-index: 1000;
     }
-    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; height: 70px; padding: 0 40px; }
-    .nav-logo { height: 50px; width: auto; margin-right: auto; }
-    .nav-menu { display: flex; gap: 35px; list-style: none; }
-    .nav-link { color: var(--white); text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.3s; }
+    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; height: 60px; padding: 0 20px; }
+    .nav-logo { height: 44px; width: auto; margin-right: auto; }
+    .nav-menu { display: flex; gap: 20px; list-style: none; }
+    .nav-link { color: var(--white); text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.3s; }
     .nav-link:hover { color: var(--red); }
 
-    .login-container { max-width: 400px; margin: 100px auto; padding: 40px; background: var(--navy); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-    .login-container h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 900; margin-bottom: 30px; text-align: center; letter-spacing: 2px; }
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; letter-spacing: 0.5px; }
-    .form-group input { width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--white); border-radius: 6px; font-size: 14px; }
-    .form-group input::placeholder { color: rgba(255,255,255,0.4); }
-    .btn { width: 100%; padding: 12px; background: var(--red); color: var(--white); border: none; border-radius: 6px; font-weight: 700; font-size: 16px; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; text-transform: uppercase; }
-    .btn:hover { background: #a01a27; box-shadow: 0 4px 12px rgba(185,30,45,0.4); }
-    .error { color: #ff6b6b; font-size: 12px; margin-top: 8px; }
+    /* LOGIN */
+    .login-container { max-width: 380px; margin: 60px auto; padding: 32px 24px; background: var(--navy); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .login-container h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 900; margin-bottom: 24px; text-align: center; letter-spacing: 2px; color: var(--white); }
+    .login-group { margin-bottom: 20px; }
+    .login-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px; letter-spacing: 0.5px; color: rgba(255,255,255,0.8); }
+    .login-group input { width: 100%; padding: 14px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--white); border-radius: 8px; font-size: 16px; }
+    .btn { width: 100%; padding: 14px; background: var(--red); color: var(--white); border: none; border-radius: 8px; font-weight: 700; font-size: 16px; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; text-transform: uppercase; margin-top: 8px; }
+    .btn:hover { background: #a01a27; }
+    .error { color: #ff6b6b; font-size: 13px; margin-top: 8px; }
 
-    .eval-form { max-width: 900px; margin: 40px auto; padding: 40px; background: #ffffff; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-    .eval-form h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; margin-bottom: 30px; letter-spacing: 2px; color: var(--navy); }
+    /* EVAL FORM */
+    .eval-form { max-width: 700px; margin: 24px auto; padding: 0; background: #ffffff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); overflow: hidden; }
+    .eval-form-header { padding: 24px 24px 0; }
+    .eval-form h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 900; margin-bottom: 20px; letter-spacing: 2px; color: var(--navy); }
     
-    .form-section { margin-bottom: 40px; }
-    .form-section h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900; background: var(--red); padding: 12px 16px; margin: -40px -40px 25px -40px; color: var(--white); letter-spacing: 1px; text-transform: uppercase; }
+    .form-section { margin-bottom: 0; }
+    .form-section h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 900; background: var(--red); padding: 14px 24px; color: var(--white); letter-spacing: 1.5px; text-transform: uppercase; margin: 0; }
+    .form-section-body { padding: 24px; }
     
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-    .form-row.full { grid-template-columns: 1fr; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 0; }
     
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--navy); }
-    .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ccd0d9; background: #f8f9fb; color: var(--navy); border-radius: 6px; font-size: 14px; font-family: 'Inter', sans-serif; }
+    .form-group { margin-bottom: 18px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #6b7280; }
+    .form-group select, .form-group input, .form-group textarea { 
+      width: 100%; padding: 13px 14px; border: 1.5px solid #e5e7eb; 
+      background: #f9fafb; color: var(--navy); border-radius: 8px; 
+      font-size: 16px; font-family: 'Inter', sans-serif; 
+      -webkit-appearance: none; appearance: none;
+      transition: border-color 0.2s;
+    }
+    .form-group select:focus, .form-group input:focus, .form-group textarea:focus { 
+      outline: none; border-color: var(--red); background: #fff; 
+    }
     .form-group select option { background: #ffffff; color: var(--navy); }
-    .form-group textarea { min-height: 100px; resize: vertical; }
+    .form-group textarea { min-height: 90px; resize: vertical; font-size: 15px; }
 
-    .multi-select { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
-    .multi-select label { display: flex; align-items: center; gap: 8px; margin: 0; font-weight: 600; font-size: 13px; background: rgba(185,30,45,0.07); padding: 8px 12px; border-radius: 6px; cursor: pointer; border: 1px solid rgba(185,30,45,0.3); transition: all 0.2s; color: var(--navy); }
-    .multi-select input[type="checkbox"] { cursor: pointer; }
-    .multi-select label:hover { background: rgba(185,30,45,0.15); border-color: var(--red); }
+    /* Positions */
+    .multi-select { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px; }
+    .multi-select label { 
+      display: flex; align-items: center; gap: 6px; margin: 0; 
+      font-weight: 600; font-size: 14px; 
+      background: #f3f4f6; padding: 10px 14px; border-radius: 8px; 
+      cursor: pointer; border: 1.5px solid #e5e7eb; 
+      transition: all 0.2s; color: var(--navy);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .multi-select input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--red); }
+    .multi-select label:hover, .multi-select label:active { background: rgba(185,30,45,0.08); border-color: var(--red); color: var(--red); }
 
-    .slider-group { margin-bottom: 20px; }
-    .slider-label { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 8px; font-size: 14px; color: var(--navy); }
-    .slider-value { color: var(--red); font-weight: 900; font-size: 16px; }
-    .slider-range { width: 100%; height: 6px; background: #dde1e9; border-radius: 3px; outline: none; -webkit-appearance: none; }
-    .slider-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: var(--red); border-radius: 50%; cursor: pointer; box-shadow: 0 2px 8px rgba(185,30,45,0.4); }
-    .slider-range::-moz-range-thumb { width: 20px; height: 20px; background: var(--red); border-radius: 50%; cursor: pointer; border: none; box-shadow: 0 2px 8px rgba(185,30,45,0.4); }
-
+    /* Reports */
     .reports-section { margin-bottom: 20px; }
-    .report-entry { background: #f0f2f5; padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 3px solid var(--red); }
-    .report-entry .report-date { font-size: 12px; color: #6b7280; margin-bottom: 8px; }
+    .reports-section:last-child { margin-bottom: 0; }
+    .reports-label { font-weight: 700; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--navy); margin-bottom: 10px; display: block; }
+    .report-entry { background: #f3f4f6; padding: 14px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--red); }
+    .report-entry .report-date { font-size: 11px; color: #9ca3af; margin-bottom: 6px; }
     .report-entry .report-text { font-size: 14px; line-height: 1.5; color: var(--navy); }
-    .report-entry .remove-btn { background: #b91e2d; padding: 6px 12px; margin-top: 8px; font-size: 12px; cursor: pointer; border: none; border-radius: 4px; color: var(--white); }
-    .add-report-btn { background: rgba(185,30,45,0.08); border: 1px solid var(--red); color: var(--red); padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 8px; transition: all 0.2s; }
-    .add-report-btn:hover { background: rgba(185,30,45,0.15); }
+    .report-entry .remove-btn { background: #fee2e2; color: var(--red); padding: 6px 12px; margin-top: 10px; font-size: 12px; cursor: pointer; border: none; border-radius: 6px; font-weight: 600; }
+    .add-report-btn { 
+      background: #fff; border: 1.5px solid var(--red); color: var(--red); 
+      padding: 12px 18px; border-radius: 8px; cursor: pointer; font-weight: 700; 
+      font-size: 14px; transition: all 0.2s; width: 100%; text-align: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .add-report-btn:hover, .add-report-btn:active { background: rgba(185,30,45,0.06); }
 
-    .form-actions { display: flex; gap: 12px; margin-top: 40px; }
-    .form-actions button { flex: 1; padding: 14px; font-size: 16px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; }
+    /* Sliders */
+    .slider-group { margin-bottom: 24px; padding: 18px; background: #f9fafb; border-radius: 10px; border: 1.5px solid #e5e7eb; }
+    .slider-group:last-child { margin-bottom: 0; }
+    .slider-label { display: flex; justify-content: space-between; align-items: center; font-weight: 600; margin-bottom: 12px; font-size: 14px; color: var(--navy); }
+    .slider-value { color: var(--red); font-weight: 900; font-size: 20px; background: #fff; padding: 2px 10px; border-radius: 6px; border: 1.5px solid #fecdd3; }
+    .slider-range { 
+      width: 100%; height: 8px; background: #e5e7eb; border-radius: 4px; 
+      outline: none; -webkit-appearance: none; cursor: pointer;
+    }
+    .slider-range::-webkit-slider-thumb { 
+      -webkit-appearance: none; appearance: none; 
+      width: 28px; height: 28px; background: var(--red); border-radius: 50%; 
+      cursor: pointer; box-shadow: 0 2px 8px rgba(185,30,45,0.4);
+      border: 3px solid #fff;
+    }
+    .slider-range::-moz-range-thumb { 
+      width: 28px; height: 28px; background: var(--red); border-radius: 50%; 
+      cursor: pointer; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(185,30,45,0.4); 
+    }
+
+    /* Actions */
+    .form-actions { display: flex; gap: 12px; padding: 24px; background: #f9fafb; border-top: 1px solid #e5e7eb; }
+    .form-actions button { 
+      flex: 1; padding: 16px; font-size: 15px; font-weight: 700; 
+      border: none; border-radius: 10px; cursor: pointer; 
+      text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s;
+      -webkit-tap-highlight-color: transparent;
+    }
     .btn-submit { background: var(--red); color: var(--white); }
-    .btn-submit:hover { background: #a01a27; box-shadow: 0 4px 12px rgba(185,30,45,0.4); }
-    .btn-logout { background: #f0f2f5; color: var(--navy); border: 1px solid #ccd0d9; }
-    .btn-logout:hover { background: #e2e5ea; }
+    .btn-submit:hover, .btn-submit:active { background: #a01a27; }
+    .btn-logout { background: #fff; color: var(--navy); border: 1.5px solid #e5e7eb; }
+    .btn-logout:hover, .btn-logout:active { background: #f3f4f6; }
 
-    .success-message { background: #2f9e44; padding: 16px; border-radius: 8px; margin-bottom: 20px; color: var(--white); }
-    .error-message { background: #c92a2a; padding: 16px; border-radius: 8px; margin-bottom: 20px; color: var(--white); }
+    .success-message { background: #dcfce7; color: #166534; padding: 16px; border-radius: 8px; margin: 0 24px 20px; font-weight: 600; border: 1px solid #bbf7d0; }
+    .error-message { background: #fee2e2; color: #991b1b; padding: 16px; border-radius: 8px; margin: 0 24px 20px; font-weight: 600; border: 1px solid #fecaca; }
 
-    @media (max-width: 768px) {
+    @media (max-width: 600px) {
+      .eval-form { margin: 0; border-radius: 0; min-height: 100vh; }
       .form-row { grid-template-columns: 1fr; }
-      .nav-container { padding: 0 15px; }
+      .nav-container { padding: 0 16px; }
+      .login-container { margin: 30px 16px; }
+      .multi-select label { font-size: 15px; padding: 11px 14px; }
+      .form-group select, .form-group input { font-size: 16px; }
     }
   </style>
 </head>
@@ -103,7 +154,7 @@
 
   <div id="loginScreen" class="login-container">
     <h1>Player Evaluations</h1>
-    <div class="form-group">
+    <div class="login-group">
       <label>Password</label>
       <input type="password" id="passwordInput" placeholder="Enter password" />
     </div>
@@ -113,7 +164,9 @@
 
   <div id="evalScreen" style="display: none;">
     <div class="eval-form">
-      <h1>Player Evaluation Form</h1>
+      <div class="eval-form-header">
+        <h1>Player Evaluation Form</h1>
+      </div>
       <div id="successMessage"></div>
       <div id="errorMessage"></div>
 
@@ -121,151 +174,162 @@
         <!-- Director & Team Section -->
         <div class="form-section">
           <h2>Evaluator & Team</h2>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Director Name</label>
-              <select id="directorName" required>
-                <option value="">Select Director</option>
-                <option>Wayne Stofsky</option>
-                <option>Addisson Marasek</option>
-                <option>Richie Warren</option>
-                <option>Nick James</option>
-                <option>Jason Pascual</option>
-                <option>Maddux Faber</option>
-              </select>
+          <div class="form-section-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Director Name</label>
+                <select id="directorName" required>
+                  <option value="">Select Director</option>
+                  <option>Wayne Stofsky</option>
+                  <option>Addisson Marasek</option>
+                  <option>Richie Warren</option>
+                  <option>Nick James</option>
+                  <option>Jason Pascual</option>
+                  <option>Maddux Faber</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Team</label>
+                <select id="teamName" onchange="loadPlayers()" required>
+                  <option value="">Select Team</option>
+                  <option>2027 Olasin</option>
+                  <option>2027 McCoy</option>
+                  <option>2027 Menendez</option>
+                  <option>2027 Thomas</option>
+                  <option>2028 Lawson</option>
+                  <option>2028 DiBenedetto</option>
+                  <option>2028 Merrell</option>
+                  <option>2028 Severidt</option>
+                  <option>2029 Pascual</option>
+                  <option>2029 Wisser</option>
+                  <option>2029 Cates</option>
+                  <option>2030 Madsen</option>
+                  <option>2030 Chappell</option>
+                  <option>2030 Kirst</option>
+                  <option>2030 Santiago</option>
+                </select>
+              </div>
             </div>
             <div class="form-group">
-              <label>Team</label>
-              <select id="teamName" onchange="loadPlayers()" required>
-                <option value="">Select Team</option>
-                <option>2027 Olasin</option>
-                <option>2027 McCoy</option>
-                <option>2027 Menendez</option>
-                <option>2027 Thomas</option>
-                <option>2028 Lawson</option>
-                <option>2028 DiBenedetto</option>
-                <option>2028 Merrell</option>
-                <option>2028 Severidt</option>
-                <option>2029 Pascual</option>
-                <option>2029 Wisser</option>
-                <option>2029 Cates</option>
-                <option>2030 Madsen</option>
-                <option>2030 Chappell</option>
-                <option>2030 Kirst</option>
-                <option>2030 Santiago</option>
+              <label>Player</label>
+              <select id="playerSelect" onchange="selectPlayer()" required>
+                <option value="">Select Player</option>
               </select>
             </div>
-          </div>
-          <div class="form-group full">
-            <label>Player</label>
-            <select id="playerSelect" onchange="selectPlayer()" required>
-              <option value="">Select Player</option>
-            </select>
           </div>
         </div>
 
         <!-- Position Section -->
         <div class="form-section">
           <h2>Projected Positions</h2>
-          <div class="multi-select">
-            <label><input type="checkbox" name="position" value="C"> C</label>
-            <label><input type="checkbox" name="position" value="1B"> 1B</label>
-            <label><input type="checkbox" name="position" value="2B"> 2B</label>
-            <label><input type="checkbox" name="position" value="3B"> 3B</label>
-            <label><input type="checkbox" name="position" value="SS"> SS</label>
-            <label><input type="checkbox" name="position" value="LF"> LF</label>
-            <label><input type="checkbox" name="position" value="CF"> CF</label>
-            <label><input type="checkbox" name="position" value="RF"> RF</label>
-            <label><input type="checkbox" name="position" value="DH"> DH</label>
-            <label><input type="checkbox" name="position" value="RHP"> RHP</label>
-            <label><input type="checkbox" name="position" value="LHP"> LHP</label>
+          <div class="form-section-body">
+            <div class="multi-select">
+              <label><input type="checkbox" name="position" value="C"> C</label>
+              <label><input type="checkbox" name="position" value="1B"> 1B</label>
+              <label><input type="checkbox" name="position" value="2B"> 2B</label>
+              <label><input type="checkbox" name="position" value="3B"> 3B</label>
+              <label><input type="checkbox" name="position" value="SS"> SS</label>
+              <label><input type="checkbox" name="position" value="LF"> LF</label>
+              <label><input type="checkbox" name="position" value="CF"> CF</label>
+              <label><input type="checkbox" name="position" value="RF"> RF</label>
+              <label><input type="checkbox" name="position" value="DH"> DH</label>
+              <label><input type="checkbox" name="position" value="RHP"> RHP</label>
+              <label><input type="checkbox" name="position" value="LHP"> LHP</label>
+            </div>
           </div>
         </div>
 
         <!-- Reports Section -->
         <div class="form-section">
           <h2>Performance Reports</h2>
-          
-          <div class="reports-section">
-            <label style="font-weight: 700; margin-bottom: 8px; display: block; text-transform: uppercase;">Defensive Reports</label>
-            <div id="defensiveReports"></div>
-            <button type="button" class="add-report-btn" onclick="addReport('defensive')">+ Add Defensive Report</button>
-          </div>
-
-          <div class="reports-section">
-            <label style="font-weight: 700; margin-bottom: 8px; display: block; text-transform: uppercase;">Offensive Reports</label>
-            <div id="offensiveReports"></div>
-            <button type="button" class="add-report-btn" onclick="addReport('offensive')">+ Add Offensive Report</button>
-          </div>
-
-          <div class="reports-section">
-            <label style="font-weight: 700; margin-bottom: 8px; display: block; text-transform: uppercase;">Pitching Reports</label>
-            <div id="pitchingReports"></div>
-            <button type="button" class="add-report-btn" onclick="addReport('pitching')">+ Add Pitching Report</button>
+          <div class="form-section-body">
+            <div class="reports-section">
+              <span class="reports-label">Defensive Reports</span>
+              <div id="defensiveReports"></div>
+              <button type="button" class="add-report-btn" onclick="addReport('defensive')">+ Add Defensive Report</button>
+            </div>
+            <div class="reports-section">
+              <span class="reports-label">Offensive Reports</span>
+              <div id="offensiveReports"></div>
+              <button type="button" class="add-report-btn" onclick="addReport('offensive')">+ Add Offensive Report</button>
+            </div>
+            <div class="reports-section">
+              <span class="reports-label">Pitching Reports</span>
+              <div id="pitchingReports"></div>
+              <button type="button" class="add-report-btn" onclick="addReport('pitching')">+ Add Pitching Report</button>
+            </div>
           </div>
         </div>
 
         <!-- Ratings Section -->
         <div class="form-section">
           <h2>Performance Ratings</h2>
-          
-          <div class="slider-group">
-            <div class="slider-label">
-              <span>Defense Level</span>
-              <span class="slider-value"><span id="defenseValue">5</span>/10</span>
+          <div class="form-section-body">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Defense Level</span>
+                <span class="slider-value"><span id="defenseValue">5</span>/10</span>
+              </div>
+              <input type="range" id="defenseRating" class="slider-range" min="1" max="10" value="5" oninput="document.getElementById('defenseValue').textContent = this.value">
             </div>
-            <input type="range" id="defenseRating" class="slider-range" min="1" max="10" value="5" oninput="document.getElementById('defenseValue').textContent = this.value">
-          </div>
-
-          <div class="slider-group">
-            <div class="slider-label">
-              <span>Offense Level</span>
-              <span class="slider-value"><span id="offenseValue">5</span>/10</span>
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Offense Level</span>
+                <span class="slider-value"><span id="offenseValue">5</span>/10</span>
+              </div>
+              <input type="range" id="offenseRating" class="slider-range" min="1" max="10" value="5" oninput="document.getElementById('offenseValue').textContent = this.value">
             </div>
-            <input type="range" id="offenseRating" class="slider-range" min="1" max="10" value="5" oninput="document.getElementById('offenseValue').textContent = this.value">
-          </div>
-
-          <div class="slider-group">
-            <div class="slider-label">
-              <span>Pitching Level</span>
-              <span class="slider-value"><span id="pitchingValue">5</span>/10</span>
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Pitching Level</span>
+                <span class="slider-value"><span id="pitchingValue">5</span>/10</span>
+              </div>
+              <input type="range" id="pitchingRating" class="slider-range" min="1" max="10" value="5" oninput="document.getElementById('pitchingValue').textContent = this.value">
             </div>
-            <input type="range" id="pitchingRating" class="slider-range" min="1" max="10" value="5" oninput="document.getElementById('pitchingValue').textContent = this.value">
           </div>
         </div>
 
         <!-- Roster Level Section -->
         <div class="form-section">
           <h2>Roster Level Assessment</h2>
-          <div class="slider-group">
-            <div class="slider-label">
-              <span>Roster Level (1=Move Down, 5=Properly Rostered, 10=Move Up)</span>
-              <span class="slider-value"><span id="rosterValue">5</span>/10</span>
+          <div class="form-section-body">
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>Roster Level</span>
+                <span class="slider-value"><span id="rosterValue">5</span>/10</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; font-size:12px; color:#9ca3af; margin-bottom:10px;">
+                <span>1 = Move Way Down</span>
+                <span>5 = Properly Rostered</span>
+                <span>10 = Move Way Up</span>
+              </div>
+              <input type="range" id="rosterLevel" class="slider-range" min="1" max="10" value="5" oninput="document.getElementById('rosterValue').textContent = this.value">
             </div>
-            <input type="range" id="rosterLevel" class="slider-range" min="1" max="10" value="5" oninput="document.getElementById('rosterValue').textContent = this.value">
           </div>
         </div>
 
         <!-- Recruitment Section -->
         <div class="form-section">
           <h2>Recruitment Evaluation</h2>
-          <div class="form-group full">
-            <label>Projected College Level</label>
-            <select id="recruitmentLevel" required>
-              <option value="">Select Level</option>
-              <option>High Draft</option>
-              <option>Power 4 D1</option>
-              <option>Mid Major D1</option>
-              <option>Lower Level D1</option>
-              <option>High Academic D1</option>
-              <option>D2</option>
-              <option>D3</option>
-              <option>High Academic D3</option>
-              <option>D1 JUCO</option>
-              <option>D2 JUCO</option>
-              <option>NAIA</option>
-              <option>Not A Prospect</option>
-            </select>
+          <div class="form-section-body">
+            <div class="form-group">
+              <label>Projected College Level</label>
+              <select id="recruitmentLevel" required>
+                <option value="">Select Level</option>
+                <option>High Draft</option>
+                <option>Power 4 D1</option>
+                <option>Mid Major D1</option>
+                <option>Lower Level D1</option>
+                <option>High Academic D1</option>
+                <option>D2</option>
+                <option>D3</option>
+                <option>High Academic D3</option>
+                <option>D1 JUCO</option>
+                <option>D2 JUCO</option>
+                <option>NAIA</option>
+                <option>Not A Prospect</option>
+              </select>
+            </div>
           </div>
         </div>
 
