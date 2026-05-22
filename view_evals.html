@@ -30,13 +30,37 @@
     .search-box { background: var(--navy); padding: 20px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
     .search-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; margin-bottom: 15px; }
     .search-row.full { grid-template-columns: 1fr; }
-    .search-input option, .search-select option { background: #0d1a33; color: #0d1a33; }
-    .search-input, .search-select { padding: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--white); border-radius: 6px; font-size: 14px; font-family: 'Inter', sans-serif; }
+    .search-input { padding: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--white); border-radius: 6px; font-size: 14px; font-family: 'Inter', sans-serif; }
     .search-input::placeholder { color: rgba(255,255,255,0.4); }
-    .search-input option { background: #0d1a33; color: #0d1a33; }
-    .search-select option { background: var(--navy); color: var(--white); }
     .search-btn { background: var(--red); color: var(--white); padding: 12px 30px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: all 0.3s; }
     .search-btn:hover { background: #a01a27; }
+
+    /* Custom dropdown */
+    .custom-select { position: relative; }
+    .custom-select-btn {
+      width: 100%; padding: 12px 36px 12px 12px; border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.05); color: var(--white); border-radius: 6px;
+      font-size: 14px; font-family: 'Inter', sans-serif; cursor: pointer;
+      text-align: left; appearance: none; position: relative;
+    }
+    .custom-select-btn::after {
+      content: '▼'; position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      font-size: 10px; color: rgba(255,255,255,0.5); pointer-events: none;
+    }
+    .custom-select-btn:hover { border-color: rgba(255,255,255,0.4); }
+    .custom-dropdown {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: #1a2a45; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px;
+      max-height: 240px; overflow-y: auto; z-index: 999;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .custom-dropdown.open { display: block; }
+    .custom-dropdown-item {
+      padding: 10px 14px; color: #ffffff; font-size: 14px; cursor: pointer;
+      font-family: 'Inter', sans-serif; transition: background 0.15s;
+    }
+    .custom-dropdown-item:hover { background: var(--red); }
+    .custom-dropdown-item.selected { background: rgba(185,30,45,0.3); }
 
     .evals-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
     .eval-card { background: var(--navy); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border-left: 4px solid var(--red); }
@@ -112,38 +136,47 @@
       <h1>Player Evaluations</h1>
 
       <div class="search-box">
-        <!-- Dropdowns Row -->
+        <!-- Custom Dropdowns Row -->
         <div class="search-row" style="margin-bottom:12px;">
-          <select class="search-input" id="filterTeam" onchange="onTeamChange()">
-            <option value="">All Teams</option>
-            <option>2027 Olasin</option>
-            <option>2027 McCoy</option>
-            <option>2027 Menendez</option>
-            <option>2027 Thomas</option>
-            <option>2028 Lawson</option>
-            <option>2028 DiBenedetto</option>
-            <option>2028 Merrell</option>
-            <option>2028 Severidt</option>
-            <option>2029 Pascual</option>
-            <option>2029 Wisser</option>
-            <option>2029 Cates</option>
-            <option>2030 Madsen</option>
-            <option>2030 Chappell</option>
-            <option>2030 Kirst</option>
-            <option>2030 Santiago</option>
-          </select>
-          <select class="search-input" id="filterPlayer">
-            <option value="">All Players</option>
-          </select>
-          <select class="search-input" id="filterDirector">
-            <option value="">All Directors</option>
-            <option>Wayne Stofsky</option>
-            <option>Addison Maruszak</option>
-            <option>Richie Warren</option>
-            <option>Nick James</option>
-            <option>Jason Pascual</option>
-            <option>Maddux Faber</option>
-          </select>
+          <div class="custom-select">
+            <button class="custom-select-btn" id="filterTeamBtn" onclick="toggleDropdown('teamDrop')">All Teams</button>
+            <div class="custom-dropdown" id="teamDrop">
+              <div class="custom-dropdown-item selected" onclick="selectTeam('')">All Teams</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2027 Olasin')">2027 Olasin</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2027 McCoy')">2027 McCoy</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2027 Menendez')">2027 Menendez</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2027 Thomas')">2027 Thomas</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2028 Lawson')">2028 Lawson</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2028 DiBenedetto')">2028 DiBenedetto</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2028 Merrell')">2028 Merrell</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2028 Severidt')">2028 Severidt</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2029 Pascual')">2029 Pascual</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2029 Wisser')">2029 Wisser</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2029 Cates')">2029 Cates</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2030 Madsen')">2030 Madsen</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2030 Chappell')">2030 Chappell</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2030 Kirst')">2030 Kirst</div>
+              <div class="custom-dropdown-item" onclick="selectTeam('2030 Santiago')">2030 Santiago</div>
+            </div>
+          </div>
+          <div class="custom-select">
+            <button class="custom-select-btn" id="filterPlayerBtn" onclick="toggleDropdown('playerDrop')">All Players</button>
+            <div class="custom-dropdown" id="playerDrop">
+              <div class="custom-dropdown-item selected" onclick="selectPlayer('')">All Players</div>
+            </div>
+          </div>
+          <div class="custom-select">
+            <button class="custom-select-btn" id="filterDirectorBtn" onclick="toggleDropdown('directorDrop')">All Directors</button>
+            <div class="custom-dropdown" id="directorDrop">
+              <div class="custom-dropdown-item selected" onclick="selectDirector('')">All Directors</div>
+              <div class="custom-dropdown-item" onclick="selectDirector('Wayne Stofsky')">Wayne Stofsky</div>
+              <div class="custom-dropdown-item" onclick="selectDirector('Addison Maruszak')">Addison Maruszak</div>
+              <div class="custom-dropdown-item" onclick="selectDirector('Richie Warren')">Richie Warren</div>
+              <div class="custom-dropdown-item" onclick="selectDirector('Nick James')">Nick James</div>
+              <div class="custom-dropdown-item" onclick="selectDirector('Jason Pascual')">Jason Pascual</div>
+              <div class="custom-dropdown-item" onclick="selectDirector('Maddux Faber')">Maddux Faber</div>
+            </div>
+          </div>
         </div>
         <!-- Text Search Row -->
         <div class="search-row">
@@ -173,7 +206,57 @@
 
     let dbClient = null;
 
-    // Player roster data for cascading dropdown
+    // Custom dropdown state
+    let selectedTeam = '', selectedPlayer = '', selectedDirector = '';
+
+    function toggleDropdown(id) {
+      document.querySelectorAll('.custom-dropdown').forEach(d => {
+        if (d.id !== id) d.classList.remove('open');
+      });
+      document.getElementById(id).classList.toggle('open');
+    }
+
+    // Close dropdowns on outside click
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.custom-select')) {
+        document.querySelectorAll('.custom-dropdown').forEach(d => d.classList.remove('open'));
+      }
+    });
+
+    function selectTeam(val) {
+      selectedTeam = val;
+      document.getElementById('filterTeamBtn').textContent = val || 'All Teams';
+      document.getElementById('teamDrop').classList.remove('open');
+      // Rebuild player dropdown
+      selectedPlayer = '';
+      document.getElementById('filterPlayerBtn').textContent = 'All Players';
+      const playerDrop = document.getElementById('playerDrop');
+      playerDrop.innerHTML = '<div class="custom-dropdown-item selected" onclick="selectPlayer(\'\')">All Players</div>';
+      if (val && playersByTeam[val]) {
+        playersByTeam[val].forEach(p => {
+          const item = document.createElement('div');
+          item.className = 'custom-dropdown-item';
+          item.textContent = `#${p.jersey} — ${p.firstName} ${p.lastName}`;
+          item.onclick = () => selectPlayer(`${p.firstName} ${p.lastName}`);
+          playerDrop.appendChild(item);
+        });
+      }
+      searchEvals();
+    }
+
+    function selectPlayer(val) {
+      selectedPlayer = val;
+      document.getElementById('filterPlayerBtn').textContent = val || 'All Players';
+      document.getElementById('playerDrop').classList.remove('open');
+      searchEvals();
+    }
+
+    function selectDirector(val) {
+      selectedDirector = val;
+      document.getElementById('filterDirectorBtn').textContent = val || 'All Directors';
+      document.getElementById('directorDrop').classList.remove('open');
+      searchEvals();
+    }
     const playersByTeam = {
       "2027 Olasin": [], "2027 McCoy": [], "2027 Menendez": [], "2027 Thomas": [],
       "2028 Lawson": [], "2028 DiBenedetto": [], "2028 Merrell": [], "2028 Severidt": [],
@@ -216,22 +299,6 @@
       }
     }
 
-    function onTeamChange() {
-      const team = document.getElementById('filterTeam').value;
-      const playerSelect = document.getElementById('filterPlayer');
-      playerSelect.innerHTML = '<option value="">All Players</option>';
-      if (team && playersByTeam[team]) {
-        playersByTeam[team].forEach(p => {
-          const opt = document.createElement('option');
-          opt.value = `${p.firstName} ${p.lastName}`;
-          opt.textContent = `#${p.jersey} — ${p.firstName} ${p.lastName}`;
-          playerSelect.appendChild(opt);
-        });
-      }
-      // Auto-search on dropdown change
-      searchEvals();
-    }
-
     function authenticate() {
       const name = document.getElementById('loginName').value.trim();
       const password = document.getElementById('loginPassword').value;
@@ -264,17 +331,14 @@
     }
 
     async function searchEvals() {
-      // Combine dropdown + text inputs — dropdowns take priority
-      const teamDropdown = document.getElementById('filterTeam').value;
-      const playerDropdown = document.getElementById('filterPlayer').value;
-      const directorDropdown = document.getElementById('filterDirector').value;
+      // Combine custom dropdowns + text inputs
       const playerText = document.getElementById('searchPlayer').value.trim();
       const teamText = document.getElementById('searchTeam').value.trim();
       const directorText = document.getElementById('searchDirector').value.trim();
 
-      const teamVal = teamDropdown || teamText;
-      const directorVal = directorDropdown || directorText;
-      const playerVal = playerDropdown || playerText;
+      const teamVal = selectedTeam || teamText;
+      const directorVal = selectedDirector || directorText;
+      const playerVal = selectedPlayer || playerText;
 
       try {
         let query = dbClient.from('player_evaluations').select('*');
@@ -297,9 +361,12 @@
     }
 
     function clearSearch() {
-      document.getElementById('filterTeam').value = '';
-      document.getElementById('filterPlayer').innerHTML = '<option value="">All Players</option>';
-      document.getElementById('filterDirector').value = '';
+      selectedTeam = ''; selectedPlayer = ''; selectedDirector = '';
+      document.getElementById('filterTeamBtn').textContent = 'All Teams';
+      document.getElementById('filterPlayerBtn').textContent = 'All Players';
+      document.getElementById('filterPlayerBtn').textContent = 'All Players';
+      document.getElementById('filterDirectorBtn').textContent = 'All Directors';
+      document.getElementById('playerDrop').innerHTML = '<div class="custom-dropdown-item selected" onclick="selectPlayer(\'\')">All Players</div>';
       document.getElementById('searchPlayer').value = '';
       document.getElementById('searchTeam').value = '';
       document.getElementById('searchDirector').value = '';
