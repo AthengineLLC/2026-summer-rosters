@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Evaluations - CBU Summer Rosters</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --navy: #0d1a33; --navy-deep: #08101f; --red: #b91e2d; --white: #ffffff; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy-deep); color: var(--white); min-height: 100vh; }
+
+    nav {
+      background: var(--navy);
+      padding: 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      position: sticky; top: 0; z-index: 1000;
+    }
+    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; height: 70px; padding: 0 40px; }
+    .nav-logo { height: 50px; width: auto; margin-right: auto; }
+    .nav-menu { display: flex; gap: 35px; list-style: none; }
+    .nav-link { color: var(--white); text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.3s; }
+    .nav-link:hover { color: var(--red); }
+
+    .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 48px; font-weight: 900; margin-bottom: 30px; letter-spacing: 2px; }
+
+    .search-box { background: var(--navy); padding: 20px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .search-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; margin-bottom: 15px; }
+    .search-row.full { grid-template-columns: 1fr; }
+    .search-input, .search-select { padding: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--white); border-radius: 6px; font-size: 14px; font-family: 'Inter', sans-serif; }
+    .search-input::placeholder { color: rgba(255,255,255,0.4); }
+    .search-select option { background: var(--navy); color: var(--white); }
+    .search-btn { background: var(--red); color: var(--white); padding: 12px 30px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: all 0.3s; }
+    .search-btn:hover { background: #a01a27; }
+
+    .evals-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
+    .eval-card { background: var(--navy); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border-left: 4px solid var(--red); }
+    .eval-card h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 900; margin-bottom: 12px; color: var(--red); }
+    .eval-card .player-name { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .eval-card .meta { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 15px; }
+    .eval-card .meta-item { display: inline-block; margin-right: 15px; }
+    .eval-card .section { margin-bottom: 15px; }
+    .eval-card .section-title { font-weight: 700; color: var(--red); font-size: 12px; text-transform: uppercase; margin-bottom: 6px; }
+    .eval-card .section-content { font-size: 13px; line-height: 1.5; }
+
+    .rating-display { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .rating-badge { background: rgba(185,30,45,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+    .rating-badge.high { background: rgba(47,158,68,0.2); }
+
+    .report-item { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; margin-bottom: 8px; font-size: 12px; }
+    .report-date { color: rgba(255,255,255,0.5); font-size: 11px; margin-bottom: 4px; }
+
+    .empty-state { text-align: center; padding: 60px 20px; }
+    .empty-state h2 { font-size: 24px; margin-bottom: 10px; }
+    .empty-state p { color: rgba(255,255,255,0.6); }
+
+    @media (max-width: 768px) {
+      .search-row { grid-template-columns: 1fr; }
+      .evals-container { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" style="text-decoration: none;">
+        <svg class="nav-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#ffffff"/>
+          <text x="50" y="70" font-size="60" font-weight="900" text-anchor="middle" fill="#b91e2d" font-family="Arial">U</text>
+        </svg>
+      </a>
+      <div class="nav-menu" style="margin-left: auto;">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="evals.html" class="nav-link">Create Eval</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Player Evaluations</h1>
+
+    <div class="search-box">
+      <div class="search-row">
+        <input type="text" class="search-input" id="searchPlayer" placeholder="Search by player name..." />
+        <input type="text" class="search-input" id="searchTeam" placeholder="Search by team..." />
+        <input type="text" class="search-input" id="searchDirector" placeholder="Search by director..." />
+        <button class="search-btn" onclick="searchEvals()">Search</button>
+      </div>
+      <div class="search-row full">
+        <button class="search-btn" onclick="clearSearch()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--white);">Clear Filters</button>
+      </div>
+    </div>
+
+    <div id="evalsContainer" class="evals-container"></div>
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <h2>No evaluations found</h2>
+      <p>Try adjusting your search filters</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // IMPORTANT: Replace these with your actual Supabase credentials
+    const SUPABASE_URL = "https://lymuuvixgdjwczviejie.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bXV1dml4Z2Rqd2N6dmllamllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc0ODksImV4cCI6MjA5NTA2MzQ4OX0.YxJk28Zk3Lhv6MQe4z4PG3cVpp6cKLANRYtDwCX3Dt8";
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function loadAllEvals() {
+      try {
+        const { data, error } = await supabase
+          .from('player_evaluations')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        renderEvals(data || []);
+      } catch (error) {
+        console.error('Error loading evals:', error);
+        document.getElementById('emptyState').style.display = 'block';
+      }
+    }
+
+    async function searchEvals() {
+      const playerName = document.getElementById('searchPlayer').value.toLowerCase();
+      const teamName = document.getElementById('searchTeam').value.toLowerCase();
+      const directorName = document.getElementById('searchDirector').value.toLowerCase();
+
+      try {
+        let query = supabase.from('player_evaluations').select('*');
+
+        if (playerName) {
+          query = query.or(`player_first_name.ilike.%${playerName}%,player_last_name.ilike.%${playerName}%`);
+        }
+        if (teamName) {
+          query = query.ilike('team_name', `%${teamName}%`);
+        }
+        if (directorName) {
+          query = query.ilike('director_name', `%${directorName}%`);
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false });
+
+        if (error) throw error;
+        renderEvals(data || []);
+      } catch (error) {
+        console.error('Error searching evals:', error);
+      }
+    }
+
+    function clearSearch() {
+      document.getElementById('searchPlayer').value = '';
+      document.getElementById('searchTeam').value = '';
+      document.getElementById('searchDirector').value = '';
+      loadAllEvals();
+    }
+
+    function renderEvals(evals) {
+      const container = document.getElementById('evalsContainer');
+      const emptyState = document.getElementById('emptyState');
+
+      if (!evals || evals.length === 0) {
+        container.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      container.innerHTML = evals.map(eval => `
+        <div class="eval-card">
+          <h2>${eval.player_first_name} ${eval.player_last_name}</h2>
+          
+          <div class="player-name">${eval.team_name}</div>
+          
+          <div class="meta">
+            <div class="meta-item"><strong>Director:</strong> ${eval.director_name}</div>
+            <div class="meta-item"><strong>Date:</strong> ${new Date(eval.created_at).toLocaleDateString()}</div>
+          </div>
+
+          ${eval.projected_positions ? `
+            <div class="section">
+              <div class="section-title">Positions</div>
+              <div class="section-content">${eval.projected_positions}</div>
+            </div>
+          ` : ''}
+
+          <div class="section">
+            <div class="section-title">Ratings</div>
+            <div class="rating-display">
+              <div class="rating-badge">DEF: ${eval.defense_rating}/10</div>
+              <div class="rating-badge">OFF: ${eval.offense_rating}/10</div>
+              <div class="rating-badge">PIT: ${eval.pitching_rating}/10</div>
+              <div class="rating-badge ${eval.roster_level >= 6 ? 'high' : ''}">ROSTER: ${eval.roster_level}/10</div>
+            </div>
+          </div>
+
+          ${eval.recruitment_level ? `
+            <div class="section">
+              <div class="section-title">Recruitment Level</div>
+              <div class="section-content">${eval.recruitment_level}</div>
+            </div>
+          ` : ''}
+
+          ${eval.defensive_reports && JSON.parse(eval.defensive_reports).length > 0 ? `
+            <div class="section">
+              <div class="section-title">Defensive Reports</div>
+              ${JSON.parse(eval.defensive_reports).map(report => `
+                <div class="report-item">
+                  <div class="report-date">${new Date(report.date).toLocaleDateString()}</div>
+                  <div>${report.text}</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          ${eval.offensive_reports && JSON.parse(eval.offensive_reports).length > 0 ? `
+            <div class="section">
+              <div class="section-title">Offensive Reports</div>
+              ${JSON.parse(eval.offensive_reports).map(report => `
+                <div class="report-item">
+                  <div class="report-date">${new Date(report.date).toLocaleDateString()}</div>
+                  <div>${report.text}</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          ${eval.pitching_reports && JSON.parse(eval.pitching_reports).length > 0 ? `
+            <div class="section">
+              <div class="section-title">Pitching Reports</div>
+              ${JSON.parse(eval.pitching_reports).map(report => `
+                <div class="report-item">
+                  <div class="report-date">${new Date(report.date).toLocaleDateString()}</div>
+                  <div>${report.text}</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    // Load evals on page load
+    window.addEventListener('load', loadAllEvals);
+  </script>
+</body>
+</html>
