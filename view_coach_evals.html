@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Coach Evaluations - CBU Summer Rosters</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --navy: #0d1a33; --navy-deep: #08101f; --red: #b91e2d; --white: #ffffff; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy-deep); color: var(--white); min-height: 100vh; }
+
+    nav { background: var(--navy); padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000; }
+    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; height: 60px; padding: 0 20px; }
+    .nav-logo { height: 44px; width: auto; margin-right: auto; }
+    .nav-link { color: var(--white); text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.3s; margin-left: 20px; }
+    .nav-link:hover { color: var(--red); }
+
+    /* LOGIN */
+    .login-container { max-width: 380px; margin: 60px auto; padding: 32px 24px; background: var(--navy); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .login-container h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 900; margin-bottom: 24px; text-align: center; letter-spacing: 2px; color: var(--white); }
+    .login-group { margin-bottom: 16px; }
+    .login-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px; letter-spacing: 0.5px; color: rgba(255,255,255,0.8); text-transform: uppercase; }
+    .login-group input { width: 100%; padding: 13px 14px; border: 1.5px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--white); border-radius: 8px; font-size: 16px; font-family: 'Inter', sans-serif; }
+    .login-group input::placeholder { color: rgba(255,255,255,0.4); }
+    .btn-login { width: 100%; padding: 14px; background: var(--red); color: var(--white); border: none; border-radius: 8px; font-weight: 700; font-size: 16px; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; text-transform: uppercase; margin-top: 8px; }
+    .btn-login:hover { background: #a01a27; }
+    .login-error { color: #ff6b6b; font-size: 13px; margin-top: 8px; min-height: 18px; }
+
+    /* MAIN */
+    .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    .page-title { font-family: 'Barlow Condensed', sans-serif; font-size: 48px; font-weight: 900; margin-bottom: 30px; letter-spacing: 2px; }
+
+    /* SEARCH */
+    .search-box { background: var(--navy); padding: 20px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .search-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; margin-bottom: 15px; }
+    .search-input { padding: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--white); border-radius: 6px; font-size: 14px; font-family: 'Inter', sans-serif; }
+    .search-input::placeholder { color: rgba(255,255,255,0.4); }
+    .search-btn { background: var(--red); color: var(--white); padding: 12px 30px; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: all 0.3s; white-space: nowrap; }
+    .search-btn:hover { background: #a01a27; }
+    .clear-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--white); padding: 12px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; text-transform: uppercase; }
+
+    /* CARDS */
+    .evals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 24px; }
+
+    .eval-card { background: var(--navy); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+    .eval-card-header { background: var(--red); padding: 16px 20px; }
+    .eval-card-header h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; color: #fff; letter-spacing: 1px; }
+    .eval-card-header .meta { font-size: 13px; color: rgba(255,255,255,0.8); margin-top: 4px; }
+
+    .eval-card-body { padding: 20px; }
+
+    .eval-section { margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 18px; }
+    .eval-section:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+    .eval-section-title { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 900; color: var(--red); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+
+    .ratings-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .rating-badge { background: rgba(255,255,255,0.08); border-radius: 6px; padding: 6px 10px; font-size: 12px; }
+    .rating-badge .badge-label { color: rgba(255,255,255,0.5); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+    .rating-badge .badge-value { font-weight: 700; font-size: 14px; color: #fff; }
+    .rating-badge .badge-value.high { color: #4ade80; }
+    .rating-badge .badge-value.low { color: #f87171; }
+    .rating-badge .badge-value.yes { color: #f87171; }
+    .rating-badge .badge-value.no { color: #4ade80; }
+
+    .comment-box { background: rgba(255,255,255,0.05); border-left: 3px solid rgba(255,255,255,0.2); border-radius: 0 6px 6px 0; padding: 10px 12px; font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.5; margin-top: 8px; }
+
+    .empty-state { text-align: center; padding: 80px 20px; }
+    .empty-state h2 { font-size: 24px; margin-bottom: 10px; color: rgba(255,255,255,0.6); }
+
+    @media (max-width: 768px) {
+      .search-row { grid-template-columns: 1fr; }
+      .evals-grid { grid-template-columns: 1fr; }
+      .login-container { margin: 30px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" style="text-decoration: none;">
+        <svg class="nav-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#ffffff"/>
+          <text x="50" y="70" font-size="60" font-weight="900" text-anchor="middle" fill="#b91e2d" font-family="Arial">U</text>
+        </svg>
+      </a>
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="evals_landing.html" class="nav-link" style="background:#b91e2d;color:#ffffff;font-weight:900;padding:8px 16px;border-radius:6px;">EVALS</a>
+    </div>
+  </nav>
+
+  <!-- LOGIN -->
+  <div id="loginScreen" class="login-container">
+    <h1>Coach Eval View</h1>
+    <div class="login-group">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter password" />
+    </div>
+    <div class="login-error" id="loginError"></div>
+    <button class="btn-login" onclick="authenticate()">View Evaluations</button>
+  </div>
+
+  <!-- MAIN -->
+  <div id="mainScreen" style="display:none;">
+    <div class="container">
+      <h1 class="page-title">Coach Evaluations</h1>
+
+      <div class="search-box">
+        <div class="search-row">
+          <input type="text" class="search-input" id="searchTeam" placeholder="Search by team..." />
+          <input type="text" class="search-input" id="searchDirector" placeholder="Search by director..." />
+          <button class="search-btn" onclick="searchEvals()">Search</button>
+        </div>
+        <button class="clear-btn" onclick="clearSearch()">Clear Filters</button>
+      </div>
+
+      <div id="evalsGrid" class="evals-grid"></div>
+      <div id="emptyState" class="empty-state" style="display:none;">
+        <h2>No evaluations found</h2>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://lymuuvixgdjwczviejie.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bXV1dml4Z2Rqd2N6dmllamllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc0ODksImV4cCI6MjA5NTA2MzQ4OX0.YxJk28Zk3Lhv6MQe4z4PG3cVpp6cKLANRYtDwCX3Dt8";
+    const EVAL_PASSWORD = "director2026evals";
+    let dbClient = null;
+
+    function authenticate() {
+      const password = document.getElementById('loginPassword').value;
+      const errorEl = document.getElementById('loginError');
+      if (password === EVAL_PASSWORD) {
+        dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        localStorage.setItem('coachViewAuth', 'true');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainScreen').style.display = 'block';
+        loadAllEvals();
+      } else {
+        errorEl.textContent = 'Invalid password.';
+      }
+    }
+
+    function ratingColor(val) {
+      if (!val) return '';
+      const n = parseInt(val);
+      if (n >= 4) return 'high';
+      if (n <= 2) return 'low';
+      return '';
+    }
+
+    function badge(label, value) {
+      if (!value) return '';
+      const colorClass = ['Yes'].includes(value) ? 'yes' : ['No'].includes(value) ? 'no' : ratingColor(value);
+      return `<div class="rating-badge"><div class="badge-label">${label}</div><div class="badge-value ${colorClass}">${value}</div></div>`;
+    }
+
+    function comment(text) {
+      if (!text) return '';
+      return `<div class="comment-box">${text}</div>`;
+    }
+
+    function renderCard(ev) {
+      return `
+        <div class="eval-card">
+          <div class="eval-card-header">
+            <h2>${ev.team_name || '—'}</h2>
+            <div class="meta">Director: ${ev.director_name || '—'} &nbsp;·&nbsp; ${new Date(ev.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+          </div>
+          <div class="eval-card-body">
+
+            <div class="eval-section">
+              <div class="eval-section-title">Organization & Preparation</div>
+              <div class="ratings-row">
+                ${badge('Organized & Prepared', ev.org_prepared)}
+                ${badge('Arrived On Time', ev.arrived_ontime)}
+                ${badge('Pregame BP', ev.pregame_bp)}
+              </div>
+              ${comment(ev.org_comments)}
+            </div>
+
+            <div class="eval-section">
+              <div class="eval-section-title">Player Development & Leadership</div>
+              <div class="ratings-row">
+                ${badge('Instruction', ev.instruction)}
+                ${badge('Accountability', ev.accountability)}
+                ${badge('Playing Time', ev.playing_time)}
+                ${badge('Professionalism', ev.professionalism)}
+              </div>
+              ${comment(ev.dev_comments)}
+            </div>
+
+            <div class="eval-section">
+              <div class="eval-section-title">Player Issues & Concerns</div>
+              <div class="ratings-row">
+                ${badge('Behavior Issues', ev.player_behavior)}
+                ${badge('Effort/Attitude', ev.effort_attitude)}
+                ${badge('Favoritism', ev.favoritism)}
+              </div>
+              ${comment(ev.player_issue_comments)}
+            </div>
+
+            <div class="eval-section">
+              <div class="eval-section-title">Parent Issues & Concerns</div>
+              <div class="ratings-row">
+                ${badge('Parent Complaints', ev.parent_complaints)}
+                ${badge('Sideline Behavior', ev.sideline_behavior)}
+                ${badge('Leadership Concerns', ev.leadership_concerns)}
+              </div>
+              ${comment(ev.parent_comments)}
+            </div>
+
+            <div class="eval-section">
+              <div class="eval-section-title">Game Management</div>
+              <div class="ratings-row">
+                ${badge('Game Mgmt', ev.game_mgmt)}
+                ${badge('Adjustments', ev.adjustments)}
+                ${badge('Pitching Mgmt', ev.pitching_mgmt)}
+              </div>
+              ${comment(ev.game_comments)}
+            </div>
+
+            <div class="eval-section">
+              <div class="eval-section-title">Overall Evaluation</div>
+              <div class="ratings-row">
+                ${badge('Head Coach', ev.hc_overall)}
+                ${badge('Asst Coach', ev.asst_overall)}
+              </div>
+              ${comment(ev.overall_comments)}
+            </div>
+
+          </div>
+        </div>`;
+    }
+
+    function renderEvals(data) {
+      const grid = document.getElementById('evalsGrid');
+      const empty = document.getElementById('emptyState');
+      if (!data || data.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+      grid.innerHTML = data.map(renderCard).join('');
+    }
+
+    async function loadAllEvals() {
+      try {
+        const { data, error } = await dbClient
+          .from('coach_evaluations')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        renderEvals(data);
+      } catch (err) {
+        console.error('Error loading evals:', err);
+      }
+    }
+
+    async function searchEvals() {
+      const team = document.getElementById('searchTeam').value.toLowerCase();
+      const director = document.getElementById('searchDirector').value.toLowerCase();
+      try {
+        let query = dbClient.from('coach_evaluations').select('*');
+        if (team) query = query.ilike('team_name', `%${team}%`);
+        if (director) query = query.ilike('director_name', `%${director}%`);
+        const { data, error } = await query.order('created_at', { ascending: false });
+        if (error) throw error;
+        renderEvals(data);
+      } catch (err) {
+        console.error('Search error:', err);
+      }
+    }
+
+    function clearSearch() {
+      document.getElementById('searchTeam').value = '';
+      document.getElementById('searchDirector').value = '';
+      loadAllEvals();
+    }
+
+    window.addEventListener('load', () => {
+      if (localStorage.getItem('coachViewAuth') === 'true') {
+        dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainScreen').style.display = 'block';
+        loadAllEvals();
+      }
+      document.getElementById('loginPassword').addEventListener('keydown', e => {
+        if (e.key === 'Enter') authenticate();
+      });
+    });
+  </script>
+</body>
+</html>
