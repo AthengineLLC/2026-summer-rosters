@@ -429,7 +429,8 @@
           const parser = new DOMParser();
           const doc = parser.parseFromString(html, 'text/html');
           
-          const rows = doc.querySelectorAll('tbody tr');
+          // Only grab rows from the actual roster table, not tournament tables
+          const rows = doc.querySelectorAll('.roster-table tbody tr');
           const players = [];
           
           rows.forEach(row => {
