@@ -224,17 +224,17 @@
           <h2>Projected Positions</h2>
           <div class="form-section-body">
             <div class="multi-select">
-              <label><input type="checkbox" name="position" value="C"> C</label>
-              <label><input type="checkbox" name="position" value="1B"> 1B</label>
-              <label><input type="checkbox" name="position" value="2B"> 2B</label>
-              <label><input type="checkbox" name="position" value="3B"> 3B</label>
-              <label><input type="checkbox" name="position" value="SS"> SS</label>
-              <label><input type="checkbox" name="position" value="LF"> LF</label>
-              <label><input type="checkbox" name="position" value="CF"> CF</label>
-              <label><input type="checkbox" name="position" value="RF"> RF</label>
-              <label><input type="checkbox" name="position" value="DH"> DH</label>
-              <label><input type="checkbox" name="position" value="RHP"> RHP</label>
-              <label><input type="checkbox" name="position" value="LHP"> LHP</label>
+              <label><input type="checkbox" name="position" value="C" onchange="updateVisibility()"> C</label>
+              <label><input type="checkbox" name="position" value="1B" onchange="updateVisibility()"> 1B</label>
+              <label><input type="checkbox" name="position" value="2B" onchange="updateVisibility()"> 2B</label>
+              <label><input type="checkbox" name="position" value="3B" onchange="updateVisibility()"> 3B</label>
+              <label><input type="checkbox" name="position" value="SS" onchange="updateVisibility()"> SS</label>
+              <label><input type="checkbox" name="position" value="LF" onchange="updateVisibility()"> LF</label>
+              <label><input type="checkbox" name="position" value="CF" onchange="updateVisibility()"> CF</label>
+              <label><input type="checkbox" name="position" value="RF" onchange="updateVisibility()"> RF</label>
+              <label><input type="checkbox" name="position" value="DH" onchange="updateVisibility()"> DH</label>
+              <label><input type="checkbox" name="position" value="RHP" onchange="updateVisibility()"> RHP</label>
+              <label><input type="checkbox" name="position" value="LHP" onchange="updateVisibility()"> LHP</label>
             </div>
           </div>
         </div>
@@ -243,17 +243,17 @@
         <div class="form-section">
           <h2>Performance Reports</h2>
           <div class="form-section-body">
-            <div class="reports-section">
+            <div id="defensiveReportsSection" class="reports-section" style="display:none;">
               <span class="reports-label">Defensive Reports</span>
               <div id="defensiveReports"></div>
               <button type="button" class="add-report-btn" onclick="addReport('defensive')">+ Add Defensive Report</button>
             </div>
-            <div class="reports-section">
+            <div id="offensiveReportsSection" class="reports-section" style="display:none;">
               <span class="reports-label">Offensive Reports</span>
               <div id="offensiveReports"></div>
               <button type="button" class="add-report-btn" onclick="addReport('offensive')">+ Add Offensive Report</button>
             </div>
-            <div class="reports-section">
+            <div id="pitchingReportsSection" class="reports-section" style="display:none;">
               <span class="reports-label">Pitching Reports</span>
               <div id="pitchingReports"></div>
               <button type="button" class="add-report-btn" onclick="addReport('pitching')">+ Add Pitching Report</button>
@@ -268,21 +268,21 @@
             <p style="font-size: 13px; color: #6b7280; background: #f3f4f6; border-left: 3px solid var(--red); padding: 12px 14px; border-radius: 6px; line-height: 1.6; margin-bottom: 24px;">
               <strong style="color: var(--navy);">Rating Scale:</strong> Rate this player relative to their peers at the same age group. A <strong style="color: var(--navy);">5</strong> represents a player who performs at the expected level for a typical player their age. Scores above 5 indicate above-average ability for their age group, while scores below 5 indicate below-average performance compared to their peers.
             </p>
-            <div class="slider-group">
+            <div id="defenseSlider" class="slider-group" style="display:none;">
               <div class="slider-label">
                 <span>Defense Level</span>
                 <span class="slider-value"><span id="defenseValue">5</span>/10</span>
               </div>
               <input type="range" id="defenseRating" class="slider-range" min="1" max="10" value="5" oninput="document.getElementById('defenseValue').textContent = this.value">
             </div>
-            <div class="slider-group">
+            <div id="offenseSlider" class="slider-group" style="display:none;">
               <div class="slider-label">
                 <span>Offense Level</span>
                 <span class="slider-value"><span id="offenseValue">5</span>/10</span>
               </div>
               <input type="range" id="offenseRating" class="slider-range" min="1" max="10" value="5" oninput="document.getElementById('offenseValue').textContent = this.value">
             </div>
-            <div class="slider-group">
+            <div id="pitchingSlider" class="slider-group" style="display:none;">
               <div class="slider-label">
                 <span>Pitching Level</span>
                 <span class="slider-value"><span id="pitchingValue">5</span>/10</span>
@@ -381,6 +381,24 @@
           console.error("Error initializing Supabase:", error);
         }
       }
+    }
+
+    function updateVisibility() {
+      const checked = Array.from(document.querySelectorAll('input[name="position"]:checked')).map(cb => cb.value);
+      const hasPitcher = checked.some(p => p === 'RHP' || p === 'LHP');
+      const hasPosition = checked.some(p => p !== 'RHP' && p !== 'LHP');
+
+      // Show/hide pitching tools
+      const show = (id, visible) => document.getElementById(id).style.display = visible ? '' : 'none';
+
+      show('pitchingReportsSection', hasPitcher);
+      show('pitchingSlider', hasPitcher);
+
+      // Show/hide positional tools
+      show('defensiveReportsSection', hasPosition);
+      show('offensiveReportsSection', hasPosition);
+      show('defenseSlider', hasPosition);
+      show('offenseSlider', hasPosition);
     }
 
     function authenticate() {
