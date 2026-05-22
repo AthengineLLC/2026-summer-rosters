@@ -435,13 +435,17 @@
           rows.forEach(row => {
             const cells = row.querySelectorAll('td');
             if (cells.length >= 3) {
+              const jersey = parseInt(cells[0]?.textContent.trim()) || 0;
               const firstName = cells[1]?.textContent.trim();
               const lastName = cells[2]?.textContent.trim();
               if (firstName && lastName) {
-                players.push({ firstName, lastName, fullName: `${firstName} ${lastName}` });
+                players.push({ jersey, firstName, lastName, fullName: `${firstName} ${lastName}` });
               }
             }
           });
+          
+          // Sort by jersey number numerically
+          players.sort((a, b) => a.jersey - b.jersey);
           
           playersByTeam[teamName] = players;
         } catch (error) {
@@ -458,8 +462,8 @@
       if (team && playersByTeam[team]) {
         playersByTeam[team].forEach(player => {
           const option = document.createElement('option');
-          option.value = JSON.stringify({ firstName: player.firstName, lastName: player.lastName });
-          option.textContent = player.fullName;
+          option.value = JSON.stringify({ firstName: player.firstName, lastName: player.lastName, jersey: player.jersey });
+          option.textContent = `#${player.jersey} — ${player.fullName}`;
           playerSelect.appendChild(option);
         });
       }
