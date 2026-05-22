@@ -57,9 +57,20 @@
     .empty-state h2 { font-size: 24px; margin-bottom: 10px; }
     .empty-state p { color: rgba(255,255,255,0.6); }
 
+    .login-container { max-width: 380px; margin: 60px auto; padding: 32px 24px; background: var(--navy); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .login-container h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 900; margin-bottom: 24px; text-align: center; letter-spacing: 2px; color: var(--white); }
+    .login-group { margin-bottom: 16px; }
+    .login-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px; letter-spacing: 0.5px; color: rgba(255,255,255,0.8); text-transform: uppercase; }
+    .login-group input { width: 100%; padding: 13px 14px; border: 1.5px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--white); border-radius: 8px; font-size: 16px; font-family: 'Inter', sans-serif; }
+    .login-group input::placeholder { color: rgba(255,255,255,0.4); }
+    .btn-login { width: 100%; padding: 14px; background: var(--red); color: var(--white); border: none; border-radius: 8px; font-weight: 700; font-size: 16px; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; text-transform: uppercase; margin-top: 8px; }
+    .btn-login:hover { background: #a01a27; }
+    .login-error { color: #ff6b6b; font-size: 13px; margin-top: 8px; min-height: 18px; }
+
     @media (max-width: 768px) {
       .search-row { grid-template-columns: 1fr; }
       .evals-container { grid-template-columns: 1fr; }
+      .login-container { margin: 30px 16px; }
     }
   </style>
 </head>
@@ -80,35 +91,67 @@
     </div>
   </nav>
 
-  <div class="container">
-    <h1>Player Evaluations</h1>
-
-    <div class="search-box">
-      <div class="search-row">
-        <input type="text" class="search-input" id="searchPlayer" placeholder="Search by player name..." />
-        <input type="text" class="search-input" id="searchTeam" placeholder="Search by team..." />
-        <input type="text" class="search-input" id="searchDirector" placeholder="Search by director..." />
-        <button class="search-btn" onclick="searchEvals()">Search</button>
-      </div>
-      <div class="search-row full">
-        <button class="search-btn" onclick="clearSearch()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--white);">Clear Filters</button>
-      </div>
+  <div id="loginScreen" class="login-container">
+    <h1>Player Eval View</h1>
+    <div class="login-group">
+      <label>Director Name</label>
+      <input type="text" id="loginName" placeholder="Your name" />
     </div>
+    <div class="login-group">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter password" />
+    </div>
+    <div class="login-error" id="loginError"></div>
+    <button class="btn-login" onclick="authenticate()">View Evaluations</button>
+  </div>
 
-    <div id="evalsContainer" class="evals-container"></div>
-    <div id="emptyState" class="empty-state" style="display: none;">
-      <h2>No evaluations found</h2>
-      <p>Try adjusting your search filters</p>
+  <div id="mainScreen" style="display:none;">
+    <div class="container">
+      <h1>Player Evaluations</h1>
+
+      <div class="search-box">
+        <div class="search-row">
+          <input type="text" class="search-input" id="searchPlayer" placeholder="Search by player name..." />
+          <input type="text" class="search-input" id="searchTeam" placeholder="Search by team..." />
+          <input type="text" class="search-input" id="searchDirector" placeholder="Search by director..." />
+          <button class="search-btn" onclick="searchEvals()">Search</button>
+        </div>
+        <div class="search-row full">
+          <button class="search-btn" onclick="clearSearch()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--white);">Clear Filters</button>
+        </div>
+      </div>
+
+      <div id="evalsContainer" class="evals-container"></div>
+      <div id="emptyState" class="empty-state" style="display: none;">
+        <h2>No evaluations found</h2>
+        <p>Try adjusting your search filters</p>
+      </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // IMPORTANT: Replace these with your actual Supabase credentials
     const SUPABASE_URL = "https://lymuuvixgdjwczviejie.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bXV1dml4Z2Rqd2N6dmllamllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc0ODksImV4cCI6MjA5NTA2MzQ4OX0.YxJk28Zk3Lhv6MQe4z4PG3cVpp6cKLANRYtDwCX3Dt8";
+    const EVAL_PASSWORD = "redhatevals2026";
 
-    const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let dbClient = null;
+
+    function authenticate() {
+      const name = document.getElementById('loginName').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const errorEl = document.getElementById('loginError');
+
+      if (!name) { errorEl.textContent = 'Please enter your name.'; return; }
+      if (password !== EVAL_PASSWORD) { errorEl.textContent = 'Invalid password.'; return; }
+
+      dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      localStorage.setItem('viewEvalsAuth', 'true');
+      localStorage.setItem('viewEvalsName', name);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('mainScreen').style.display = 'block';
+      loadAllEvals();
+    }
 
     async function loadAllEvals() {
       try {
@@ -245,7 +288,18 @@
     }
 
     // Load evals on page load
-    window.addEventListener('load', loadAllEvals);
+    window.addEventListener('load', () => {
+      if (localStorage.getItem('viewEvalsAuth') === 'true') {
+        dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainScreen').style.display = 'block';
+        loadAllEvals();
+      }
+      // Allow Enter key on login
+      document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') authenticate();
+      });
+    });
   </script>
 </body>
 </html>

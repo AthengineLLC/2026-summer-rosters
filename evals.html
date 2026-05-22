@@ -613,6 +613,9 @@
         document.getElementById('evalScreen').style.display = 'block';
         loadTeamPlayers();
       }
+      document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') authenticate();
+      });
     });
   </script>
 </body>
