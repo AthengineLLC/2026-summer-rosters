@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coach Evaluation - CBU Summer Rosters</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --navy: #0d1a33; --navy-deep: #08101f; --red: #b91e2d; --white: #ffffff; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy-deep); color: var(--white); min-height: 100vh; -webkit-text-size-adjust: 100%; }
+
+    nav { background: var(--navy); padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000; }
+    .nav-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; height: 60px; padding: 0 20px; }
+    .nav-logo { height: 44px; width: auto; margin-right: auto; }
+    .nav-menu { display: flex; gap: 20px; list-style: none; }
+    .nav-link { color: var(--white); text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.3s; }
+    .nav-link:hover { color: var(--red); }
+
+    /* LOGIN */
+    .login-container { max-width: 380px; margin: 60px auto; padding: 32px 24px; background: var(--navy); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .login-container h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 900; margin-bottom: 24px; text-align: center; letter-spacing: 2px; color: var(--white); }
+    .login-group { margin-bottom: 16px; }
+    .login-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px; letter-spacing: 0.5px; color: rgba(255,255,255,0.8); text-transform: uppercase; }
+    .login-group input { width: 100%; padding: 13px 14px; border: 1.5px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--white); border-radius: 8px; font-size: 16px; font-family: 'Inter', sans-serif; }
+    .login-group input::placeholder { color: rgba(255,255,255,0.4); }
+    .btn-login { width: 100%; padding: 14px; background: var(--red); color: var(--white); border: none; border-radius: 8px; font-weight: 700; font-size: 16px; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; text-transform: uppercase; margin-top: 8px; }
+    .btn-login:hover { background: #a01a27; }
+    .login-error { color: #ff6b6b; font-size: 13px; margin-top: 8px; min-height: 18px; }
+
+    /* FORM */
+    .eval-form { max-width: 700px; margin: 24px auto; padding: 0; background: #ffffff; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); overflow: hidden; }
+    .eval-form-header { padding: 24px 24px 20px; }
+    .eval-form h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 900; color: var(--navy); letter-spacing: 1px; margin-bottom: 8px; }
+    .eval-form .subtitle { font-size: 13px; color: #6b7280; line-height: 1.5; }
+
+    .form-section { margin-bottom: 0; }
+    .form-section h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 900; background: var(--red); padding: 14px 24px; color: var(--white); letter-spacing: 1.5px; text-transform: uppercase; margin: 0; }
+    .form-section-body { padding: 24px; }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; color: #6b7280; }
+    .form-group select, .form-group textarea { width: 100%; padding: 13px 14px; border: 1.5px solid #e5e7eb; background: #f9fafb; color: var(--navy); border-radius: 8px; font-size: 16px; font-family: 'Inter', sans-serif; -webkit-appearance: none; }
+    .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--red); background: #fff; }
+    .form-group select option { background: #fff; color: var(--navy); }
+    .form-group textarea { min-height: 90px; resize: vertical; font-size: 15px; }
+
+    /* RATING SCALE */
+    .scale-label { font-size: 13px; color: #6b7280; margin-bottom: 16px; font-style: italic; }
+    .rating-item { margin-bottom: 20px; padding: 16px; background: #f9fafb; border-radius: 10px; border: 1.5px solid #e5e7eb; }
+    .rating-item:last-of-type { margin-bottom: 0; }
+    .rating-question { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 14px; line-height: 1.4; }
+    .rating-scale { display: flex; align-items: center; gap: 0; }
+    .rating-scale .scale-end { font-size: 12px; color: #9ca3af; font-weight: 600; white-space: nowrap; }
+    .rating-scale .scale-end.left { margin-right: 10px; }
+    .rating-scale .scale-end.right { margin-left: 10px; }
+    .rating-options { display: flex; gap: 8px; flex: 1; justify-content: space-between; }
+    .rating-option { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+    .rating-option input[type="radio"] { display: none; }
+    .rating-circle { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #d1d5db; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #9ca3af; cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+    .rating-option input[type="radio"]:checked + .rating-circle { background: var(--red); border-color: var(--red); color: #fff; }
+    .rating-num { font-size: 11px; color: #9ca3af; font-weight: 600; }
+
+    /* YES/NO */
+    .yesno-item { margin-bottom: 20px; padding: 16px; background: #f9fafb; border-radius: 10px; border: 1.5px solid #e5e7eb; }
+    .yesno-item:last-of-type { margin-bottom: 0; }
+    .yesno-question { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 12px; line-height: 1.4; }
+    .yesno-options { display: flex; gap: 12px; }
+    .yesno-option { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 18px; border-radius: 8px; border: 1.5px solid #e5e7eb; background: #fff; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+    .yesno-option input[type="radio"] { display: none; }
+    .yesno-option.selected, .yesno-option:has(input:checked) { border-color: var(--red); background: rgba(185,30,45,0.07); }
+    .yesno-label { font-size: 15px; font-weight: 700; color: var(--navy); }
+
+    /* ACTIONS */
+    .form-actions { display: flex; gap: 12px; padding: 24px; background: #f9fafb; border-top: 1px solid #e5e7eb; }
+    .form-actions button { flex: 1; padding: 16px; font-size: 15px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; }
+    .btn-submit { background: var(--red); color: var(--white); }
+    .btn-submit:hover { background: #a01a27; }
+    .btn-reset { background: #fff; color: var(--navy); border: 1.5px solid #e5e7eb; }
+    .btn-reset:hover { background: #f3f4f6; }
+
+    .success-message { background: #dcfce7; color: #166534; padding: 16px 24px; font-weight: 600; border-bottom: 1px solid #bbf7d0; }
+    .error-message { background: #fee2e2; color: #991b1b; padding: 16px 24px; font-weight: 600; border-bottom: 1px solid #fecaca; }
+
+    @media (max-width: 600px) {
+      .eval-form { margin: 0; border-radius: 0; min-height: 100vh; }
+      .login-container { margin: 30px 16px; }
+      .rating-circle { width: 40px; height: 40px; font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" style="text-decoration: none;">
+        <svg class="nav-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="#ffffff"/>
+          <text x="50" y="70" font-size="60" font-weight="900" text-anchor="middle" fill="#b91e2d" font-family="Arial">U</text>
+        </svg>
+      </a>
+      <div class="nav-menu" style="margin-left: auto;">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="evals_landing.html" class="nav-link" style="background:#b91e2d;color:#ffffff;font-weight:900;padding:8px 16px;border-radius:6px;">EVALS</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- LOGIN -->
+  <div id="loginScreen" class="login-container">
+    <h1>Coach Evaluation</h1>
+    <div class="login-group">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter password" />
+    </div>
+    <div class="login-error" id="loginError"></div>
+    <button class="btn-login" onclick="authenticate()">Access Form</button>
+  </div>
+
+  <!-- FORM -->
+  <div id="evalScreen" style="display:none;">
+    <div class="eval-form">
+      <div class="eval-form-header">
+        <h1>CBU Age Director In-Game Evaluation</h1>
+        <p class="subtitle">Age Group Directors — please fill out this form for <strong>each game</strong> you attend. Over the course of the summer, the goal is to have a written evaluation on most players and certainly all of the teams in your age group.</p>
+      </div>
+
+      <div id="successMessage"></div>
+      <div id="errorMessage"></div>
+
+      <form id="coachEvalForm">
+
+        <!-- SECTION 1: Director & Team -->
+        <div class="form-section">
+          <h2>Section 1 — Evaluator & Team</h2>
+          <div class="form-section-body">
+            <div class="form-group">
+              <label>Age Group Director</label>
+              <select id="directorName" required>
+                <option value="">Select Director</option>
+                <option>Wayne Stofsky</option>
+                <option>Addison Maruszak</option>
+                <option>Richie Warren</option>
+                <option>Nick James</option>
+                <option>Jason Pascual</option>
+                <option>Maddux Faber</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Team You Are Evaluating</label>
+              <select id="teamName" required>
+                <option value="">Select Team</option>
+                <option>2027 Olasin</option>
+                <option>2027 McCoy</option>
+                <option>2027 Menendez</option>
+                <option>2027 Thomas</option>
+                <option>2028 Lawson</option>
+                <option>2028 DiBenedetto</option>
+                <option>2028 Merrell</option>
+                <option>2028 Severidt</option>
+                <option>2029 Pascual</option>
+                <option>2029 Wisser</option>
+                <option>2029 Cates</option>
+                <option>2030 Madsen</option>
+                <option>2030 Chappell</option>
+                <option>2030 Kirst</option>
+                <option>2030 Santiago</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Organization & Preparation -->
+        <div class="form-section">
+          <h2>Section 2 — Organization & Preparation</h2>
+          <div class="form-section-body">
+            <p class="scale-label">Linear Scale 1–5 &nbsp;(1 = Poor &nbsp;·&nbsp; 5 = Excellent)</p>
+
+            <div class="rating-item">
+              <div class="rating-question">How organized and prepared was the coaching staff?</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="org_prepared" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="org_prepared" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="org_prepared" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="org_prepared" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="org_prepared" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="rating-item">
+              <div class="rating-question">Coaches arrived prepared and on time</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="arrived_ontime" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="arrived_ontime" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="arrived_ontime" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="arrived_ontime" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="arrived_ontime" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="rating-item">
+              <div class="rating-question">Pregame BP was structured and efficient</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="pregame_bp" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="pregame_bp" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="pregame_bp" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="pregame_bp" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="pregame_bp" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:20px;">
+              <label>Discuss Overall Preparation & Coach Eval</label>
+              <textarea id="org_comments" placeholder="Your comments..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Player Development & Leadership -->
+        <div class="form-section">
+          <h2>Section 3 — Player Development & Leadership</h2>
+          <div class="form-section-body">
+            <p class="scale-label">Rate 1–5 &nbsp;(1 = Poor &nbsp;·&nbsp; 5 = Excellent)</p>
+
+            <div class="rating-item">
+              <div class="rating-question">Coaches provided instruction and teaching</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="instruction" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="instruction" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="instruction" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="instruction" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="instruction" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="rating-item">
+              <div class="rating-question">Coaches maintained accountability and CBU standards</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="accountability" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="accountability" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="accountability" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="accountability" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="accountability" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="rating-item">
+              <div class="rating-question">Coaches managed playing time well/professionally</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="playing_time" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="playing_time" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="playing_time" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="playing_time" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="playing_time" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="rating-item">
+              <div class="rating-question">Coaches upheld CBU standards and professionalism</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="professionalism" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="professionalism" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="professionalism" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="professionalism" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="professionalism" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:20px;">
+              <label>Comment Box — Notes on Player & Coach Interactions</label>
+              <textarea id="dev_comments" placeholder="Your comments..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: Player Issues -->
+        <div class="form-section">
+          <h2>Section 4 — Player Issues & Concerns</h2>
+          <div class="form-section-body">
+            <p class="scale-label">Yes / No &nbsp;(If Yes — please explain below)</p>
+
+            <div class="yesno-item">
+              <div class="yesno-question">Any player behavior issues?</div>
+              <div class="yesno-options">
+                <label class="yesno-option"><input type="radio" name="player_behavior" value="Yes"><span class="yesno-label">YES</span></label>
+                <label class="yesno-option"><input type="radio" name="player_behavior" value="No"><span class="yesno-label">NO</span></label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-question">Any effort/attitude concerns?</div>
+              <div class="yesno-options">
+                <label class="yesno-option"><input type="radio" name="effort_attitude" value="Yes"><span class="yesno-label">YES</span></label>
+                <label class="yesno-option"><input type="radio" name="effort_attitude" value="No"><span class="yesno-label">NO</span></label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-question">Any concerns regarding player treatment/favoritism?</div>
+              <div class="yesno-options">
+                <label class="yesno-option"><input type="radio" name="favoritism" value="Yes"><span class="yesno-label">YES</span></label>
+                <label class="yesno-option"><input type="radio" name="favoritism" value="No"><span class="yesno-label">NO</span></label>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:20px;">
+              <label>If you answered "Yes" to anything above — expound here</label>
+              <textarea id="player_issue_comments" placeholder="Your comments..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 5: Parent Issues -->
+        <div class="form-section">
+          <h2>Section 5 — Parent Issues & Concerns</h2>
+          <div class="form-section-body">
+            <p class="scale-label">Yes / No &nbsp;(If Yes — please explain below)</p>
+
+            <div class="yesno-item">
+              <div class="yesno-question">Any parent complaints?</div>
+              <div class="yesno-options">
+                <label class="yesno-option"><input type="radio" name="parent_complaints" value="Yes"><span class="yesno-label">YES</span></label>
+                <label class="yesno-option"><input type="radio" name="parent_complaints" value="No"><span class="yesno-label">NO</span></label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-question">Any sideline/stands behavior concerns from families?</div>
+              <div class="yesno-options">
+                <label class="yesno-option"><input type="radio" name="sideline_behavior" value="Yes"><span class="yesno-label">YES</span></label>
+                <label class="yesno-option"><input type="radio" name="sideline_behavior" value="No"><span class="yesno-label">NO</span></label>
+              </div>
+            </div>
+
+            <div class="yesno-item">
+              <div class="yesno-question">Any immediate concerns that leadership needs to address?</div>
+              <div class="yesno-options">
+                <label class="yesno-option"><input type="radio" name="leadership_concerns" value="Yes"><span class="yesno-label">YES</span></label>
+                <label class="yesno-option"><input type="radio" name="leadership_concerns" value="No"><span class="yesno-label">NO</span></label>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:20px;">
+              <label>Comment Overall Regarding Any Parent Issues</label>
+              <textarea id="parent_comments" placeholder="Your comments..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 6: Game Management -->
+        <div class="form-section">
+          <h2>Section 6 — Game Management</h2>
+          <div class="form-section-body">
+            <p class="scale-label">Rate 1–5 &nbsp;(1 = Poor &nbsp;·&nbsp; 5 = Excellent)</p>
+
+            <div class="rating-item">
+              <div class="rating-question">Coaches managed the game professionally</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="game_mgmt" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="game_mgmt" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="game_mgmt" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="game_mgmt" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="game_mgmt" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="rating-item">
+              <div class="rating-question">Coaches made good adjustments during the game</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="adjustments" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="adjustments" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="adjustments" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="adjustments" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="adjustments" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="rating-item">
+              <div class="rating-question">Coaches handled pitching management well</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="pitching_mgmt" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="pitching_mgmt" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="pitching_mgmt" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="pitching_mgmt" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="pitching_mgmt" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:20px;">
+              <label>Comment as Needed on Any Issues</label>
+              <textarea id="game_comments" placeholder="Your comments..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 7: Overall Evaluation -->
+        <div class="form-section">
+          <h2>Section 7 — Overall Evaluation</h2>
+          <div class="form-section-body">
+            <p class="scale-label">Rate 1–5 &nbsp;(1 = Poor &nbsp;·&nbsp; 5 = Excellent)</p>
+
+            <div class="rating-item">
+              <div class="rating-question">Overall Head Coach Rating</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="hc_overall" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="hc_overall" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="hc_overall" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="hc_overall" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="hc_overall" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="rating-item">
+              <div class="rating-question">Overall Assistant Coach Rating</div>
+              <div class="rating-scale">
+                <span class="scale-end left">POOR</span>
+                <div class="rating-options">
+                  <label class="rating-option"><input type="radio" name="asst_overall" value="1"><div class="rating-circle">1</div></label>
+                  <label class="rating-option"><input type="radio" name="asst_overall" value="2"><div class="rating-circle">2</div></label>
+                  <label class="rating-option"><input type="radio" name="asst_overall" value="3"><div class="rating-circle">3</div></label>
+                  <label class="rating-option"><input type="radio" name="asst_overall" value="4"><div class="rating-circle">4</div></label>
+                  <label class="rating-option"><input type="radio" name="asst_overall" value="5"><div class="rating-circle">5</div></label>
+                </div>
+                <span class="scale-end right">EXCELLENT</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top:20px;">
+              <label>Comment with Any Major Concerns</label>
+              <textarea id="overall_comments" placeholder="Your comments..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">Submit Evaluation</button>
+          <button type="button" class="btn-reset" onclick="resetForm()">Reset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://lymuuvixgdjwczviejie.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bXV1dml4Z2Rqd2N6dmllamllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc0ODksImV4cCI6MjA5NTA2MzQ4OX0.YxJk28Zk3Lhv6MQe4z4PG3cVpp6cKLANRYtDwCX3Dt8";
+    const EVAL_PASSWORD = "redhatevals2026";
+    let dbClient = null;
+
+    function authenticate() {
+      const password = document.getElementById('loginPassword').value;
+      const errorEl = document.getElementById('loginError');
+      if (password === EVAL_PASSWORD) {
+        dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        localStorage.setItem('coachEvalAuth', 'true');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('evalScreen').style.display = 'block';
+      } else {
+        errorEl.textContent = 'Invalid password.';
+      }
+    }
+
+    function getRadioValue(name) {
+      const el = document.querySelector(`input[name="${name}"]:checked`);
+      return el ? el.value : null;
+    }
+
+    function resetForm() {
+      document.getElementById('coachEvalForm').reset();
+      document.getElementById('successMessage').innerHTML = '';
+      document.getElementById('errorMessage').innerHTML = '';
+    }
+
+    document.getElementById('coachEvalForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const evalData = {
+        director_name: document.getElementById('directorName').value,
+        team_name: document.getElementById('teamName').value,
+        // Section 2
+        org_prepared: getRadioValue('org_prepared'),
+        arrived_ontime: getRadioValue('arrived_ontime'),
+        pregame_bp: getRadioValue('pregame_bp'),
+        org_comments: document.getElementById('org_comments').value,
+        // Section 3
+        instruction: getRadioValue('instruction'),
+        accountability: getRadioValue('accountability'),
+        playing_time: getRadioValue('playing_time'),
+        professionalism: getRadioValue('professionalism'),
+        dev_comments: document.getElementById('dev_comments').value,
+        // Section 4
+        player_behavior: getRadioValue('player_behavior'),
+        effort_attitude: getRadioValue('effort_attitude'),
+        favoritism: getRadioValue('favoritism'),
+        player_issue_comments: document.getElementById('player_issue_comments').value,
+        // Section 5
+        parent_complaints: getRadioValue('parent_complaints'),
+        sideline_behavior: getRadioValue('sideline_behavior'),
+        leadership_concerns: getRadioValue('leadership_concerns'),
+        parent_comments: document.getElementById('parent_comments').value,
+        // Section 6
+        game_mgmt: getRadioValue('game_mgmt'),
+        adjustments: getRadioValue('adjustments'),
+        pitching_mgmt: getRadioValue('pitching_mgmt'),
+        game_comments: document.getElementById('game_comments').value,
+        // Section 7
+        hc_overall: getRadioValue('hc_overall'),
+        asst_overall: getRadioValue('asst_overall'),
+        overall_comments: document.getElementById('overall_comments').value,
+      };
+
+      if (!evalData.director_name || !evalData.team_name) {
+        document.getElementById('errorMessage').innerHTML = '<div class="error-message">Please select a director and team.</div>';
+        return;
+      }
+
+      try {
+        const { error } = await dbClient.from('coach_evaluations').insert([evalData]);
+        if (error) throw error;
+        document.getElementById('successMessage').innerHTML = '<div class="success-message">✓ Coach evaluation submitted successfully!</div>';
+        document.getElementById('coachEvalForm').reset();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => { document.getElementById('successMessage').innerHTML = ''; }, 5000);
+      } catch (error) {
+        document.getElementById('errorMessage').innerHTML = `<div class="error-message">Error submitting: ${error.message}</div>`;
+      }
+    });
+
+    window.addEventListener('load', () => {
+      if (localStorage.getItem('coachEvalAuth') === 'true') {
+        dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('evalScreen').style.display = 'block';
+      }
+      document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') authenticate();
+      });
+    });
+  </script>
+</body>
+</html>
