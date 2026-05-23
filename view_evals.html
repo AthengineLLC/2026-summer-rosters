@@ -381,8 +381,10 @@
       if (n <= 7)  return 'background:#1e6b3a;color:#7ae0a0;';
       if (n <= 8)  return 'background:#1a7a3a;color:#27ae60;';
       if (n <= 9)  return 'background:#4a4a00;color:#f9e94e;';
-      return             'background:#5a4200;color:#f4c430;';  // 10 = gold
+      return             'background:#5a4200;color:#f4c430;';
     }
+
+    function renderEvals(evals) {
       const container = document.getElementById('evalsContainer');
       const emptyState = document.getElementById('emptyState');
 
