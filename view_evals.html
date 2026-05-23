@@ -515,13 +515,23 @@
 
       const prompt = `You are a professional baseball scout writing a unified scouting report for CBU Baseball. Based on ${playerEvals.length} evaluation(s), write a concise but detailed player summary for ${firstName} ${lastName} (${team}).
 
+RATING SCALE CONTEXT (use this to interpret the numbers):
+- Offensive, Defensive, and Pitching ratings are 1-10 relative to peers at the same age group:
+  1 = Well below average for the age, significant development needed
+  5 = Average for the age, performing as expected
+  10 = Top of the class for the age, exceptional/elite
+- Roster Level rating is 1-10 reflecting team fit:
+  1 = Player likely needs to move down multiple teams or may be cut
+  5 = Player is on the perfect team for their current level
+  10 = Player needs to move up significantly, likely belongs on our top team
+
 Average ratings: Defense ${avgDef}/10, Offense ${avgOff}/10, Pitching ${avgPit}/10, Roster Level ${avgRoster}/10.
 Projected positions: ${positions || 'Not specified'}.
 Recruitment level: ${recruitLevels || 'Not specified'}.
 
 ${allNotes.join('\n\n')}
 
-Write a 3-4 paragraph professional scouting summary. Cover their overall profile, defensive ability, offensive ability${pitReports.length ? ', pitching ability,' : ''} and overall outlook/recruitment recommendation. Be specific and reference details from the notes. Do not use bullet points. Write in the style of a professional baseball scout.`;
+Write a 3-4 paragraph professional scouting summary. Cover their overall profile, defensive ability, offensive ability${pitReports.length ? ', pitching ability,' : ''} and overall outlook. In the final paragraph, interpret the roster level rating and give a clear recommendation on whether this player is on the right team, needs to move up, or needs to move down. Be specific and reference details from the notes. Do not use bullet points. Write in the style of a professional baseball scout.`;
 
       generateAIReport(prompt);
     }
