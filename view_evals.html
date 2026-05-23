@@ -422,43 +422,43 @@
       window._currentEvals = evals;
 
       emptyState.style.display = 'none';
-      container.innerHTML = evals.map(eval => `
-        <div class="eval-card" style="cursor:pointer;" onclick="openPlayerCard('${eval.player_first_name}', '${eval.player_last_name}', '${eval.team_name}')">
-          <h2>${eval.player_first_name} ${eval.player_last_name}</h2>
-          ${committedBadge(eval.player_first_name, eval.player_last_name)}
+      container.innerHTML = evals.map(e => `
+        <div class="eval-card" style="cursor:pointer;" onclick="openPlayerCard('${e.player_first_name}', '${e.player_last_name}', '${e.team_name}')">
+          <h2>${e.player_first_name} ${e.player_last_name}</h2>
+          ${committedBadge(e.player_first_name, e.player_last_name)}
           
-          <div class="player-name">${eval.team_name}</div>
+          <div class="player-name">${e.team_name}</div>
           
           <div class="meta">
-            <div class="meta-item"><strong>Director:</strong> ${eval.director_name}</div>
+            <div class="meta-item"><strong>Director:</strong> ${e.director_name}</div>
             <div class="meta-item"><strong>Date:</strong> ${new Date(eval.created_at).toLocaleDateString()}</div>
           </div>
 
-          ${eval.projected_positions ? `
+          ${e.projected_positions ? `
             <div class="section">
               <div class="section-title">Positions</div>
-              <div class="section-content">${eval.projected_positions}</div>
+              <div class="section-content">${e.projected_positions}</div>
             </div>
           ` : ''}
 
           <div class="section">
             <div class="section-title">Ratings</div>
             <div class="rating-display">
-              <div class="rating-badge" style="${ratingStyle(eval.defense_rating)}">DEF: ${eval.defense_rating}/10</div>
-              <div class="rating-badge" style="${ratingStyle(eval.offense_rating)}">OFF: ${eval.offense_rating}/10</div>
-              ${eval.pitching_rating ? `<div class="rating-badge" style="${ratingStyle(eval.pitching_rating)}">PIT: ${eval.pitching_rating}/10</div>` : ''}
-              <div class="rating-badge" style="${ratingStyle(eval.roster_level)}">ROSTER: ${eval.roster_level}/10</div>
+              <div class="rating-badge" style="${ratingStyle(eval.defense_rating)}">DEF: ${e.defense_rating}/10</div>
+              <div class="rating-badge" style="${ratingStyle(eval.offense_rating)}">OFF: ${e.offense_rating}/10</div>
+              ${e.pitching_rating ? `<div class="rating-badge" style="${ratingStyle(eval.pitching_rating)}">PIT: ${e.pitching_rating}/10</div>` : ''}
+              <div class="rating-badge" style="${ratingStyle(eval.roster_level)}">ROSTER: ${e.roster_level}/10</div>
             </div>
           </div>
 
-          ${eval.recruitment_level ? `
+          ${e.recruitment_level ? `
             <div class="section">
               <div class="section-title">Recruitment Level</div>
-              <div class="section-content">${eval.recruitment_level}</div>
+              <div class="section-content">${e.recruitment_level}</div>
             </div>
           ` : ''}
 
-          ${eval.defensive_reports && JSON.parse(eval.defensive_reports).length > 0 ? `
+          ${e.defensive_reports && JSON.parse(eval.defensive_reports).length > 0 ? `
             <div class="section">
               <div class="section-title">Defensive Reports</div>
               ${JSON.parse(eval.defensive_reports).map(report => `
@@ -470,7 +470,7 @@
             </div>
           ` : ''}
 
-          ${eval.offensive_reports && JSON.parse(eval.offensive_reports).length > 0 ? `
+          ${e.offensive_reports && JSON.parse(eval.offensive_reports).length > 0 ? `
             <div class="section">
               <div class="section-title">Offensive Reports</div>
               ${JSON.parse(eval.offensive_reports).map(report => `
@@ -482,7 +482,7 @@
             </div>
           ` : ''}
 
-          ${eval.pitching_reports && JSON.parse(eval.pitching_reports).length > 0 ? `
+          ${e.pitching_reports && JSON.parse(eval.pitching_reports).length > 0 ? `
             <div class="section">
               <div class="section-title">Pitching Reports</div>
               ${JSON.parse(eval.pitching_reports).map(report => `
