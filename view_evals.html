@@ -73,8 +73,7 @@
     .eval-card .section-content { font-size: 13px; line-height: 1.5; }
 
     .rating-display { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-    .rating-badge { background: rgba(185,30,45,0.2); padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; }
-    .rating-badge.high { background: rgba(47,158,68,0.2); }
+    .rating-badge { padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; }
 
     .report-item { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 4px; margin-bottom: 8px; font-size: 12px; }
     .report-date { color: rgba(255,255,255,0.5); font-size: 11px; margin-bottom: 4px; }
@@ -370,7 +369,20 @@
       loadAllEvals();
     }
 
-    function renderEvals(evals) {
+    function ratingStyle(val) {
+      const n = parseFloat(val);
+      if (isNaN(n)) return 'background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);';
+      if (n <= 1)  return 'background:#7b0000;color:#ff9999;';
+      if (n <= 2)  return 'background:#a30000;color:#ffaaaa;';
+      if (n <= 3)  return 'background:#c0392b;color:#ffc0c0;';
+      if (n <= 4)  return 'background:#7d2020;color:#e8a0a0;';
+      if (n <= 5)  return 'background:#0d1a33;color:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.1);';
+      if (n <= 6)  return 'background:#1a4a2e;color:#6fcf97;';
+      if (n <= 7)  return 'background:#1e6b3a;color:#7ae0a0;';
+      if (n <= 8)  return 'background:#1a7a3a;color:#27ae60;';
+      if (n <= 9)  return 'background:#4a4a00;color:#f9e94e;';
+      return             'background:#5a4200;color:#f4c430;';  // 10 = gold
+    }
       const container = document.getElementById('evalsContainer');
       const emptyState = document.getElementById('emptyState');
 
@@ -405,10 +417,10 @@
           <div class="section">
             <div class="section-title">Ratings</div>
             <div class="rating-display">
-              <div class="rating-badge">DEF: ${eval.defense_rating}/10</div>
-              <div class="rating-badge">OFF: ${eval.offense_rating}/10</div>
-              ${eval.pitching_rating ? `<div class="rating-badge">PIT: ${eval.pitching_rating}/10</div>` : ''}
-              <div class="rating-badge ${eval.roster_level >= 6 ? 'high' : ''}">ROSTER: ${eval.roster_level}/10</div>
+              <div class="rating-badge" style="${ratingStyle(eval.defense_rating)}">DEF: ${eval.defense_rating}/10</div>
+              <div class="rating-badge" style="${ratingStyle(eval.offense_rating)}">OFF: ${eval.offense_rating}/10</div>
+              ${eval.pitching_rating ? `<div class="rating-badge" style="${ratingStyle(eval.pitching_rating)}">PIT: ${eval.pitching_rating}/10</div>` : ''}
+              <div class="rating-badge" style="${ratingStyle(eval.roster_level)}">ROSTER: ${eval.roster_level}/10</div>
             </div>
           </div>
 
