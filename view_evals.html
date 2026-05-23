@@ -387,8 +387,11 @@
       'Nolan Hartley':         'Dayton University',
     };
 
-    // Red hat icon as base64 (inline SVG hat)
-    const hatIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 14" style="width:16px;height:10px;margin-right:5px;vertical-align:middle;"><path d="M12 0 C6 0 1 3 0 7 L0 9 L24 9 L24 7 C23 3 18 0 12 0Z" fill="#b91e2d"/><rect x="0" y="9" width="24" height="3" rx="1.5" fill="#b91e2d"/><path d="M0 9 Q2 11 5 11 L5 9Z" fill="#8b1520"/></svg>`;
+    function committedBadge(firstName, lastName) {
+      const school = committedPlayers[firstName + ' ' + lastName];
+      if (!school) return '';
+      return '<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(185,30,45,0.18);border:1px solid rgba(185,30,45,0.45);border-radius:20px;padding:3px 12px 3px 8px;margin-bottom:8px;font-size:12px;font-weight:700;color:#e8a0a0;">🎓 Committed · ' + school + '</div>';
+    }
 
     function ratingStyle(val) {
       const n = parseFloat(val);
@@ -422,7 +425,7 @@
       container.innerHTML = evals.map(eval => `
         <div class="eval-card" style="cursor:pointer;" onclick="openPlayerCard('${eval.player_first_name}', '${eval.player_last_name}', '${eval.team_name}')">
           <h2>${eval.player_first_name} ${eval.player_last_name}</h2>
-          ${(() => { const school = committedPlayers[`${eval.player_first_name} ${eval.player_last_name}`]; return school ? `<div style="display:inline-flex;align-items:center;background:rgba(185,30,45,0.15);border:1px solid rgba(185,30,45,0.4);border-radius:20px;padding:3px 10px;margin-bottom:8px;font-size:12px;font-weight:700;color:#e8a0a0;">${hatIconSVG} Committed · ${school}</div>` : ''; })()}
+          ${committedBadge(eval.player_first_name, eval.player_last_name)}
           
           <div class="player-name">${eval.team_name}</div>
           
@@ -536,7 +539,7 @@
       const school = committedPlayers[`${firstName} ${lastName}`];
       const committedEl = document.getElementById('aiCardCommitted');
       if (school) {
-        committedEl.innerHTML = `${hatIconSVG} Committed · ${school}`;
+        committedEl.innerHTML = '🎓 Committed · ' + school;
         committedEl.style.display = 'inline-flex';
         committedEl.style.alignItems = 'center';
       } else {
