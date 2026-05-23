@@ -390,7 +390,10 @@
     function committedBadge(firstName, lastName) {
       const school = committedPlayers[firstName + ' ' + lastName];
       if (!school) return '';
-      return '<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(185,30,45,0.18);border:1px solid rgba(185,30,45,0.45);border-radius:20px;padding:3px 12px 3px 8px;margin-bottom:8px;font-size:12px;font-weight:700;color:#e8a0a0;">🎓 Committed · ' + school + '</div>';
+      return '<div style="position:absolute;top:14px;right:14px;display:flex;align-items:center;gap:6px;background:rgba(13,26,51,0.9);border:1px solid rgba(185,30,45,0.5);border-radius:20px;padding:4px 10px 4px 10px;font-size:11px;font-weight:700;color:#e8a0a0;z-index:2;">'
+        + '<span style="color:rgba(255,255,255,0.75);">' + school + '</span>'
+        + '<span style="font-size:16px;">🎩</span>'
+        + '</div>';
     }
 
     function ratingStyle(val) {
@@ -423,15 +426,15 @@
 
       emptyState.style.display = 'none';
       container.innerHTML = evals.map(e => `
-        <div class="eval-card" style="cursor:pointer;" onclick="openPlayerCard('${e.player_first_name}', '${e.player_last_name}', '${e.team_name}')">
-          <h2>${e.player_first_name} ${e.player_last_name}</h2>
+        <div class="eval-card" style="cursor:pointer;position:relative;" onclick="openPlayerCard('${e.player_first_name}', '${e.player_last_name}', '${e.team_name}')">
           ${committedBadge(e.player_first_name, e.player_last_name)}
+          <h2>${e.player_first_name} ${e.player_last_name}</h2>
           
           <div class="player-name">${e.team_name}</div>
           
           <div class="meta">
             <div class="meta-item"><strong>Director:</strong> ${e.director_name}</div>
-            <div class="meta-item"><strong>Date:</strong> ${new Date(eval.created_at).toLocaleDateString()}</div>
+            <div class="meta-item"><strong>Date:</strong> ${new Date(e.created_at).toLocaleDateString()}</div>
           </div>
 
           ${e.projected_positions ? `
