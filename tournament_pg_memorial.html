@@ -535,6 +535,12 @@
       .team-col { width: 150px !important; }
       .team-col strong { font-size: 15px !important; }
     }
+
+  .result-col { width: 90px; padding: 12px 14px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 900; letter-spacing: 1px; white-space: nowrap; }
+  .result-col.win  { color: #22c55e; }
+  .result-col.loss { color: #ef4444; }
+  .result-col.pending { color: #444e61; font-size: 14px; font-weight: 600; letter-spacing: 0; }
+  @media (max-width: 700px) { .result-col { font-size: 14px; width: 68px; padding: 10px 8px; } }
   </style>
 </head>
 <body>
@@ -672,7 +678,7 @@
     </div>
     <table>
       <thead><tr>
-        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th>
+        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
       </tr></thead>
       <tbody>
         <tr>
@@ -681,6 +687,7 @@
           <td class="opp-col">@ <span class="opp-name">Ghost Evolve 14U</span></td>
           <td class="venue-col">Terry Park Sports Complex · Brett</td>
           <td class="pool-col">Pool A</td>
+          <td class="result-col win">W 18-2</td>
         </tr>
         <tr>
           <td class="time-col">6:15 PM</td>
@@ -688,13 +695,15 @@
           <td class="opp-col">vs. <span class="opp-name">FL Elite Scout Team 2028</span></td>
           <td class="venue-col">Terry Park · Clemente</td>
           <td class="pool-col">Pool B</td>
-        </tr><tr class="time-spacer"><td colspan="5"></td></tr>
+          <td class="result-col pending">–</td>
+        </tr><tr class="time-spacer"><td colspan="6"></td></tr>
         <tr>
           <td class="time-col">8:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Kirst</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Gulf Coast Knights-Palomba</span></td>
           <td class="venue-col">Terry Park · Clemente</td>
           <td class="pool-col">Pool A</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">8:30 PM</td>
@@ -702,6 +711,7 @@
           <td class="opp-col">@ <span class="opp-name">FL Burn 2028 Guthrie</span></td>
           <td class="venue-col">Terry Park · Mack</td>
           <td class="pool-col">Pool C</td>
+          <td class="result-col pending">–</td>
         </tr></tbody>
     </table>
   </div>
@@ -715,7 +725,7 @@
     </div>
     <table>
       <thead><tr>
-        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th>
+        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
       </tr></thead>
       <tbody>
         <tr>
@@ -724,14 +734,16 @@
           <td class="opp-col">vs. <span class="opp-name">SBA Bolts Florida 2030</span></td>
           <td class="venue-col">JetBlue Park · Red Sox 3</td>
           <td class="pool-col">Pool A</td>
+          <td class="result-col pending">–</td>
         </tr>
-        <tr class="time-spacer"><td colspan="5"></td></tr>
+        <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr>
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 Scout Wisser</strong></td>
           <td class="opp-col">vs. <span class="opp-name">USA Prime Tampa 15U Scout</span></td>
           <td class="venue-col">Lee Health Sports Complex</td>
           <td class="pool-col">Pool A</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">8:00 AM</td>
@@ -739,13 +751,15 @@
           <td class="opp-col">@ <span class="opp-name">Haymakers Baseball</span></td>
           <td class="venue-col">5 Plex · Field 2</td>
           <td class="pool-col">Pool A</td>
-        </tr><tr class="time-spacer"><td colspan="5"></td></tr>
+          <td class="result-col pending">–</td>
+        </tr><tr class="time-spacer"><td colspan="6"></td></tr>
         <tr>
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 Scout Wisser</strong></td>
           <td class="opp-col">vs. <span class="opp-name">FL Burn 2029 LBI</span></td>
           <td class="venue-col">Lee Health Sports Complex</td>
           <td class="pool-col">Pool A</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">10:15 AM</td>
@@ -753,6 +767,7 @@
           <td class="opp-col">vs. <span class="opp-name">Swamp Baseball</span></td>
           <td class="venue-col">5 Plex · Field 2</td>
           <td class="pool-col">Pool A</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">10:15 AM</td>
@@ -760,6 +775,7 @@
           <td class="opp-col">@ <span class="opp-name">Southern Squeeze 14u</span></td>
           <td class="venue-col">JetBlue Park · Red Sox 5</td>
           <td class="pool-col">Pool A</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">10:15 AM</td>
@@ -767,13 +783,15 @@
           <td class="opp-col">vs. <span class="opp-name">ConchBall 14u</span></td>
           <td class="venue-col">JetBlue Park · Red Sox 3</td>
           <td class="pool-col">Pool A</td>
-        </tr><tr class="time-spacer"><td colspan="5"></td></tr>
+          <td class="result-col pending">–</td>
+        </tr><tr class="time-spacer"><td colspan="6"></td></tr>
         <tr>
           <td class="time-col">12:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Thomas</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Florida Flames 16u</span></td>
           <td class="venue-col">Terry Park · Mack</td>
           <td class="pool-col">Pool E</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">12:30 PM</td>
@@ -781,6 +799,7 @@
           <td class="opp-col">@ <span class="opp-name">Turn 2 Garcia</span></td>
           <td class="venue-col">5 Plex · Field 2</td>
           <td class="pool-col">Pool B</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">12:30 PM</td>
@@ -788,6 +807,7 @@
           <td class="opp-col">@ <span class="opp-name">Natty Boys 2029</span></td>
           <td class="venue-col">Lee Health · Twins 6</td>
           <td class="pool-col">Pool D</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">12:30 PM</td>
@@ -795,6 +815,7 @@
           <td class="opp-col">vs. <span class="opp-name">West Boynton Cobras</span></td>
           <td class="venue-col">JetBlue Park · Red Sox 5</td>
           <td class="pool-col">Pool A</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">12:30 PM</td>
@@ -802,13 +823,15 @@
           <td class="opp-col">@ <span class="opp-name">FL Burn 2030 Shambora</span></td>
           <td class="venue-col">JetBlue Park · Red Sox 4</td>
           <td class="pool-col">Pool A</td>
-        </tr><tr class="time-spacer"><td colspan="5"></td></tr>
+          <td class="result-col pending">–</td>
+        </tr><tr class="time-spacer"><td colspan="6"></td></tr>
         <tr>
           <td class="time-col">2:45 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Thomas</strong></td>
           <td class="opp-col">@ <span class="opp-name">USA Prime Tampa Scout 2027</span></td>
           <td class="venue-col">Terry Park · Mack</td>
           <td class="pool-col">Pool E</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">2:45 PM</td>
@@ -816,6 +839,7 @@
           <td class="opp-col">vs. <span class="opp-name">USA Scout Nike Florida 16U</span></td>
           <td class="venue-col">5 Plex · Field 2</td>
           <td class="pool-col">Pool C</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">2:45 PM</td>
@@ -823,6 +847,7 @@
           <td class="opp-col">@ <span class="opp-name">Ghost Evolve 15U</span></td>
           <td class="venue-col">Lee Health · Twins 6</td>
           <td class="pool-col">Pool D</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">2:45 PM</td>
@@ -830,6 +855,7 @@
           <td class="opp-col">@ <span class="opp-name">FL Burn 2030 American</span></td>
           <td class="venue-col">JetBlue Park · Red Sox 4</td>
           <td class="pool-col">Pool A</td>
+          <td class="result-col pending">–</td>
         </tr>
         </tbody>
     </table>
@@ -844,7 +870,7 @@
     </div>
     <table>
       <thead><tr>
-        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th>
+        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
       </tr></thead>
       <tbody>
         <tr>
@@ -853,6 +879,7 @@
           <td class="opp-col">vs. <span class="opp-name">5 Star National Tampa Black</span></td>
           <td class="venue-col">5 Plex · Field 5</td>
           <td class="pool-col">Pool E</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">8:00 AM</td>
@@ -860,6 +887,7 @@
           <td class="opp-col">vs. <span class="opp-name">FL Burn 2028 Trovinger</span></td>
           <td class="venue-col">Lee Health · Twins 6</td>
           <td class="pool-col">Pool B</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">8:00 AM</td>
@@ -867,13 +895,15 @@
           <td class="opp-col">vs. <span class="opp-name">FL Burn 2029 Callan</span></td>
           <td class="venue-col">JetBlue Park · Red Sox 6</td>
           <td class="pool-col">Pool D</td>
-        </tr><tr class="time-spacer"><td colspan="5"></td></tr>
+          <td class="result-col pending">–</td>
+        </tr><tr class="time-spacer"><td colspan="6"></td></tr>
         <tr>
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 Scout Lawson</strong></td>
           <td class="opp-col">vs. <span class="opp-name">SBA Bolts FL 2028 Scout</span></td>
           <td class="venue-col">Lee Health · Twins 3</td>
           <td class="pool-col">Pool A</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">10:15 AM</td>
@@ -881,6 +911,7 @@
           <td class="opp-col">@ <span class="opp-name">SBA Bolts FL 2028 National</span></td>
           <td class="venue-col">Lee Health · Twins 4</td>
           <td class="pool-col">Pool C</td>
+          <td class="result-col pending">–</td>
         </tr>
         <tr>
           <td class="time-col">10:15 AM</td>
@@ -888,6 +919,7 @@
           <td class="opp-col">@ <span class="opp-name">Original FL Pokers 2029</span></td>
           <td class="venue-col">JetBlue Park · Pool A</td>
           <td class="pool-col">Pool A</td>
+          <td class="result-col pending">–</td>
         </tr></tbody>
     </table>
   </div>
