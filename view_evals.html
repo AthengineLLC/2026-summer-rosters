@@ -380,9 +380,12 @@
         return;
       }
 
+      // Group by player for AI card button logic
+      window._currentEvals = evals;
+
       emptyState.style.display = 'none';
       container.innerHTML = evals.map(eval => `
-        <div class="eval-card">
+        <div class="eval-card" style="cursor:pointer;" onclick="openPlayerCard('${eval.player_first_name}', '${eval.player_last_name}', '${eval.team_name}')">
           <h2>${eval.player_first_name} ${eval.player_last_name}</h2>
           
           <div class="player-name">${eval.team_name}</div>
@@ -451,8 +454,99 @@
               `).join('')}
             </div>
           ` : ''}
+
+          <div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,0.35);text-align:right;">Click for AI Player Card →</div>
         </div>
       `).join('');
+    }
+
+    function openPlayerCard(firstName, lastName, team) {
+      // Gather all evals for this player
+      const playerEvals = (window._currentEvals || []).filter(e =>
+        e.player_first_name === firstName && e.player_last_name === lastName
+      );
+      if (!playerEvals.length) return;
+
+      // Average ratings
+      const avg = (field) => {
+        const vals = playerEvals.map(e => parseFloat(e[field])).filter(v => !isNaN(v));
+        return vals.length ? (vals.reduce((a,b) => a+b, 0) / vals.length).toFixed(1) : 'N/A';
+      };
+      const avgDef = avg('defense_rating');
+      const avgOff = avg('offense_rating');
+      const avgPit = avg('pitching_rating');
+      const avgRoster = avg('roster_level');
+
+      // Collect all written reports
+      const collectReports = (field) => playerEvals.flatMap(e => {
+        try { return JSON.parse(e[field] || '[]').map(r => r.text).filter(Boolean); } catch { return []; }
+      });
+      const defReports = collectReports('defensive_reports');
+      const offReports = collectReports('offensive_reports');
+      const pitReports = collectReports('pitching_reports');
+
+      // Positions across all evals
+      const positions = [...new Set(playerEvals.flatMap(e => (e.projected_positions || '').split(',').map(p => p.trim()).filter(Boolean)))].join(', ');
+
+      // Recruitment levels
+      const recruitLevels = [...new Set(playerEvals.map(e => e.recruitment_level).filter(Boolean))].join(', ');
+
+      // Show modal
+      const modal = document.getElementById('aiCardModal');
+      modal.style.display = 'flex';
+      document.getElementById('aiCardName').textContent = `${firstName} ${lastName}`;
+      document.getElementById('aiCardTeam').textContent = team;
+      document.getElementById('aiCardEvalCount').textContent = `${playerEvals.length} eval${playerEvals.length > 1 ? 's' : ''}`;
+      document.getElementById('aiCardAvgDef').textContent = avgDef;
+      document.getElementById('aiCardAvgOff').textContent = avgOff;
+      document.getElementById('aiCardAvgPit').textContent = avgPit;
+      document.getElementById('aiCardAvgRoster').textContent = avgRoster;
+      document.getElementById('aiCardPositions').textContent = positions || '—';
+      document.getElementById('aiCardRecruitment').textContent = recruitLevels || '—';
+      document.getElementById('aiCardReport').textContent = '';
+      document.getElementById('aiCardLoading').style.display = 'flex';
+      document.getElementById('aiCardReportWrap').style.display = 'none';
+
+      // Build prompt for Claude
+      const allNotes = [];
+      if (defReports.length) allNotes.push(`DEFENSIVE NOTES:\n${defReports.join('\n')}`);
+      if (offReports.length) allNotes.push(`OFFENSIVE NOTES:\n${offReports.join('\n')}`);
+      if (pitReports.length) allNotes.push(`PITCHING NOTES:\n${pitReports.join('\n')}`);
+
+      const prompt = `You are a professional baseball scout writing a unified scouting report for CBU Baseball. Based on ${playerEvals.length} evaluation(s), write a concise but detailed player summary for ${firstName} ${lastName} (${team}).
+
+Average ratings: Defense ${avgDef}/10, Offense ${avgOff}/10, Pitching ${avgPit}/10, Roster Level ${avgRoster}/10.
+Projected positions: ${positions || 'Not specified'}.
+Recruitment level: ${recruitLevels || 'Not specified'}.
+
+${allNotes.join('\n\n')}
+
+Write a 3-4 paragraph professional scouting summary. Cover their overall profile, defensive ability, offensive ability${pitReports.length ? ', pitching ability,' : ''} and overall outlook/recruitment recommendation. Be specific and reference details from the notes. Do not use bullet points. Write in the style of a professional baseball scout.`;
+
+      generateAIReport(prompt);
+    }
+
+    async function generateAIReport(prompt) {
+      try {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 1000,
+            messages: [{ role: 'user', content: prompt }]
+          })
+        });
+        const data = await response.json();
+        const text = data.content?.[0]?.text || 'Unable to generate report.';
+        document.getElementById('aiCardLoading').style.display = 'none';
+        document.getElementById('aiCardReportWrap').style.display = 'block';
+        document.getElementById('aiCardReport').textContent = text;
+      } catch (err) {
+        document.getElementById('aiCardLoading').style.display = 'none';
+        document.getElementById('aiCardReportWrap').style.display = 'block';
+        document.getElementById('aiCardReport').textContent = 'Error generating report. Please try again.';
+      }
     }
 
     // Load evals on page load
@@ -470,5 +564,69 @@
       });
     });
   </script>
+  <!-- AI Player Card Modal -->
+  <div id="aiCardModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#0d1a33;border-radius:16px;max-width:720px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.08);">
+      <!-- Header -->
+      <div style="background:#b91e2d;padding:24px 28px;border-radius:16px 16px 0 0;position:relative;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-bottom:4px;">AI Scouting Card</div>
+        <div id="aiCardName" style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:#fff;letter-spacing:1px;"></div>
+        <div style="display:flex;gap:16px;margin-top:6px;align-items:center;">
+          <span id="aiCardTeam" style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.85);"></span>
+          <span id="aiCardEvalCount" style="font-size:12px;color:rgba(255,255,255,0.6);background:rgba(0,0,0,0.25);padding:2px 10px;border-radius:20px;"></span>
+        </div>
+        <button onclick="document.getElementById('aiCardModal').style.display='none'" style="position:absolute;top:16px;right:20px;background:rgba(0,0,0,0.3);border:none;color:#fff;font-size:20px;width:36px;height:36px;border-radius:50%;cursor:pointer;line-height:1;">✕</button>
+      </div>
+      <!-- Averaged Ratings -->
+      <div style="padding:20px 28px;border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#b91e2d;text-transform:uppercase;margin-bottom:12px;">Averaged Ratings</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+          <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px;letter-spacing:1px;">DEFENSE</div>
+            <div id="aiCardAvgDef" style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;"></div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);">/10</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px;letter-spacing:1px;">OFFENSE</div>
+            <div id="aiCardAvgOff" style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;"></div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);">/10</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px;letter-spacing:1px;">PITCHING</div>
+            <div id="aiCardAvgPit" style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;"></div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);">/10</div>
+          </div>
+          <div style="background:rgba(185,30,45,0.15);border-radius:10px;padding:14px;text-align:center;border:1px solid rgba(185,30,45,0.3);">
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px;letter-spacing:1px;">ROSTER</div>
+            <div id="aiCardAvgRoster" style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#b91e2d;"></div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);">/10</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:24px;margin-top:14px;">
+          <div>
+            <span style="font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;">Positions · </span>
+            <span id="aiCardPositions" style="font-size:13px;color:#fff;font-weight:600;"></span>
+          </div>
+          <div>
+            <span style="font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;">Recruitment · </span>
+            <span id="aiCardRecruitment" style="font-size:13px;color:#fff;font-weight:600;"></span>
+          </div>
+        </div>
+      </div>
+      <!-- AI Report -->
+      <div style="padding:20px 28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#b91e2d;text-transform:uppercase;margin-bottom:14px;">⚡ AI Scouting Summary</div>
+        <div id="aiCardLoading" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.5);font-size:14px;padding:20px 0;">
+          <div style="width:20px;height:20px;border:2px solid rgba(185,30,45,0.3);border-top-color:#b91e2d;border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;"></div>
+          Generating scouting report...
+        </div>
+        <div id="aiCardReportWrap" style="display:none;">
+          <p id="aiCardReport" style="font-size:14px;line-height:1.75;color:rgba(255,255,255,0.85);white-space:pre-wrap;"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
 </body>
 </html>
