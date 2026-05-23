@@ -501,6 +501,8 @@
       document.getElementById('aiCardAvgOff').textContent = avgOff;
       document.getElementById('aiCardAvgPit').textContent = avgPit;
       document.getElementById('aiCardAvgRoster').textContent = avgRoster;
+      // Hide pitching box if no pitching reports
+      document.getElementById('aiCardPitBox').style.display = pitReports.length ? 'block' : 'none';
       document.getElementById('aiCardPositions').textContent = positions || '—';
       document.getElementById('aiCardRecruitment').textContent = recruitLevels || '—';
       document.getElementById('aiCardReport').textContent = '';
@@ -525,7 +527,7 @@ RATING SCALE CONTEXT (use this to interpret the numbers):
   5 = Player is on the perfect team for their current level
   10 = Player needs to move up significantly, likely belongs on our top team
 
-Average ratings: Defense ${avgDef}/10, Offense ${avgOff}/10, Pitching ${avgPit}/10, Roster Level ${avgRoster}/10.
+Average ratings: Defense ${avgDef}/10, Offense ${avgOff}/10${pitReports.length ? `, Pitching ${avgPit}/10` : ''}, Roster Level ${avgRoster}/10.
 Projected positions: ${positions || 'Not specified'}.
 Recruitment level: ${recruitLevels || 'Not specified'}.
 
@@ -597,7 +599,7 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
             <div id="aiCardAvgOff" style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;"></div>
             <div style="font-size:10px;color:rgba(255,255,255,0.3);">/10</div>
           </div>
-          <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;text-align:center;">
+          <div id="aiCardPitBox" style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;text-align:center;">
             <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px;letter-spacing:1px;">PITCHING</div>
             <div id="aiCardAvgPit" style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;"></div>
             <div style="font-size:10px;color:rgba(255,255,255,0.3);">/10</div>
