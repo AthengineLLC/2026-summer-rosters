@@ -515,6 +515,19 @@
       document.getElementById('aiCardAvgOff').textContent = avgOff;
       document.getElementById('aiCardAvgPit').textContent = avgPit;
       document.getElementById('aiCardAvgRoster').textContent = avgRoster;
+      // Apply heatmap colors to AI card boxes
+      ['aiCardAvgDef', 'aiCardAvgOff', 'aiCardAvgPit', 'aiCardAvgRoster'].forEach(id => {
+        const el = document.getElementById(id);
+        const box = el.parentElement;
+        const val = parseFloat(el.textContent);
+        const style = ratingStyle(val);
+        // Extract background and color from style string
+        const bg = style.match(/background:([^;]+)/)?.[1] || '';
+        const color = style.match(/color:([^;]+)/)?.[1] || '#fff';
+        box.style.background = bg;
+        el.style.color = color;
+        box.style.border = val <= 5 && val >= 5 ? '1px solid rgba(255,255,255,0.1)' : '';
+      });
       // Hide pitching box if no pitching reports
       document.getElementById('aiCardPitBox').style.display = pitReports.length ? 'block' : 'none';
       document.getElementById('aiCardPositions').textContent = positions || '—';
