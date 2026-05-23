@@ -534,14 +534,14 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
           body: JSON.stringify({ prompt })
         });
         const data = await response.json();
-        const text = data.text || 'Unable to generate report.';
+        const text = data.text || data.error || 'Unable to generate report.';
         document.getElementById('aiCardLoading').style.display = 'none';
         document.getElementById('aiCardReportWrap').style.display = 'block';
         document.getElementById('aiCardReport').textContent = text;
       } catch (err) {
         document.getElementById('aiCardLoading').style.display = 'none';
         document.getElementById('aiCardReportWrap').style.display = 'block';
-        document.getElementById('aiCardReport').textContent = 'Error generating report. Please try again.';
+        document.getElementById('aiCardReport').textContent = 'Error: ' + err.message;
       }
     }
 
