@@ -214,6 +214,12 @@
                 <option value="">Select Player</option>
               </select>
             </div>
+            <div class="form-group">
+              <label>Coach Being Evaluated</label>
+              <select id="coachSelect" required>
+                <option value="">Select Coach</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -474,11 +480,41 @@
       }
     }
 
+    const coachesByTeam = {
+      '2027 Olasin':        ['Michael Olasin (HC)', 'Fred Matracadi (Asst)'],
+      '2027 McCoy':         ['Mark McCoy (HC)', 'Tom Stanton (Asst)'],
+      '2027 Menendez':      ['Miguel Menendez (HC)', 'Chris Fernandez (Asst)', 'Ron Perez (Asst)'],
+      '2027 Thomas':        ['Tony Thomas (HC)', 'Mat Latos (Asst)'],
+      '2028 Lawson':        ['Aaron Lawson (HC)', 'Rick Harris (Asst)'],
+      '2028 DiBenedetto':   ['John Dibenedetto (HC)', 'Joel Ramos (Asst)'],
+      '2028 Merrell':       ['Tripp Merrell (HC)', "Logan O'Neil (Asst)"],
+      '2028 Severidt':      ['Nick Severidt (HC)', 'Alec Sanchez (Asst)'],
+      '2029 Pascual':       ['Jason Pascual (HC)', 'T.D. Hicks (Asst)'],
+      '2029 Wisser':        ['Phillip Wisser (HC)', 'Paul Trapani (Asst)'],
+      '2029 Cates':         ['Gary Cates (HC)', 'Bill Kozlick (Asst)'],
+      '2030 Madsen':        ['Bryan Madsen (HC)', 'Grant Grodi (Asst)'],
+      '2030 Chappell':      ['Zach Chappell (HC)', 'Chuck Pate (Asst)'],
+      '2030 Kirst':         ['Eddie Kirst (HC)'],
+      '2030 Santiago':      ['Mickey Santiago (HC)', 'Cliff Conners (Asst)'],
+    };
+
     function loadPlayers() {
       const team = document.getElementById('teamName').value;
       const playerSelect = document.getElementById('playerSelect');
       playerSelect.innerHTML = '<option value="">Select Player</option>';
       
+      // Populate coaches
+      const coachSelect = document.getElementById('coachSelect');
+      coachSelect.innerHTML = '<option value="">Select Coach</option>';
+      if (team && coachesByTeam[team]) {
+        coachesByTeam[team].forEach(coach => {
+          const opt = document.createElement('option');
+          opt.value = coach;
+          opt.textContent = coach;
+          coachSelect.appendChild(opt);
+        });
+      }
+
       if (team && playersByTeam[team]) {
         playersByTeam[team].forEach(player => {
           const option = document.createElement('option');
@@ -568,6 +604,7 @@
       const evalData = {
         director_name: document.getElementById('directorName').value,
         team_name: document.getElementById('teamName').value,
+        coach_name: document.getElementById('coachSelect').value,
         player_first_name: playerData.firstName,
         player_last_name: playerData.lastName,
         projected_positions: positions,
