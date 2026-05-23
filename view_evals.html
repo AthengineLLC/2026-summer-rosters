@@ -528,17 +528,13 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
 
     async function generateAIReport(prompt) {
       try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
+        const response = await fetch('/api/scout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 1000,
-            messages: [{ role: 'user', content: prompt }]
-          })
+          body: JSON.stringify({ prompt })
         });
         const data = await response.json();
-        const text = data.content?.[0]?.text || 'Unable to generate report.';
+        const text = data.text || 'Unable to generate report.';
         document.getElementById('aiCardLoading').style.display = 'none';
         document.getElementById('aiCardReportWrap').style.display = 'block';
         document.getElementById('aiCardReport').textContent = text;
