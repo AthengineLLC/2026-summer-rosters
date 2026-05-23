@@ -425,81 +425,50 @@
       window._currentEvals = evals;
 
       emptyState.style.display = 'none';
-      container.innerHTML = evals.map(e => `
-        <div class="eval-card" style="cursor:pointer;position:relative;" onclick="openPlayerCard('${e.player_first_name}', '${e.player_last_name}', '${e.team_name}')">
-          ${committedBadge(e.player_first_name, e.player_last_name)}
+      container.innerHTML = '';
+
+      evals.forEach(e => {
+        const fullName = e.player_first_name + ' ' + e.player_last_name;
+        const school = committedPlayers[fullName] || '';
+        const pitBadge = e.pitching_rating ? `<div class="rating-badge" style="${ratingStyle(e.pitching_rating)}">PIT: ${e.pitching_rating}/10</div>` : '';
+        const defReports = e.defensive_reports ? JSON.parse(e.defensive_reports) : [];
+        const offReports = e.offensive_reports ? JSON.parse(e.offensive_reports) : [];
+        const pitReports = e.pitching_reports ? JSON.parse(e.pitching_reports) : [];
+
+        const card = document.createElement('div');
+        card.className = 'eval-card';
+        card.style.cssText = 'cursor:pointer;position:relative;';
+        card.onclick = () => openPlayerCard(e.player_first_name, e.player_last_name, e.team_name);
+
+        card.innerHTML = `
+          ${school ? `<div style="position:absolute;top:14px;right:14px;display:flex;align-items:center;gap:6px;background:rgba(13,26,51,0.95);border:1px solid rgba(185,30,45,0.6);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;z-index:2;">
+            <span style="color:rgba(255,255,255,0.8);">${school}</span>
+            <span style="font-size:15px;">🎩</span>
+          </div>` : ''}
           <h2>${e.player_first_name} ${e.player_last_name}</h2>
-          
           <div class="player-name">${e.team_name}</div>
-          
           <div class="meta">
             <div class="meta-item"><strong>Director:</strong> ${e.director_name}</div>
             <div class="meta-item"><strong>Date:</strong> ${new Date(e.created_at).toLocaleDateString()}</div>
           </div>
-
-          ${e.projected_positions ? `
-            <div class="section">
-              <div class="section-title">Positions</div>
-              <div class="section-content">${e.projected_positions}</div>
-            </div>
-          ` : ''}
-
+          ${e.projected_positions ? `<div class="section"><div class="section-title">Positions</div><div class="section-content">${e.projected_positions}</div></div>` : ''}
           <div class="section">
             <div class="section-title">Ratings</div>
             <div class="rating-display">
-              <div class="rating-badge" style="${ratingStyle(eval.defense_rating)}">DEF: ${e.defense_rating}/10</div>
-              <div class="rating-badge" style="${ratingStyle(eval.offense_rating)}">OFF: ${e.offense_rating}/10</div>
-              ${e.pitching_rating ? `<div class="rating-badge" style="${ratingStyle(eval.pitching_rating)}">PIT: ${e.pitching_rating}/10</div>` : ''}
-              <div class="rating-badge" style="${ratingStyle(eval.roster_level)}">ROSTER: ${e.roster_level}/10</div>
+              <div class="rating-badge" style="${ratingStyle(e.defense_rating)}">DEF: ${e.defense_rating}/10</div>
+              <div class="rating-badge" style="${ratingStyle(e.offense_rating)}">OFF: ${e.offense_rating}/10</div>
+              ${pitBadge}
+              <div class="rating-badge" style="${ratingStyle(e.roster_level)}">ROSTER: ${e.roster_level}/10</div>
             </div>
           </div>
-
-          ${e.recruitment_level ? `
-            <div class="section">
-              <div class="section-title">Recruitment Level</div>
-              <div class="section-content">${e.recruitment_level}</div>
-            </div>
-          ` : ''}
-
-          ${e.defensive_reports && JSON.parse(eval.defensive_reports).length > 0 ? `
-            <div class="section">
-              <div class="section-title">Defensive Reports</div>
-              ${JSON.parse(eval.defensive_reports).map(report => `
-                <div class="report-item">
-                  <div class="report-date">${new Date(report.date).toLocaleDateString()}</div>
-                  <div>${report.text}</div>
-                </div>
-              `).join('')}
-            </div>
-          ` : ''}
-
-          ${e.offensive_reports && JSON.parse(eval.offensive_reports).length > 0 ? `
-            <div class="section">
-              <div class="section-title">Offensive Reports</div>
-              ${JSON.parse(eval.offensive_reports).map(report => `
-                <div class="report-item">
-                  <div class="report-date">${new Date(report.date).toLocaleDateString()}</div>
-                  <div>${report.text}</div>
-                </div>
-              `).join('')}
-            </div>
-          ` : ''}
-
-          ${e.pitching_reports && JSON.parse(eval.pitching_reports).length > 0 ? `
-            <div class="section">
-              <div class="section-title">Pitching Reports</div>
-              ${JSON.parse(eval.pitching_reports).map(report => `
-                <div class="report-item">
-                  <div class="report-date">${new Date(report.date).toLocaleDateString()}</div>
-                  <div>${report.text}</div>
-                </div>
-              `).join('')}
-            </div>
-          ` : ''}
-
+          ${e.recruitment_level ? `<div class="section"><div class="section-title">Recruitment Level</div><div class="section-content">${e.recruitment_level}</div></div>` : ''}
+          ${defReports.length > 0 ? `<div class="section"><div class="section-title">Defensive Reports</div>${defReports.map(r => `<div class="report-item"><div class="report-date">${new Date(r.date).toLocaleDateString()}</div><div>${r.text}</div></div>`).join('')}</div>` : ''}
+          ${offReports.length > 0 ? `<div class="section"><div class="section-title">Offensive Reports</div>${offReports.map(r => `<div class="report-item"><div class="report-date">${new Date(r.date).toLocaleDateString()}</div><div>${r.text}</div></div>`).join('')}</div>` : ''}
+          ${pitReports.length > 0 ? `<div class="section"><div class="section-title">Pitching Reports</div>${pitReports.map(r => `<div class="report-item"><div class="report-date">${new Date(r.date).toLocaleDateString()}</div><div>${r.text}</div></div>`).join('')}</div>` : ''}
           <div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,0.35);text-align:right;">Click for AI Player Card →</div>
-        </div>
-      `).join('');
+        `;
+        container.appendChild(card);
+      });
     }
 
     function openPlayerCard(firstName, lastName, team) {
