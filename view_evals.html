@@ -407,7 +407,7 @@
             <div class="rating-display">
               <div class="rating-badge">DEF: ${eval.defense_rating}/10</div>
               <div class="rating-badge">OFF: ${eval.offense_rating}/10</div>
-              <div class="rating-badge">PIT: ${eval.pitching_rating}/10</div>
+              ${eval.pitching_rating ? `<div class="rating-badge">PIT: ${eval.pitching_rating}/10</div>` : ''}
               <div class="rating-badge ${eval.roster_level >= 6 ? 'high' : ''}">ROSTER: ${eval.roster_level}/10</div>
             </div>
           </div>
