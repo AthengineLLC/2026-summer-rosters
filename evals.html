@@ -848,13 +848,16 @@
         selectedColleges.push({ name, div });
         renderCollegeChips();
       }
-      document.getElementById('collegeSearchInput').value = '';
-      document.getElementById('collegeDropdown').style.display = 'none';
+      const searchInput = document.getElementById('collegeSearchInput');
+      const dropdown = document.getElementById('collegeDropdown');
+      if (searchInput) searchInput.value = '';
+      if (dropdown) dropdown.style.display = 'none';
     }
 
     function initCollegeSearch() {
       const input = document.getElementById('collegeSearchInput');
       const dropdown = document.getElementById('collegeDropdown');
+      if (!input || !dropdown) return;
 
       // Style the dropdown container
       Object.assign(dropdown.style, {
@@ -1102,7 +1105,8 @@
       document.getElementById('recruitmentLevel').value = '';
       selectedColleges = [];
       renderCollegeChips();
-      document.getElementById('collegeSearchInput').value = '';
+      const collegeSearchInput = document.getElementById('collegeSearchInput');
+      if (collegeSearchInput) collegeSearchInput.value = '';
       document.querySelectorAll('input[name="position"]').forEach(cb => cb.checked = false);
       
       document.getElementById('defensiveReports').innerHTML = '';
