@@ -1060,7 +1060,11 @@
         defensive_reports: JSON.stringify(currentReports.defensive),
         offensive_reports: JSON.stringify(currentReports.offensive),
         pitching_reports: JSON.stringify(currentReports.pitching),
-        college_interests: JSON.stringify(selectedColleges)
+        college_interests: JSON.stringify(selectedColleges),
+        is_objectives_only: objectivesOnly,
+        physical_objectives: document.getElementById("physicalObjectives").value || null,
+        fundamental_objectives: document.getElementById("fundamentalObjectives").value || null,
+        mental_emotional_objectives: document.getElementById("mentalObjectives").value || null
       };
 
       try {
