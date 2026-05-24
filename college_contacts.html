@@ -519,12 +519,14 @@ const COLLEGE_LIST = [
       '2028 Severidt':    ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Nick Severidt (HC)', 'Alec Sanchez (Asst)'],
       '2029 Pascual':     ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Jason Pascual (HC)', 'T.D. Hicks (Asst)'],
       '2029 Wisser':      ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Phillip Wisser (HC)', 'Paul Trapani (Asst)'],
-      '2029 Cates':       ['Addison Maruszak', 'Nick James', 'Wayne Stofford', 'Richie Warren', 'Gary Cates (HC)', 'Bill Kozlick (Asst)'],
+      '2029 Cates':       ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Gary Cates (HC)', 'Bill Kozlick (Asst)'],
       '2030 Madsen':      ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber', 'Bryan Madsen (HC)', 'Grant Grodi (Asst)'],
       '2030 Chappell':    ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber', 'Zach Chappell (HC)', 'Chuck Pate (Asst)'],
       '2030 Kirst':       ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber', 'Eddie Kirst (HC)'],
       '2030 Santiago':    ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber', 'Mickey Santiago (HC)', 'Cliff Conners (Asst)'],
     };
+
+    function authenticate() {
       const pw = document.getElementById('loginPassword').value;
       if (pw === PASSWORD) {
         db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
