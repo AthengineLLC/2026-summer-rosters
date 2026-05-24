@@ -843,6 +843,7 @@
         document.getElementById('evalScreen').style.display = 'block';
         localStorage.setItem('evalAuth', 'true');
         loadTeamPlayers();
+        initCollegeSearch();
       } else {
         document.getElementById('loginError').textContent = 'Invalid password';
       }
@@ -1078,6 +1079,7 @@
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('evalScreen').style.display = 'block';
         loadTeamPlayers();
+        initCollegeSearch();
       }
       document.getElementById('passwordInput').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') authenticate();
