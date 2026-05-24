@@ -756,8 +756,18 @@
         if (q.length < 1) { dropdown.style.display = 'none'; return; }
         const matches = COLLEGE_LIST.filter(c => c.name.toLowerCase().includes(q)).slice(0, 15);
         if (!matches.length) { dropdown.style.display = 'none'; return; }
+        dropdown.style.background = '#ffffff';
+        dropdown.style.border = '1px solid rgba(0,0,0,0.15)';
+        dropdown.style.borderRadius = '8px';
+        dropdown.style.boxShadow = '0 4px 16px rgba(0,0,0,0.15)';
+        dropdown.style.maxHeight = '220px';
+        dropdown.style.overflowY = 'auto';
+        dropdown.style.position = 'absolute';
+        dropdown.style.left = '0';
+        dropdown.style.right = '0';
+        dropdown.style.zIndex = '100';
         dropdown.innerHTML = matches.map(c => `
-          <div class="college-dropdown-item" onclick="selectCollege('${c.name}', '${c.div}')">
+          <div onclick="selectCollege('${c.name}', '${c.div}')" style="padding:10px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#0d1a33;border-bottom:1px solid rgba(0,0,0,0.05);" onmouseover="this.style.background='rgba(185,30,45,0.08)'" onmouseout="this.style.background=''">
             <span>${c.name}</span>
             <span class="college-div-badge ${divBadgeClass(c.div)}">${c.div}</span>
           </div>
