@@ -473,7 +473,7 @@
       });
     }
 
-    function openPlayerCard(firstName, lastName, team) {
+    async function openPlayerCard(firstName, lastName, team) {
       // Gather all evals for this player
       const playerEvals = (window._currentEvals || []).filter(e =>
         e.player_first_name === firstName && e.player_last_name === lastName
@@ -549,6 +549,34 @@
       if (defReports.length) allNotes.push(`DEFENSIVE NOTES:\n${defReports.join('\n')}`);
       if (offReports.length) allNotes.push(`OFFENSIVE NOTES:\n${offReports.join('\n')}`);
       if (pitReports.length) allNotes.push(`PITCHING NOTES:\n${pitReports.join('\n')}`);
+
+      // Fetch college contacts from Supabase
+      let collegeContactsList = [];
+      try {
+        const { data: contacts } = await dbClient
+          .from('college_contacts')
+          .select('college_name, division, contact_date')
+          .eq('player_first_name', firstName)
+          .eq('player_last_name', lastName)
+          .order('contact_date', { ascending: false });
+        collegeContactsList = contacts || [];
+      } catch(e) {}
+
+      // Show college contacts in modal
+      const contactsEl = document.getElementById('aiCardCollegeContacts');
+      const contactsSection = document.getElementById('aiCardCollegeSection');
+      if (collegeContactsList.length) {
+        contactsSection.style.display = 'block';
+        contactsEl.innerHTML = collegeContactsList.map(c =>
+          `<span style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.06);border-radius:16px;padding:3px 10px;margin:3px;font-size:12px;">
+            <span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;background:#1a4a2e;color:#6fcf97;">${c.division}</span>
+            ${c.college_name}
+          </span>`
+        ).join('');
+        allNotes.push(`COLLEGE INTEREST:\n${collegeContactsList.map(c => `${c.college_name} (${c.division})`).join(', ')}`);
+      } else {
+        contactsSection.style.display = 'none';
+      }
 
       const prompt = `You are a professional baseball scout writing a unified scouting report for CBU Baseball. Based on ${playerEvals.length} evaluation(s), write a concise but detailed player summary for ${firstName} ${lastName} (${team}).
 
@@ -656,6 +684,11 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
             <span id="aiCardRecruitment" style="font-size:13px;color:#fff;font-weight:600;"></span>
           </div>
         </div>
+      </div>
+      <!-- College Contacts -->
+      <div id="aiCardCollegeSection" style="display:none;padding:0 28px 16px;border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#b91e2d;text-transform:uppercase;margin-bottom:10px;">🎓 College Interest</div>
+        <div id="aiCardCollegeContacts" style="display:flex;flex-wrap:wrap;gap:4px;"></div>
       </div>
       <!-- AI Report -->
       <div style="padding:20px 28px;">
