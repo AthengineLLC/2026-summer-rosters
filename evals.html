@@ -741,7 +741,7 @@
         chip.innerHTML = `<span style="background:#b91e2d;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;">${c.div}</span><span style="color:#0d1a33;">${c.name}</span><span data-index="${i}" style="cursor:pointer;color:#b91e2d;font-size:14px;margin-left:2px;">✕</span>`;
         container.appendChild(chip);
       });
-      container.querySelectorAll('.college-chip-remove').forEach(btn => {
+      container.querySelectorAll('[data-index]').forEach(btn => {
         btn.addEventListener('click', () => {
           selectedColleges.splice(parseInt(btn.dataset.index), 1);
           renderCollegeChips();
