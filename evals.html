@@ -821,6 +821,7 @@
 
     function renderCollegeChips() {
       const container = document.getElementById('collegeChips');
+      if (!container) return;
       container.innerHTML = '';
       selectedColleges.forEach((c, i) => {
         const chip = document.createElement('div');
