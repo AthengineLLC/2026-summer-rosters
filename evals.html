@@ -326,6 +326,21 @@
           </div>
         </div>
 
+
+        <div class="form-section">
+          <h2>College Interest</h2>
+          <div class="form-section-body">
+            <div class="form-group">
+              <label>Schools That Have Shown Interest</label>
+              <div class="college-search-wrap">
+                <input type="text" id="collegeSearchInput" class="college-search-input" placeholder="Type a school name to search..." autocomplete="off" />
+                <div id="collegeDropdown" class="college-dropdown"></div>
+              </div>
+              <div id="collegeChips" class="college-chips"></div>
+            </div>
+          </div>
+        </div>
+
         <div class="form-actions">
           <button type="submit" class="btn-submit">Submit Evaluation</button>
           <button type="button" class="btn-logout" onclick="logoutBtn()">Logout</button>
@@ -336,6 +351,434 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+
+    const COLLEGE_LIST = [
+  { name: "Abraham Baldwin Agricultural College", div: "JUCO" },
+  { name: "Adelphi", div: "D2" },
+  { name: "Adrian", div: "D3" },
+  { name: "Air Force", div: "D1" },
+  { name: "Alabama", div: "D1" },
+  { name: "Alabama-Huntsville", div: "D2" },
+  { name: "Amherst", div: "D3" },
+  { name: "Anderson", div: "D2" },
+  { name: "Appalachian State", div: "D1" },
+  { name: "Aquinas College", div: "NAIA" },
+  { name: "Arizona", div: "D1" },
+  { name: "Arizona State", div: "D1" },
+  { name: "Arizona Western College", div: "JUCO" },
+  { name: "Arkansas", div: "D1" },
+  { name: "Arkansas State", div: "D1" },
+  { name: "Armstrong State", div: "D2" },
+  { name: "Army", div: "D1" },
+  { name: "Auburn", div: "D1" },
+  { name: "Austin Peay", div: "D1" },
+  { name: "Avila University", div: "NAIA" },
+  { name: "Babson", div: "D3" },
+  { name: "Baldwin Wallace", div: "D3" },
+  { name: "Ball State", div: "D1" },
+  { name: "Barry", div: "D2" },
+  { name: "Baylor", div: "D1" },
+  { name: "Bellarmine", div: "D1" },
+  { name: "Belmont Abbey", div: "D2" },
+  { name: "Benedictine College", div: "NAIA" },
+  { name: "Bentley", div: "D2" },
+  { name: "Bethune-Cookman", div: "D1" },
+  { name: "Binghamton", div: "D1" },
+  { name: "Bloomsburg", div: "D2" },
+  { name: "Boston College", div: "D1" },
+  { name: "Bowdoin", div: "D3" },
+  { name: "Bradley", div: "D1" },
+  { name: "Broward College", div: "JUCO" },
+  { name: "Bryant", div: "D1" },
+  { name: "Bucknell", div: "D1" },
+  { name: "Butler", div: "D1" },
+  { name: "Cal Poly", div: "D1" },
+  { name: "Cal State Bakersfield", div: "D1" },
+  { name: "Cal State Fullerton", div: "D1" },
+  { name: "Cal State Northridge", div: "D1" },
+  { name: "California", div: "D1" },
+  { name: "Campbell", div: "D1" },
+  { name: "Canisius", div: "D1" },
+  { name: "Carroll College", div: "NAIA" },
+  { name: "Central Arkansas", div: "D1" },
+  { name: "Central Connecticut State", div: "D1" },
+  { name: "Central Missouri", div: "D2" },
+  { name: "Chapman", div: "D3" },
+  { name: "Charleston Southern", div: "D1" },
+  { name: "Charlotte", div: "D1" },
+  { name: "Chipola College", div: "JUCO" },
+  { name: "Cincinnati", div: "D1" },
+  { name: "Clemson", div: "D1" },
+  { name: "Coastal Carolina", div: "D1" },
+  { name: "College of Central Florida", div: "JUCO" },
+  { name: "College of Charleston", div: "D1" },
+  { name: "Colorado Mesa", div: "D2" },
+  { name: "Colorado State", div: "D1" },
+  { name: "Columbia", div: "D1" },
+  { name: "Columbus State", div: "D2" },
+  { name: "Concordia University", div: "NAIA" },
+  { name: "Connecticut", div: "D1" },
+  { name: "Connors State College", div: "JUCO" },
+  { name: "Coppin State", div: "D1" },
+  { name: "Cornell", div: "D1" },
+  { name: "Cortland", div: "D3" },
+  { name: "Creighton", div: "D1" },
+  { name: "Dallas Baptist", div: "D1" },
+  { name: "Dartmouth", div: "D1" },
+  { name: "Davidson", div: "D1" },
+  { name: "Dayton", div: "D1" },
+  { name: "Daytona State College", div: "JUCO" },
+  { name: "Delaware", div: "D1" },
+  { name: "Delaware State", div: "D1" },
+  { name: "Delta State", div: "D2" },
+  { name: "Doane University", div: "NAIA" },
+  { name: "Duke", div: "D1" },
+  { name: "East Carolina", div: "D1" },
+  { name: "Eastern Florida State College", div: "JUCO" },
+  { name: "Eastern Illinois", div: "D1" },
+  { name: "Eastern Kentucky", div: "D1" },
+  { name: "Eastern Michigan", div: "D1" },
+  { name: "Elon", div: "D1" },
+  { name: "Embry-Riddle", div: "D2" },
+  { name: "Emory", div: "D3" },
+  { name: "Fairfield", div: "D1" },
+  { name: "Fairleigh Dickinson", div: "D1" },
+  { name: "Faulkner University", div: "NAIA" },
+  { name: "Flagler", div: "D2" },
+  { name: "Florida", div: "D1" },
+  { name: "Florida A&M", div: "D1" },
+  { name: "Florida Atlantic", div: "D1" },
+  { name: "Florida Gulf Coast", div: "D1" },
+  { name: "Florida International", div: "D1" },
+  { name: "Florida Southern", div: "D2" },
+  { name: "Florida State", div: "D1" },
+  { name: "Florida State College", div: "JUCO" },
+  { name: "Fordham", div: "D1" },
+  { name: "Fort Valley State", div: "D2" },
+  { name: "Freed-Hardeman", div: "NAIA" },
+  { name: "Fresno State", div: "D1" },
+  { name: "Furman", div: "D1" },
+  { name: "Gannon", div: "D2" },
+  { name: "Gardner-Webb", div: "D1" },
+  { name: "George Mason", div: "D1" },
+  { name: "Georgetown", div: "D1" },
+  { name: "Georgetown College", div: "NAIA" },
+  { name: "Georgia", div: "D1" },
+  { name: "Georgia College", div: "D2" },
+  { name: "Georgia Southern", div: "D1" },
+  { name: "Georgia State", div: "D1" },
+  { name: "Georgia Tech", div: "D1" },
+  { name: "Gettysburg", div: "D3" },
+  { name: "Gonzaga", div: "D1" },
+  { name: "Grambling State", div: "D1" },
+  { name: "Grand Canyon", div: "D1" },
+  { name: "Grand Valley State", div: "D2" },
+  { name: "Gulf Coast State College", div: "JUCO" },
+  { name: "Hardin-Simmons", div: "D3" },
+  { name: "Hartford", div: "D1" },
+  { name: "Harvard", div: "D1" },
+  { name: "Hawaii", div: "D1" },
+  { name: "Henderson State", div: "D2" },
+  { name: "High Point", div: "D1" },
+  { name: "Hillsborough Community College", div: "JUCO" },
+  { name: "Hofstra", div: "D1" },
+  { name: "Holy Cross", div: "D1" },
+  { name: "Houston", div: "D1" },
+  { name: "Illinois", div: "D1" },
+  { name: "Illinois-Chicago", div: "D1" },
+  { name: "Indian River State College", div: "JUCO" },
+  { name: "Indiana", div: "D1" },
+  { name: "Indiana State", div: "D1" },
+  { name: "Indiana Tech", div: "NAIA" },
+  { name: "Indianapolis", div: "D2" },
+  { name: "Iowa", div: "D1" },
+  { name: "Iowa State", div: "D1" },
+  { name: "Iowa Western Community College", div: "JUCO" },
+  { name: "Jackson State", div: "D1" },
+  { name: "Jacksonville", div: "D1" },
+  { name: "Jacksonville State", div: "D1" },
+  { name: "Jacksonville University", div: "JUCO" },
+  { name: "James Madison", div: "D1" },
+  { name: "Jewel City College", div: "JUCO" },
+  { name: "Johns Hopkins", div: "D3" },
+  { name: "Kansas", div: "D1" },
+  { name: "Kansas State", div: "D1" },
+  { name: "Kean", div: "D3" },
+  { name: "Kennesaw State", div: "D1" },
+  { name: "Kent State", div: "D1" },
+  { name: "Kentucky", div: "D1" },
+  { name: "Kentucky Wesleyan", div: "D2" },
+  { name: "LSU", div: "D1" },
+  { name: "Lafayette", div: "D1" },
+  { name: "Lake-Sumter State College", div: "JUCO" },
+  { name: "Lamar", div: "D1" },
+  { name: "Lander", div: "D2" },
+  { name: "Le Moyne", div: "D1" },
+  { name: "Le Moyne", div: "D2" },
+  { name: "Lehigh", div: "D1" },
+  { name: "Lenoir-Rhyne", div: "D2" },
+  { name: "Lewis-Clark State", div: "NAIA" },
+  { name: "Liberty", div: "D1" },
+  { name: "Lincoln Memorial", div: "D2" },
+  { name: "Lipscomb", div: "D1" },
+  { name: "Long Beach State", div: "D1" },
+  { name: "Long Island University", div: "D1" },
+  { name: "Longwood", div: "D1" },
+  { name: "Louisiana", div: "D1" },
+  { name: "Louisiana Monroe", div: "D1" },
+  { name: "Louisiana Tech", div: "D1" },
+  { name: "Louisville", div: "D1" },
+  { name: "Loyola Marymount", div: "D1" },
+  { name: "Lubbock Christian", div: "NAIA" },
+  { name: "Lynn", div: "D2" },
+  { name: "Madonna University", div: "NAIA" },
+  { name: "Maine", div: "D1" },
+  { name: "Manhattan", div: "D1" },
+  { name: "Marist", div: "D1" },
+  { name: "Marshall", div: "D1" },
+  { name: "Mary Hardin-Baylor", div: "D3" },
+  { name: "Maryland", div: "D1" },
+  { name: "McNeese State", div: "D1" },
+  { name: "Memphis", div: "D1" },
+  { name: "Mercer", div: "D1" },
+  { name: "Meridian Community College", div: "JUCO" },
+  { name: "Mesa State", div: "D2" },
+  { name: "Miami", div: "D1" },
+  { name: "Miami (Ohio)", div: "D1" },
+  { name: "Miami Dade College", div: "JUCO" },
+  { name: "Michigan", div: "D1" },
+  { name: "Michigan State", div: "D1" },
+  { name: "Middle Georgia State", div: "JUCO" },
+  { name: "Middle Tennessee", div: "D1" },
+  { name: "Millsaps", div: "D3" },
+  { name: "Minnesota", div: "D1" },
+  { name: "Mississippi State", div: "D1" },
+  { name: "Missouri", div: "D1" },
+  { name: "Missouri Southern", div: "D2" },
+  { name: "Mobile", div: "NAIA" },
+  { name: "Monmouth", div: "D1" },
+  { name: "Montclair State", div: "D3" },
+  { name: "Moravian", div: "D3" },
+  { name: "Morgan State", div: "D1" },
+  { name: "Mount St. Mary's", div: "D1" },
+  { name: "Murray State", div: "D1" },
+  { name: "NC State", div: "D1" },
+  { name: "Navy", div: "D1" },
+  { name: "Nebraska", div: "D1" },
+  { name: "New Mexico", div: "D1" },
+  { name: "New Mexico State", div: "D1" },
+  { name: "Niagara", div: "D1" },
+  { name: "North Carolina", div: "D1" },
+  { name: "North Carolina A&T", div: "D1" },
+  { name: "North Central", div: "D3" },
+  { name: "North Dakota State", div: "D1" },
+  { name: "Northeastern", div: "D1" },
+  { name: "Northern Illinois", div: "D1" },
+  { name: "Northwest Florida State College", div: "JUCO" },
+  { name: "Northwestern", div: "D1" },
+  { name: "Notre Dame", div: "D1" },
+  { name: "Nova Southeastern", div: "D2" },
+  { name: "Oakland", div: "D1" },
+  { name: "Ohio", div: "D1" },
+  { name: "Ohio State", div: "D1" },
+  { name: "Oklahoma", div: "D1" },
+  { name: "Oklahoma Baptist", div: "NAIA" },
+  { name: "Oklahoma City University", div: "NAIA" },
+  { name: "Oklahoma State", div: "D1" },
+  { name: "Old Dominion", div: "D1" },
+  { name: "Ole Miss", div: "D1" },
+  { name: "Olivet Nazarene", div: "NAIA" },
+  { name: "Oral Roberts", div: "D1" },
+  { name: "Oregon", div: "D1" },
+  { name: "Oregon State", div: "D1" },
+  { name: "Ouachita Baptist", div: "D2" },
+  { name: "Palm Beach State College", div: "JUCO" },
+  { name: "Pasco-Hernando State College", div: "JUCO" },
+  { name: "Penn State", div: "D1" },
+  { name: "Pennsylvania", div: "D1" },
+  { name: "Pensacola State College", div: "JUCO" },
+  { name: "Pepperdine", div: "D1" },
+  { name: "Pfeiffer", div: "D2" },
+  { name: "Pittsburgh", div: "D1" },
+  { name: "Plattsburgh State", div: "D3" },
+  { name: "Polk State College", div: "JUCO" },
+  { name: "Post", div: "D2" },
+  { name: "Prairie View A&M", div: "D1" },
+  { name: "Princeton", div: "D1" },
+  { name: "Purdue", div: "D1" },
+  { name: "Purdue Fort Wayne", div: "D1" },
+  { name: "Quinnipiac", div: "D1" },
+  { name: "Radford", div: "D1" },
+  { name: "Rhode Island", div: "D1" },
+  { name: "Rice", div: "D1" },
+  { name: "Richmond", div: "D1" },
+  { name: "Rider", div: "D1" },
+  { name: "Rogers State", div: "NAIA" },
+  { name: "Rollins", div: "D2" },
+  { name: "Rowan", div: "D3" },
+  { name: "Rutgers", div: "D1" },
+  { name: "Sacramento State", div: "D1" },
+  { name: "Saint Leo", div: "D2" },
+  { name: "Salisbury", div: "D3" },
+  { name: "Sam Houston State", div: "D1" },
+  { name: "San Diego", div: "D1" },
+  { name: "San Diego State", div: "D1" },
+  { name: "San Francisco", div: "D1" },
+  { name: "San Jose State", div: "D1" },
+  { name: "Santa Clara", div: "D1" },
+  { name: "Santa Fe College", div: "JUCO" },
+  { name: "Seminole State College", div: "JUCO" },
+  { name: "Seton Hall", div: "D1" },
+  { name: "Seton Hill", div: "D2" },
+  { name: "Siena", div: "D1" },
+  { name: "South Alabama", div: "D1" },
+  { name: "South Carolina", div: "D1" },
+  { name: "South Florida", div: "D1" },
+  { name: "South Georgia State College", div: "JUCO" },
+  { name: "Southeast Missouri State", div: "D1" },
+  { name: "Southeastern Louisiana", div: "D1" },
+  { name: "Southeastern University", div: "NAIA" },
+  { name: "Southern Arkansas", div: "D2" },
+  { name: "Southern Illinois", div: "D1" },
+  { name: "Southern Maine", div: "D3" },
+  { name: "Southern Miss", div: "D1" },
+  { name: "Southern University", div: "D1" },
+  { name: "Southern Wesleyan", div: "NAIA" },
+  { name: "Spring Hill College", div: "NAIA" },
+  { name: "St. John's", div: "D1" },
+  { name: "St. Johns River State College", div: "JUCO" },
+  { name: "St. Thomas", div: "D3" },
+  { name: "St. Thomas University", div: "NAIA" },
+  { name: "Stanford", div: "D1" },
+  { name: "State College of Florida", div: "JUCO" },
+  { name: "Stephen F. Austin", div: "D1" },
+  { name: "Stetson", div: "D1" },
+  { name: "Stony Brook", div: "D1" },
+  { name: "TCU", div: "D1" },
+  { name: "Tabor College", div: "NAIA" },
+  { name: "Tallahassee Community College", div: "JUCO" },
+  { name: "Tampa", div: "D2" },
+  { name: "Tennessee", div: "D1" },
+  { name: "Tennessee State", div: "D1" },
+  { name: "Tennessee Tech", div: "D1" },
+  { name: "Texas", div: "D1" },
+  { name: "Texas A&M", div: "D1" },
+  { name: "Texas A&M-Corpus Christi", div: "D1" },
+  { name: "Texas Southern", div: "D1" },
+  { name: "Texas State", div: "D1" },
+  { name: "Texas Tech", div: "D1" },
+  { name: "Thomas More", div: "NAIA" },
+  { name: "Toledo", div: "D1" },
+  { name: "Trevecca Nazarene", div: "D2" },
+  { name: "Trinity", div: "D3" },
+  { name: "Troy", div: "D1" },
+  { name: "Tufts", div: "D3" },
+  { name: "Tulane", div: "D1" },
+  { name: "Tulsa", div: "D1" },
+  { name: "Tusculum", div: "D2" },
+  { name: "UAB", div: "D1" },
+  { name: "UC Davis", div: "D1" },
+  { name: "UC Irvine", div: "D1" },
+  { name: "UC Riverside", div: "D1" },
+  { name: "UC San Diego", div: "D1" },
+  { name: "UC Santa Barbara", div: "D1" },
+  { name: "UCLA", div: "D1" },
+  { name: "UConn", div: "D1" },
+  { name: "UIC", div: "D1" },
+  { name: "UMass", div: "D1" },
+  { name: "UNC Asheville", div: "D1" },
+  { name: "UNC Greensboro", div: "D1" },
+  { name: "UNC Wilmington", div: "D1" },
+  { name: "UNLV", div: "D1" },
+  { name: "USC", div: "D1" },
+  { name: "UT Arlington", div: "D1" },
+  { name: "UTSA", div: "D1" },
+  { name: "Utah", div: "D1" },
+  { name: "Utah Valley", div: "D1" },
+  { name: "VCU", div: "D1" },
+  { name: "Valencia College", div: "JUCO" },
+  { name: "Vanderbilt", div: "D1" },
+  { name: "Vanguard University", div: "NAIA" },
+  { name: "Virginia", div: "D1" },
+  { name: "Virginia Tech", div: "D1" },
+  { name: "Wagner", div: "D1" },
+  { name: "Wake Forest", div: "D1" },
+  { name: "Walters State Community College", div: "JUCO" },
+  { name: "Washington", div: "D1" },
+  { name: "Washington & Lee", div: "D3" },
+  { name: "Washington State", div: "D1" },
+  { name: "West Virginia", div: "D1" },
+  { name: "Western Carolina", div: "D1" },
+  { name: "Western Illinois", div: "D1" },
+  { name: "Western Kentucky", div: "D1" },
+  { name: "Western Michigan", div: "D1" },
+  { name: "William & Mary", div: "D1" },
+  { name: "William Carey", div: "NAIA" },
+  { name: "Williams", div: "D3" },
+  { name: "Wingate", div: "D2" },
+  { name: "Winthrop", div: "D1" },
+  { name: "Wisconsin-Oshkosh", div: "D3" },
+  { name: "Wisconsin-Whitewater", div: "D3" },
+  { name: "Wofford", div: "D1" },
+  { name: "Wright State", div: "D1" },
+  { name: "Xavier", div: "D1" },
+  { name: "Yale", div: "D1" }
+];
+
+    let selectedColleges = [];
+
+    function divBadgeClass(div) {
+      return 'badge-' + div;
+    }
+
+    function renderCollegeChips() {
+      const container = document.getElementById('collegeChips');
+      container.innerHTML = selectedColleges.map((c, i) => `
+        <div class="college-chip">
+          <span class="college-div-badge ${divBadgeClass(c.div)}">${c.div}</span>
+          ${c.name}
+          <span class="college-chip-remove" onclick="removeCollege(${i})">✕</span>
+        </div>
+      `).join('');
+    }
+
+    function removeCollege(index) {
+      selectedColleges.splice(index, 1);
+      renderCollegeChips();
+    }
+
+    function initCollegeSearch() {
+      const input = document.getElementById('collegeSearchInput');
+      const dropdown = document.getElementById('collegeDropdown');
+
+      input.addEventListener('input', () => {
+        const q = input.value.trim().toLowerCase();
+        if (q.length < 1) { dropdown.style.display = 'none'; return; }
+        const matches = COLLEGE_LIST.filter(c => c.name.toLowerCase().includes(q)).slice(0, 15);
+        if (!matches.length) { dropdown.style.display = 'none'; return; }
+        dropdown.innerHTML = matches.map(c => `
+          <div class="college-dropdown-item" onclick="selectCollege('${c.name}', '${c.div}')">
+            <span>${c.name}</span>
+            <span class="college-div-badge ${divBadgeClass(c.div)}">${c.div}</span>
+          </div>
+        `).join('');
+        dropdown.style.display = 'block';
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.college-search-wrap')) dropdown.style.display = 'none';
+      });
+    }
+
+    function selectCollege(name, div) {
+      if (!selectedColleges.find(c => c.name === name)) {
+        selectedColleges.push({ name, div });
+        renderCollegeChips();
+      }
+      document.getElementById('collegeSearchInput').value = '';
+      document.getElementById('collegeDropdown').style.display = 'none';
+    }
+
     const SUPABASE_URL = "https://lymuuvixgdjwczviejie.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bXV1dml4Z2Rqd2N6dmllamllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc0ODksImV4cCI6MjA5NTA2MzQ4OX0.YxJk28Zk3Lhv6MQe4z4PG3cVpp6cKLANRYtDwCX3Dt8";
     const EVAL_PASSWORD = "redhatevals2026";
@@ -518,6 +961,9 @@
       document.getElementById('pitchingRating').value = 5;
       document.getElementById('rosterLevel').value = 5;
       document.getElementById('recruitmentLevel').value = '';
+      selectedColleges = [];
+      renderCollegeChips();
+      document.getElementById('collegeSearchInput').value = '';
       document.querySelectorAll('input[name="position"]').forEach(cb => cb.checked = false);
       
       document.getElementById('defensiveReports').innerHTML = '';
@@ -600,7 +1046,8 @@
         recruitment_level: document.getElementById('recruitmentLevel').value,
         defensive_reports: JSON.stringify(currentReports.defensive),
         offensive_reports: JSON.stringify(currentReports.offensive),
-        pitching_reports: JSON.stringify(currentReports.pitching)
+        pitching_reports: JSON.stringify(currentReports.pitching),
+        college_interests: JSON.stringify(selectedColleges)
       };
 
       try {
