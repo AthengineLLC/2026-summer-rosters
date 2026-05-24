@@ -787,8 +787,9 @@
           item.innerHTML = `<span style="color:#0d1a33;">${c.name}</span><span class="college-div-badge badge-${c.div}">${c.div}</span>`;
           item.addEventListener('mouseenter', () => item.style.background = 'rgba(185,30,45,0.08)');
           item.addEventListener('mouseleave', () => item.style.background = '#fff');
-          item.addEventListener('mousedown', (e) => {
-            e.preventDefault(); // prevent input blur before click fires
+          item.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             selectCollege(c.name, c.div);
           });
           dropdown.appendChild(item);
@@ -796,7 +797,7 @@
         dropdown.style.display = 'block';
       });
 
-      document.addEventListener('click', (e) => {
+      document.addEventListener('pointerdown', (e) => {
         if (!e.target.closest('.college-search-wrap')) dropdown.style.display = 'none';
       });
     }
