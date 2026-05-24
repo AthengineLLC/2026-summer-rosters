@@ -98,6 +98,12 @@
             </select>
           </div>
           <div class="form-group">
+            <label>Logged By</label>
+            <select id="evaluatorSelect">
+              <option value="">Select Evaluator</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label>College(s) That Made Contact</label>
             <div class="search-wrap">
               <input type="text" id="collegeSearch" placeholder="Type a school name to search..." autocomplete="off" />
@@ -502,7 +508,23 @@ const COLLEGE_LIST = [
   { name: "Xavier", div: "D1" },
   { name: "Yale", div: "D1" }
 ];
-    function authenticate() {
+    const evaluatorsByTeam = {
+      '2027 Olasin':      ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Michael Olasin (HC)', 'Fred Matracadi (Asst)'],
+      '2027 McCoy':       ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Mark McCoy (HC)', 'Tom Stanton (Asst)'],
+      '2027 Menendez':    ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Miguel Menendez (HC)', 'Chris Fernandez (Asst)', 'Ron Perez (Asst)'],
+      '2027 Thomas':      ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Tony Thomas (HC)', 'Mat Latos (Asst)'],
+      '2028 Lawson':      ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Aaron Lawson (HC)', 'Rick Harris (Asst)'],
+      '2028 DiBenedetto': ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'John Dibenedetto (HC)', 'Joel Ramos (Asst)'],
+      '2028 Merrell':     ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Tripp Merrell (HC)', "Logan O'Neil (Asst)"],
+      '2028 Severidt':    ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Nick Severidt (HC)', 'Alec Sanchez (Asst)'],
+      '2029 Pascual':     ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Jason Pascual (HC)', 'T.D. Hicks (Asst)'],
+      '2029 Wisser':      ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Phillip Wisser (HC)', 'Paul Trapani (Asst)'],
+      '2029 Cates':       ['Addison Maruszak', 'Nick James', 'Wayne Stofford', 'Richie Warren', 'Gary Cates (HC)', 'Bill Kozlick (Asst)'],
+      '2030 Madsen':      ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber', 'Bryan Madsen (HC)', 'Grant Grodi (Asst)'],
+      '2030 Chappell':    ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber', 'Zach Chappell (HC)', 'Chuck Pate (Asst)'],
+      '2030 Kirst':       ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber', 'Eddie Kirst (HC)'],
+      '2030 Santiago':    ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber', 'Mickey Santiago (HC)', 'Cliff Conners (Asst)'],
+    };
       const pw = document.getElementById('loginPassword').value;
       if (pw === PASSWORD) {
         db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -532,8 +554,18 @@ const COLLEGE_LIST = [
     async function loadPlayers() {
       const team = document.getElementById('teamSelect').value;
       const playerSelect = document.getElementById('playerSelect');
+      const evaluatorSelect = document.getElementById('evaluatorSelect');
       playerSelect.innerHTML = '<option value="">Select Player</option>';
+      evaluatorSelect.innerHTML = '<option value="">Select Evaluator</option>';
       if (!team) return;
+
+      // Populate evaluators
+      (evaluatorsByTeam[team] || []).forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        evaluatorSelect.appendChild(opt);
+      });
       if (playersByTeam[team]) {
         populatePlayers(team); return;
       }
@@ -620,9 +652,10 @@ const COLLEGE_LIST = [
     async function submitContacts() {
       const team = document.getElementById('teamSelect').value;
       const playerRaw = document.getElementById('playerSelect').value;
+      const loggedBy = document.getElementById('evaluatorSelect').value;
       const date = document.getElementById('contactDate').value;
 
-      if (!team || !playerRaw || selectedColleges.length === 0 || !date) {
+      if (!team || !playerRaw || !loggedBy || selectedColleges.length === 0 || !date) {
         document.getElementById('errorMsg').textContent = 'Please fill in all fields and add at least one college.';
         document.getElementById('errorMsg').style.display = 'block';
         setTimeout(() => document.getElementById('errorMsg').style.display = 'none', 3000);
@@ -636,7 +669,8 @@ const COLLEGE_LIST = [
         player_last_name: player.lastName,
         college_name: c.name,
         division: c.div,
-        contact_date: date
+        contact_date: date,
+        logged_by: loggedBy
       }));
 
       const { error } = await db.from('college_contacts').insert(rows);
@@ -651,6 +685,7 @@ const COLLEGE_LIST = [
       selectedColleges = [];
       renderChips();
       document.getElementById('playerSelect').value = '';
+      document.getElementById('evaluatorSelect').value = '';
       document.getElementById('collegeSearch').value = '';
       loadRecentContacts();
     }
@@ -671,6 +706,7 @@ const COLLEGE_LIST = [
               <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:#b91e2d;color:#fff;margin-right:6px;">${r.division}</span>
               ${r.college_name}
             </div>
+            ${r.logged_by ? `<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:3px;">Logged by ${r.logged_by}</div>` : ''}
           </div>
           <div class="log-date">${new Date(r.contact_date).toLocaleDateString()}</div>
         </div>
