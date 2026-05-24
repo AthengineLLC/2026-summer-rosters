@@ -126,6 +126,72 @@
     .success-message { background: #dcfce7; color: #166534; padding: 16px; border-radius: 8px; margin: 0 24px 20px; font-weight: 600; border: 1px solid #bbf7d0; }
     .error-message { background: #fee2e2; color: #991b1b; padding: 16px; border-radius: 8px; margin: 0 24px 20px; font-weight: 600; border: 1px solid #fecaca; }
 
+    /* Objectives Toggle */
+    .objectives-toggle-section {
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 56px;
+      height: 30px;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #cbd5e1;
+      transition: 0.3s;
+      border-radius: 30px;
+    }
+    .toggle-slider:before {
+      position: absolute; content: "";
+      height: 24px; width: 24px;
+      left: 3px; bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: var(--red);
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+    .toggle-label-block {
+      flex: 1;
+      min-width: 0;
+    }
+    .toggle-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--navy);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .toggle-description {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.45;
+    }
+
+    .objectives-section .form-section-body {
+      padding: 24px;
+    }
+    .objectives-section .form-group textarea {
+      min-height: 110px;
+    }
+
     @media (max-width: 600px) {
       .eval-form { margin: 0; border-radius: 0; min-height: 100vh; }
       .form-row { grid-template-columns: 1fr; }
@@ -133,6 +199,7 @@
       .login-container { margin: 30px 16px; }
       .multi-select label { font-size: 15px; padding: 11px 14px; }
       .form-group select, .form-group input { font-size: 16px; }
+      .objectives-toggle-section { flex-direction: column; align-items: flex-start; gap: 12px; }
     }
   </style>
 </head>
@@ -208,6 +275,40 @@
             </div>
           </div>
         </div>
+
+        <!-- Objectives Toggle -->
+        <div class="objectives-toggle-section">
+          <label class="toggle-switch">
+            <input type="checkbox" id="objectivesToggle" onchange="toggleObjectivesMode()">
+            <span class="toggle-slider"></span>
+          </label>
+          <div class="toggle-label-block">
+            <div class="toggle-title">Player Objectives Only</div>
+            <div class="toggle-description">Toggle this on to skip the full evaluation and submit only player objectives. When enabled, ratings, reports, and recruitment fields are hidden and you'll provide three development objectives for this player.</div>
+          </div>
+        </div>
+
+        <!-- Player Objectives Section (hidden by default) -->
+        <div class="form-section objectives-section" id="objectivesSection" style="display:none;">
+          <h2>Player Objectives</h2>
+          <div class="form-section-body">
+            <div class="form-group">
+              <label>Fundamental Objectives</label>
+              <textarea id="fundamentalObjectives" placeholder="Skill development, mechanics, baseball IQ, situational awareness..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Physical Objectives</label>
+              <textarea id="physicalObjectives" placeholder="Strength, speed, mobility, conditioning, body composition..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Mental / Emotional Objectives</label>
+              <textarea id="mentalObjectives" placeholder="Focus, confidence, composure, leadership, mental routines..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evaluation Sections Wrapper (hidden when objectives-only mode is on) -->
+        <div id="evaluationSections">
 
         <!-- Position Section -->
         <div class="form-section">
@@ -326,6 +427,7 @@
           </div>
         </div>
 
+        </div><!-- /#evaluationSections -->
 
         <div class="form-actions">
           <button type="submit" class="btn-submit">Submit Evaluation</button>
@@ -798,6 +900,7 @@
     let dbClient = null;
     let isAuthenticated = false;
     let currentReports = { defensive: [], offensive: [], pitching: [] };
+    let objectivesOnly = false;
 
     const playersByTeam = {
       "2027 Olasin": [],
@@ -844,6 +947,28 @@
       show('offensiveReportsSection', hasPosition);
       show('defenseSlider', hasPosition);
       show('offenseSlider', hasPosition);
+    }
+
+    function toggleObjectivesMode() {
+      objectivesOnly = document.getElementById('objectivesToggle').checked;
+      const evalSections = document.getElementById('evaluationSections');
+      const objectivesSection = document.getElementById('objectivesSection');
+      const recruitmentLevel = document.getElementById('recruitmentLevel');
+
+      if (objectivesOnly) {
+        evalSections.style.display = 'none';
+        objectivesSection.style.display = '';
+        // Remove required attr so form can submit without these fields
+        recruitmentLevel.required = false;
+      } else {
+        evalSections.style.display = '';
+        objectivesSection.style.display = 'none';
+        recruitmentLevel.required = true;
+        // Clear objectives fields when switching off
+        document.getElementById('fundamentalObjectives').value = '';
+        document.getElementById('physicalObjectives').value = '';
+        document.getElementById('mentalObjectives').value = '';
+      }
     }
 
     function authenticate() {
@@ -1051,20 +1176,20 @@
         team_name: document.getElementById('teamName').value,
         player_first_name: playerData.firstName,
         player_last_name: playerData.lastName,
-        projected_positions: positions,
-        defense_rating: parseInt(document.getElementById('defenseRating').value),
-        offense_rating: parseInt(document.getElementById('offenseRating').value),
-        pitching_rating: parseInt(document.getElementById('pitchingRating').value),
-        roster_level: parseInt(document.getElementById('rosterLevel').value),
-        recruitment_level: document.getElementById('recruitmentLevel').value,
-        defensive_reports: JSON.stringify(currentReports.defensive),
-        offensive_reports: JSON.stringify(currentReports.offensive),
-        pitching_reports: JSON.stringify(currentReports.pitching),
-        college_interests: JSON.stringify(selectedColleges),
+        projected_positions: objectivesOnly ? null : positions,
+        defense_rating: objectivesOnly ? null : parseInt(document.getElementById('defenseRating').value),
+        offense_rating: objectivesOnly ? null : parseInt(document.getElementById('offenseRating').value),
+        pitching_rating: objectivesOnly ? null : parseInt(document.getElementById('pitchingRating').value),
+        roster_level: objectivesOnly ? null : parseInt(document.getElementById('rosterLevel').value),
+        recruitment_level: objectivesOnly ? null : document.getElementById('recruitmentLevel').value,
+        defensive_reports: objectivesOnly ? null : JSON.stringify(currentReports.defensive),
+        offensive_reports: objectivesOnly ? null : JSON.stringify(currentReports.offensive),
+        pitching_reports: objectivesOnly ? null : JSON.stringify(currentReports.pitching),
+        college_interests: objectivesOnly ? null : JSON.stringify(selectedColleges),
         is_objectives_only: objectivesOnly,
-        physical_objectives: document.getElementById("physicalObjectives").value || null,
-        fundamental_objectives: document.getElementById("fundamentalObjectives").value || null,
-        mental_emotional_objectives: document.getElementById("mentalObjectives").value || null
+        physical_objectives: objectivesOnly ? (document.getElementById("physicalObjectives").value || null) : null,
+        fundamental_objectives: objectivesOnly ? (document.getElementById("fundamentalObjectives").value || null) : null,
+        mental_emotional_objectives: objectivesOnly ? (document.getElementById("mentalObjectives").value || null) : null
       };
 
       try {
@@ -1078,7 +1203,12 @@
         document.getElementById('evalForm').reset();
         currentReports = { defensive: [], offensive: [], pitching: [] };
         document.getElementById('playerSelect').value = '';
+        selectedColleges = [];
+        renderCollegeChips();
         renderReports();
+        // Reset objectives mode back to default (full eval)
+        document.getElementById('objectivesToggle').checked = false;
+        toggleObjectivesMode();
 
         setTimeout(() => {
           document.getElementById('successMessage').innerHTML = '';
