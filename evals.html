@@ -737,7 +737,8 @@
       selectedColleges.forEach((c, i) => {
         const chip = document.createElement('div');
         chip.className = 'college-chip';
-        chip.innerHTML = `<span class="college-div-badge badge-${c.div}">${c.div}</span> ${c.name} <span class="college-chip-remove" data-index="${i}">✕</span>`;
+        chip.style.cssText = 'display:inline-flex;align-items:center;gap:6px;background:#e8edf5;border:1px solid #b91e2d;border-radius:20px;padding:4px 10px 4px 8px;font-size:12px;font-weight:600;color:#0d1a33;margin:4px;';
+        chip.innerHTML = `<span style="background:#b91e2d;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;">${c.div}</span><span style="color:#0d1a33;">${c.name}</span><span data-index="${i}" style="cursor:pointer;color:#b91e2d;font-size:14px;margin-left:2px;">✕</span>`;
         container.appendChild(chip);
       });
       container.querySelectorAll('.college-chip-remove').forEach(btn => {
