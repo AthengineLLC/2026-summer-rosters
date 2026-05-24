@@ -1314,38 +1314,43 @@
 
         if (error) throw error;
 
-        // Preserve team and evaluator for fast follow-up evals
+        // Capture player name and current selections BEFORE resetting the form
+        const playerFullName = `${playerData.firstName} ${playerData.lastName}`;
         const savedTeam = document.getElementById('teamName').value;
         const savedEvaluator = document.getElementById('directorName').value;
+
+        // Show success modal FIRST so it appears even if any reset step throws
+        document.getElementById('successModalText').innerHTML =
+          `Evaluation for <strong>${playerFullName}</strong> has been recorded successfully.`;
+        document.getElementById('successModal').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         // Clear inline messages (modal replaces them)
         document.getElementById('successMessage').innerHTML = '';
         document.getElementById('errorMessage').innerHTML = '';
 
-        // Reset form state
-        document.getElementById('evalForm').reset();
-        currentReports = { defensive: [], offensive: [], pitching: [] };
-        selectedColleges = [];
-        renderCollegeChips();
-        renderReports();
-        // Reset objectives mode back to default (full eval)
-        document.getElementById('objectivesToggle').checked = false;
-        toggleObjectivesMode();
+        // Reset form state (wrapped in try so any failure doesn't hide the modal)
+        try {
+          document.getElementById('evalForm').reset();
+          currentReports = { defensive: [], offensive: [], pitching: [] };
+          selectedColleges = [];
+          renderCollegeChips();
+          renderReports();
+          // Reset objectives mode back to default (full eval)
+          document.getElementById('objectivesToggle').checked = false;
+          toggleObjectivesMode();
 
-        // Restore team and evaluator selections
-        if (savedTeam) {
-          document.getElementById('teamName').value = savedTeam;
-          loadPlayers();
-          if (savedEvaluator) {
-            document.getElementById('directorName').value = savedEvaluator;
+          // Restore team and evaluator selections
+          if (savedTeam) {
+            document.getElementById('teamName').value = savedTeam;
+            loadPlayers();
+            if (savedEvaluator) {
+              document.getElementById('directorName').value = savedEvaluator;
+            }
           }
+        } catch (resetErr) {
+          console.error('Form reset error after successful submit:', resetErr);
         }
-
-        // Show success modal
-        document.getElementById('successModalText').innerHTML =
-          `Evaluation for <strong>${playerData.firstName} ${playerData.lastName}</strong> has been recorded successfully.`;
-        document.getElementById('successModal').classList.add('show');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (error) {
         document.getElementById('errorMessage').innerHTML = `<div class="error-message">Error submitting evaluation: ${error.message}</div>`;
       }
