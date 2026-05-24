@@ -767,8 +767,8 @@
         dropdown.style.right = '0';
         dropdown.style.zIndex = '100';
         dropdown.innerHTML = matches.map(c => `
-          <div onclick="selectCollege('${c.name}', '${c.div}')" style="padding:10px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#0d1a33;border-bottom:1px solid rgba(0,0,0,0.05);" onmouseover="this.style.background='rgba(185,30,45,0.08)'" onmouseout="this.style.background=''">
-            <span>${c.name}</span>
+          <div onclick="selectCollege('${c.name}', '${c.div}')" style="padding:10px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#0d1a33 !important;border-bottom:1px solid rgba(0,0,0,0.05);background:#ffffff;" onmouseover="this.style.background='rgba(185,30,45,0.08)'" onmouseout="this.style.background='#ffffff'">
+            <span style="color:#0d1a33 !important;">${c.name}</span>
             <span class="college-div-badge ${divBadgeClass(c.div)}">${c.div}</span>
           </div>
         `).join('');
