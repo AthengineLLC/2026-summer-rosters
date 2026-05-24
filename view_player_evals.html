@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Player Evaluations</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    .header {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .header h1 { font-size: 28px; margin-bottom: 0.5rem; color: #1a1a1a; }
+    .filters {
+      display: flex;
+      gap: 12px;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-group { flex: 1; min-width: 200px; }
+    .filter-group label { display: block; font-size: 12px; font-weight: 500; color: #666; margin-bottom: 0.5rem; text-transform: uppercase; }
+    .filter-group select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 0.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .evaluations-container { }
+    .eval-card {
+      background: white;
+      border: 0.5px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .eval-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      border-bottom: 0.5px solid #e0e0e0;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+    .eval-title { font-size: 18px; font-weight: 500; color: #1a1a1a; }
+    .eval-meta { font-size: 13px; color: #999; margin-top: 0.25rem; }
+    .eval-badge {
+      background: #c41e3a;
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .eval-content { }
+    .eval-section { margin-bottom: 1.5rem; }
+    .eval-section:last-child { margin-bottom: 0; }
+    .section-title { font-size: 14px; font-weight: 500; color: #1a1a1a; margin-bottom: 0.5rem; }
+    .section-content { font-size: 14px; color: #666; line-height: 1.6; background: #f9f9f9; padding: 0.75rem; border-radius: 8px; }
+    .empty-state {
+      background: white;
+      border: 0.5px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+      color: #999;
+    }
+    .loading { text-align: center; padding: 2rem; color: #999; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Player Evaluations</h1>
+      <p style="color: #999; font-size: 14px; margin: 0;">View all submitted player evaluations</p>
+      <div class="filters">
+        <div class="filter-group">
+          <label>Filter by Team</label>
+          <select id="teamFilter" onchange="filterEvaluations()">
+            <option value="">All Teams</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Filter by Player</label>
+          <input type="text" id="playerFilter" placeholder="Enter player name" onkeyup="filterEvaluations()" style="padding: 0.5rem; border: 0.5px solid #ddd; border-radius: 8px; font-size: 14px; width: 100%;">
+        </div>
+      </div>
+    </div>
+
+    <div id="loadingDiv" class="loading">Loading evaluations...</div>
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <p>No evaluations found</p>
+    </div>
+    <div id="evaluationsContainer" class="evaluations-container"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://lymuuvixgdjwczviejie.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bXV1dml4Z2Rqd2N6dmllamllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc0ODksImV4cCI6MjA5NTA2MzQ4OX0.YxJk28Zk3Lhv6MQe4z4PG3cVpp6cKLANRYtDwCX3Dt8";
+    
+    let dbClient = null;
+    let allEvaluations = [];
+
+    function initSupabase() {
+      if (!dbClient && window.supabase) {
+        try {
+          dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          console.log("Supabase initialized");
+        } catch (error) {
+          console.error("Error initializing Supabase:", error);
+        }
+      }
+    }
+
+    async function loadEvaluations() {
+      initSupabase();
+
+      if (!dbClient) {
+        document.getElementById('loadingDiv').textContent = 'Database connection failed';
+        return;
+      }
+
+      try {
+        const { data, error } = await dbClient
+          .from('player_evaluations')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error loading evaluations:', error);
+          document.getElementById('loadingDiv').textContent = 'Error loading evaluations';
+          return;
+        }
+
+        allEvaluations = data || [];
+        populateTeamFilter();
+        displayEvaluations(allEvaluations);
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('loadingDiv').textContent = 'Error loading evaluations';
+      }
+    }
+
+    function populateTeamFilter() {
+      const teamSet = new Set(allEvaluations.map(e => e.team).filter(Boolean));
+      const teamFilter = document.getElementById('teamFilter');
+      Array.from(teamSet).sort().forEach(team => {
+        const option = document.createElement('option');
+        option.value = team;
+        option.textContent = team;
+        teamFilter.appendChild(option);
+      });
+    }
+
+    function filterEvaluations() {
+      const teamFilter = document.getElementById('teamFilter').value.toLowerCase();
+      const playerFilter = document.getElementById('playerFilter').value.toLowerCase();
+
+      const filtered = allEvaluations.filter(e => {
+        const matchTeam = !teamFilter || e.team.toLowerCase().includes(teamFilter);
+        const matchPlayer = !playerFilter || e.player.toLowerCase().includes(playerFilter);
+        return matchTeam && matchPlayer;
+      });
+
+      displayEvaluations(filtered);
+    }
+
+    function displayEvaluations(evaluations) {
+      const container = document.getElementById('evaluationsContainer');
+      const loadingDiv = document.getElementById('loadingDiv');
+      const emptyState = document.getElementById('emptyState');
+
+      loadingDiv.style.display = 'none';
+
+      if (evaluations.length === 0) {
+        emptyState.style.display = 'block';
+        container.innerHTML = '';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      container.innerHTML = evaluations.map(eval => createEvalCard(eval)).join('');
+    }
+
+    function createEvalCard(evaluation) {
+      const dateCreated = new Date(evaluation.created_at).toLocaleDateString();
+      const isObjectivesOnly = evaluation.is_objectives_only;
+
+      let content = `
+        <div class="eval-card">
+          <div class="eval-header">
+            <div>
+              <div class="eval-title">${evaluation.player}</div>
+              <div class="eval-meta">${evaluation.team} • Evaluator: ${evaluation.evaluator} • ${dateCreated}</div>
+            </div>
+            ${isObjectivesOnly ? '<span class="eval-badge">Objectives Only</span>' : ''}
+          </div>
+          <div class="eval-content">
+      `;
+
+      if (isObjectivesOnly) {
+        if (evaluation.physical_objectives) {
+          content += `
+            <div class="eval-section">
+              <div class="section-title">Physical Objectives</div>
+              <div class="section-content">${evaluation.physical_objectives}</div>
+            </div>
+          `;
+        }
+        if (evaluation.fundamental_objectives) {
+          content += `
+            <div class="eval-section">
+              <div class="section-title">Fundamental Objectives</div>
+              <div class="section-content">${evaluation.fundamental_objectives}</div>
+            </div>
+          `;
+        }
+        if (evaluation.mental_emotional_objectives) {
+          content += `
+            <div class="eval-section">
+              <div class="section-title">Mental & Emotional Objectives</div>
+              <div class="section-content">${evaluation.mental_emotional_objectives}</div>
+            </div>
+          `;
+        }
+      } else {
+        if (evaluation.projected_positions) {
+          content += `
+            <div class="eval-section">
+              <div class="section-title">Projected Positions</div>
+              <div class="section-content">${evaluation.projected_positions}</div>
+            </div>
+          `;
+        }
+        if (evaluation.performance_reports) {
+          content += `
+            <div class="eval-section">
+              <div class="section-title">Performance Reports</div>
+              <div class="section-content">${evaluation.performance_reports}</div>
+            </div>
+          `;
+        }
+        if (evaluation.performance_ratings) {
+          content += `
+            <div class="eval-section">
+              <div class="section-title">Performance Ratings</div>
+              <div class="section-content">${evaluation.performance_ratings}</div>
+            </div>
+          `;
+        }
+      }
+
+      content += `
+          </div>
+        </div>
+      `;
+
+      return content;
+    }
+
+    document.addEventListener('DOMContentLoaded', loadEvaluations);
+  </script>
+</body>
+</html>
