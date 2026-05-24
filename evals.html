@@ -192,6 +192,103 @@
       min-height: 110px;
     }
 
+    /* Success Modal */
+    .success-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(8, 16, 31, 0.78);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.2s ease;
+    }
+    .success-modal-overlay.show { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .success-modal {
+      background: #ffffff;
+      border-radius: 16px;
+      max-width: 440px;
+      width: 100%;
+      padding: 40px 32px 32px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      animation: scaleIn 0.25s ease;
+    }
+    .success-modal-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: #dcfce7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      color: #166534;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .success-modal h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--navy);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .success-modal p {
+      font-size: 15px;
+      color: #6b7280;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+    .success-modal p strong { color: var(--navy); font-weight: 700; }
+    .success-modal-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .success-modal-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      font-family: 'Inter', sans-serif;
+      text-align: center;
+      text-decoration: none;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .success-modal-btn-primary {
+      background: var(--red);
+      color: #fff;
+      border: 2px solid var(--red);
+    }
+    .success-modal-btn-primary:hover, .success-modal-btn-primary:active {
+      background: #a01a27;
+      border-color: #a01a27;
+    }
+    .success-modal-btn-secondary {
+      background: #fff;
+      color: var(--navy);
+      border: 2px solid #e5e7eb;
+    }
+    .success-modal-btn-secondary:hover, .success-modal-btn-secondary:active {
+      background: #f3f4f6;
+      border-color: var(--navy);
+    }
+
     @media (max-width: 600px) {
       .eval-form { margin: 0; border-radius: 0; min-height: 100vh; }
       .form-row { grid-template-columns: 1fr; }
@@ -434,6 +531,19 @@
           <button type="button" class="btn-logout" onclick="logoutBtn()">Logout</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="successModal" class="success-modal-overlay">
+    <div class="success-modal">
+      <div class="success-modal-icon">✓</div>
+      <h2>Evaluation Submitted</h2>
+      <p id="successModalText">Your evaluation has been recorded successfully.</p>
+      <div class="success-modal-buttons">
+        <button type="button" class="success-modal-btn success-modal-btn-primary" onclick="closeSuccessModal()">Submit Another Evaluation</button>
+        <a href="evals_landing.html" class="success-modal-btn success-modal-btn-secondary">Go to Eval Dashboard</a>
+      </div>
     </div>
   </div>
 
@@ -1204,10 +1314,17 @@
 
         if (error) throw error;
 
-        document.getElementById('successMessage').innerHTML = `<div class="success-message">✓ Evaluation submitted successfully for ${playerData.firstName} ${playerData.lastName}</div>`;
+        // Preserve team and evaluator for fast follow-up evals
+        const savedTeam = document.getElementById('teamName').value;
+        const savedEvaluator = document.getElementById('directorName').value;
+
+        // Clear inline messages (modal replaces them)
+        document.getElementById('successMessage').innerHTML = '';
+        document.getElementById('errorMessage').innerHTML = '';
+
+        // Reset form state
         document.getElementById('evalForm').reset();
         currentReports = { defensive: [], offensive: [], pitching: [] };
-        document.getElementById('playerSelect').value = '';
         selectedColleges = [];
         renderCollegeChips();
         renderReports();
@@ -1215,13 +1332,28 @@
         document.getElementById('objectivesToggle').checked = false;
         toggleObjectivesMode();
 
-        setTimeout(() => {
-          document.getElementById('successMessage').innerHTML = '';
-        }, 5000);
+        // Restore team and evaluator selections
+        if (savedTeam) {
+          document.getElementById('teamName').value = savedTeam;
+          loadPlayers();
+          if (savedEvaluator) {
+            document.getElementById('directorName').value = savedEvaluator;
+          }
+        }
+
+        // Show success modal
+        document.getElementById('successModalText').innerHTML =
+          `Evaluation for <strong>${playerData.firstName} ${playerData.lastName}</strong> has been recorded successfully.`;
+        document.getElementById('successModal').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } catch (error) {
         document.getElementById('errorMessage').innerHTML = `<div class="error-message">Error submitting evaluation: ${error.message}</div>`;
       }
     });
+
+    function closeSuccessModal() {
+      document.getElementById('successModal').classList.remove('show');
+    }
 
     window.addEventListener('load', () => {
       if (localStorage.getItem('evalAuth') === 'true') {
