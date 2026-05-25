@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Audit - CBU Summer Rosters</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1a33;
+      --navy-deep: #08101f;
+      --red: #b91e2d;
+      --powder: #6daed4;
+      --white: #ffffff;
+      --green: #22c55e;
+      --green-bg: #dcfce7;
+      --amber: #f59e0b;
+      --amber-bg: #fef3c7;
+      --gray: #9ca3af;
+      --gray-bg: #f3f4f6;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--navy-deep); color: var(--white); min-height: 100vh; }
+
+    /* NAV */
+    nav {
+      background: var(--navy);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      position: sticky; top: 0; z-index: 1000;
+    }
+    .nav-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; height: 64px; padding: 0 20px; gap: 20px; }
+    .nav-logo { height: 44px; width: auto; }
+    .nav-links { display: flex; gap: 16px; align-items: center; margin-left: auto; }
+    .nav-link { color: var(--white); text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.2s; }
+    .nav-link:hover { color: var(--powder); }
+    .nav-link.evals { background: var(--red); color: #fff; font-weight: 900; letter-spacing: 1px; padding: 8px 16px; border-radius: 6px; }
+    .nav-link.evals:hover { background: #a01a27; color: #fff; }
+
+    /* PAGE HEADER */
+    .page-header {
+      background: var(--navy);
+      border-bottom: 3px solid var(--red);
+      padding: 32px 20px 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .page-header p { color: rgba(255,255,255,0.6); font-size: 15px; }
+
+    /* TEAM SELECTOR */
+    .selector-bar {
+      background: var(--navy);
+      padding: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .selector-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .selector-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: rgba(255,255,255,0.7);
+      white-space: nowrap;
+    }
+    #teamSelect {
+      flex: 1; min-width: 220px; max-width: 340px;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1.5px solid rgba(255,255,255,0.18);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 38px;
+    }
+    #teamSelect option { background: #1a2a45; color: #fff; }
+
+    /* LEGEND */
+    .legend {
+      display: flex; gap: 20px; align-items: center; flex-wrap: wrap;
+      margin-left: auto;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.65); }
+    .legend-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      display: inline-block; flex-shrink: 0;
+    }
+    .legend-dot.complete { background: var(--green); }
+    .legend-dot.partial  { background: var(--amber); }
+    .legend-dot.missing  { background: #4b5563; border: 1.5px solid #6b7280; }
+
+    /* MAIN */
+    .main { max-width: 1200px; margin: 0 auto; padding: 28px 20px 60px; }
+
+    /* SUMMARY BAR */
+    .summary-bar {
+      display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .summary-card {
+      flex: 1; min-width: 140px;
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .summary-card .sc-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 36px; font-weight: 900;
+      line-height: 1;
+    }
+    .summary-card .sc-label { font-size: 11px; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+    .summary-card.total .sc-num  { color: var(--powder); }
+    .summary-card.done  .sc-num  { color: var(--green); }
+    .summary-card.partial .sc-num { color: var(--amber); }
+    .summary-card.missing .sc-num { color: #9ca3af; }
+
+    /* AUDIT TABLE */
+    .audit-wrapper {
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .audit-table { width: 100%; border-collapse: collapse; }
+    .audit-table thead { background: var(--navy); }
+    .audit-table th {
+      padding: 14px 16px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 800;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+      text-align: left;
+      border-bottom: 2px solid var(--red);
+    }
+    .audit-table th.center { text-align: center; }
+    .audit-table td {
+      padding: 14px 16px;
+      font-size: 14px;
+      color: #111827;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: middle;
+    }
+    .audit-table tbody tr:last-child td { border-bottom: none; }
+    .audit-table tbody tr:hover { background: #f8fafc; cursor: pointer; }
+    .audit-table td.center { text-align: center; }
+
+    .player-name { font-weight: 700; color: var(--navy); font-size: 15px; }
+    .jersey-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px;
+      background: var(--navy);
+      color: #fff;
+      border-radius: 50%;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px; font-weight: 800;
+    }
+
+    /* CHECK BADGES */
+    .check-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .check-badge.done    { background: var(--green-bg); color: #15803d; }
+    .check-badge.partial { background: var(--amber-bg); color: #92400e; }
+    .check-badge.missing { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
+    .check-badge .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .check-badge.done    .dot { background: #22c55e; }
+    .check-badge.partial .dot { background: var(--amber); }
+    .check-badge.missing .dot { background: #d1d5db; }
+
+    /* LOADING / EMPTY */
+    .status-row td {
+      text-align: center;
+      padding: 40px;
+      color: #9ca3af;
+      font-size: 15px;
+    }
+    .spinner {
+      display: inline-block;
+      width: 20px; height: 20px;
+      border: 3px solid #e5e7eb;
+      border-top-color: var(--navy);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* PLACEHOLDER */
+    .placeholder {
+      text-align: center;
+      padding: 80px 20px;
+      color: rgba(255,255,255,0.35);
+    }
+    .placeholder h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .placeholder p { font-size: 14px; }
+
+    @media (max-width: 700px) {
+      .page-header h1 { font-size: 28px; }
+      .selector-inner { flex-direction: column; align-items: flex-start; }
+      .legend { margin-left: 0; }
+      #teamSelect { max-width: 100%; width: 100%; }
+      .audit-table th, .audit-table td { padding: 10px 10px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-container">
+      <a href="index.html" style="text-decoration:none;">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAzQAAAE4CAYAAACNL7YlAAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAEAAElEQVR4nOzdd7xdVZn4/ed..." class="nav-logo" alt="CBU Logo">
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="evals_landing.html" class="nav-link evals">Evals</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>Player Audit</h1>
+    <p>Completion tracker — select a team to see what still needs to be done</p>
+  </div>
+
+  <!-- TEAM SELECTOR -->
+  <div class="selector-bar">
+    <div class="selector-inner">
+      <span class="selector-label">Team</span>
+      <select id="teamSelect" onchange="loadAudit()">
+        <option value="">— Select a team —</option>
+        <optgroup label="2027">
+          <option value="2027 Olasin">2027 Olasin</option>
+          <option value="2027 McCoy">2027 McCoy</option>
+          <option value="2027 Menendez">2027 Menendez</option>
+          <option value="2027 Thomas">2027 Thomas</option>
+        </optgroup>
+        <optgroup label="2028">
+          <option value="2028 Lawson">2028 Lawson</option>
+          <option value="2028 DiBenedetto">2028 DiBenedetto</option>
+          <option value="2028 Merrell">2028 Merrell</option>
+          <option value="2028 Severidt">2028 Severidt</option>
+        </optgroup>
+        <optgroup label="2029">
+          <option value="2029 Pascual">2029 Pascual</option>
+          <option value="2029 Wisser">2029 Wisser</option>
+          <option value="2029 Cates">2029 Cates</option>
+        </optgroup>
+        <optgroup label="2030">
+          <option value="2030 Madsen">2030 Madsen</option>
+          <option value="2030 Chappell">2030 Chappell</option>
+          <option value="2030 Kirst">2030 Kirst</option>
+          <option value="2030 Santiago">2030 Santiago</option>
+        </optgroup>
+      </select>
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot complete"></span> Complete</div>
+        <div class="legend-item"><span class="legend-dot partial"></span> Partial</div>
+        <div class="legend-item"><span class="legend-dot missing"></span> Missing</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- Summary cards (hidden until team selected) -->
+    <div class="summary-bar" id="summaryBar" style="display:none;">
+      <div class="summary-card total">
+        <div class="sc-num" id="sumTotal">0</div>
+        <div class="sc-label">Total Players</div>
+      </div>
+      <div class="summary-card done">
+        <div class="sc-num" id="sumComplete">0</div>
+        <div class="sc-label">Fully Complete</div>
+      </div>
+      <div class="summary-card partial">
+        <div class="sc-num" id="sumPartial">0</div>
+        <div class="sc-label">Partially Done</div>
+      </div>
+      <div class="summary-card missing">
+        <div class="sc-num" id="sumMissing">0</div>
+        <div class="sc-label">Nothing Yet</div>
+      </div>
+    </div>
+
+    <!-- Placeholder when no team selected -->
+    <div id="placeholder" class="placeholder">
+      <h2>Select a team above</h2>
+      <p>Choose a team from the dropdown to see the player audit checklist</p>
+    </div>
+
+    <!-- Audit table -->
+    <div class="audit-wrapper" id="auditWrapper" style="display:none;">
+      <table class="audit-table" id="auditTable">
+        <thead>
+          <tr>
+            <th style="width:52px;">#</th>
+            <th>Player</th>
+            <th class="center" style="min-width:130px;">Objectives</th>
+            <th class="center" style="min-width:130px;">Coach Eval</th>
+            <th class="center" style="min-width:130px;">Director Eval</th>
+          </tr>
+        </thead>
+        <tbody id="auditBody">
+          <tr class="status-row"><td colspan="5"><span class="spinner"></span> Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- .main -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL  = "https://lymuuvixgdjwczviejie.supabase.co";
+    const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bXV1dml4Z2Rqd2N6dmllamllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc0ODksImV4cCI6MjA5NTA2MzQ4OX0.YxJk28Zk3Lhv6MQe4z4PG3cVpp6cKLANRYtDwCX3Dt8";
+
+    const DIRECTORS = ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber'];
+
+    // Team roster page mapping
+    const rosterPages = {
+      '2027 Olasin':       'olasin_roster.html',
+      '2027 McCoy':        'mccoy_roster.html',
+      '2027 Menendez':     'menendez_roster.html',
+      '2027 Thomas':       'thomas_roster.html',
+      '2028 Lawson':       'scout_lawson_roster.html',
+      '2028 DiBenedetto':  'scout_dibenedetto_roster.html',
+      '2028 Merrell':      'united_merrell_roster.html',
+      '2028 Severidt':     'united_severidt_roster.html',
+      '2029 Pascual':      'pascual_roster.html',
+      '2029 Wisser':       'wisser_roster.html',
+      '2029 Cates':        'cates_roster.html',
+      '2030 Madsen':       'madsen_roster.html',
+      '2030 Chappell':     'chappell_roster.html',
+      '2030 Kirst':        'kirst_roster.html',
+      '2030 Santiago':     'santiago_roster.html',
+    };
+
+    let db = null;
+    function getDb() {
+      if (!db && window.supabase) {
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+      }
+      return db;
+    }
+
+    // ------------------------------------
+    // Fetch players from the roster page
+    // ------------------------------------
+    async function fetchRosterPlayers(team) {
+      const page = rosterPages[team];
+      if (!page) return [];
+      try {
+        const resp = await fetch(page);
+        const html  = await resp.text();
+        const parser = new DOMParser();
+        const doc  = parser.parseFromString(html, 'text/html');
+        const rows = doc.querySelectorAll('.roster-table tbody tr');
+        const players = [];
+        rows.forEach(row => {
+          const cells = row.querySelectorAll('td');
+          const jersey = cells[0]?.textContent.trim();
+          const firstName = cells[1]?.textContent.trim();
+          const lastName  = cells[2]?.textContent.trim();
+          if (firstName && lastName) {
+            players.push({ jersey, firstName, lastName });
+          }
+        });
+        return players;
+      } catch(e) {
+        console.error('Error fetching roster:', e);
+        return [];
+      }
+    }
+
+    // ------------------------------------
+    // Fetch all evals for a team from Supabase
+    // ------------------------------------
+    async function fetchEvals(team) {
+      const client = getDb();
+      if (!client) return [];
+      const { data, error } = await client
+        .from('player_evaluations')
+        .select('player_first_name, player_last_name, director_name, is_objectives_only, fundamental_objectives, physical_objectives, mental_emotional_objectives')
+        .eq('team_name', team);
+      if (error) { console.error(error); return []; }
+      return data || [];
+    }
+
+    // ------------------------------------
+    // Determine badge status
+    // ------------------------------------
+    function isDirector(name) {
+      return DIRECTORS.some(d => name && name.toLowerCase().includes(d.toLowerCase().split(' ')[0]));
+    }
+    function isCoach(name) {
+      return !isDirector(name);
+    }
+
+    function objectivesStatus(evals) {
+      // Look for an objectives-only row that has at least one objective filled
+      const objEval = evals.find(e => e.is_objectives_only);
+      if (!objEval) return 'missing';
+      const filled = [
+        objEval.fundamental_objectives,
+        objEval.physical_objectives,
+        objEval.mental_emotional_objectives
+      ].filter(Boolean);
+      if (filled.length === 3) return 'done';
+      if (filled.length > 0)  return 'partial';
+      return 'missing';
+    }
+
+    function coachEvalStatus(evals) {
+      const coachEvals = evals.filter(e => !e.is_objectives_only && isCoach(e.director_name));
+      if (coachEvals.length > 0) return 'done';
+      return 'missing';
+    }
+
+    function directorEvalStatus(evals) {
+      const dirEvals = evals.filter(e => !e.is_objectives_only && isDirector(e.director_name));
+      if (dirEvals.length > 0) return 'done';
+      return 'missing';
+    }
+
+    function badge(status, labels) {
+      const label = labels[status] || labels['missing'];
+      return `<span class="check-badge ${status}"><span class="dot"></span>${label}</span>`;
+    }
+
+    // ------------------------------------
+    // Main load function
+    // ------------------------------------
+    async function loadAudit() {
+      const team = document.getElementById('teamSelect').value;
+      if (!team) {
+        document.getElementById('placeholder').style.display = '';
+        document.getElementById('auditWrapper').style.display = 'none';
+        document.getElementById('summaryBar').style.display = 'none';
+        return;
+      }
+
+      document.getElementById('placeholder').style.display = 'none';
+      document.getElementById('auditWrapper').style.display = '';
+      document.getElementById('summaryBar').style.display = 'none';
+      document.getElementById('auditBody').innerHTML =
+        '<tr class="status-row"><td colspan="5"><span class="spinner"></span> Loading…</td></tr>';
+
+      const [players, allEvals] = await Promise.all([
+        fetchRosterPlayers(team),
+        fetchEvals(team)
+      ]);
+
+      if (players.length === 0) {
+        document.getElementById('auditBody').innerHTML =
+          '<tr class="status-row"><td colspan="5">No players found for this team.</td></tr>';
+        return;
+      }
+
+      // Group evals by player
+      function key(fn, ln) { return `${fn.trim().toLowerCase()}|${ln.trim().toLowerCase()}`; }
+      const evalMap = {};
+      allEvals.forEach(e => {
+        const k = key(e.player_first_name, e.player_last_name);
+        if (!evalMap[k]) evalMap[k] = [];
+        evalMap[k].push(e);
+      });
+
+      let complete = 0, partial = 0, missing = 0;
+
+      const rows = players.map(p => {
+        const evals   = evalMap[key(p.firstName, p.lastName)] || [];
+        const objSt   = objectivesStatus(evals);
+        const coachSt = coachEvalStatus(evals);
+        const dirSt   = directorEvalStatus(evals);
+
+        const allDone = objSt === 'done' && coachSt === 'done' && dirSt === 'done';
+        const noneMissing = objSt === 'missing' && coachSt === 'missing' && dirSt === 'missing';
+        if (allDone) complete++;
+        else if (noneMissing) missing++;
+        else partial++;
+
+        const rosterPage = rosterPages[team] || 'evals.html';
+        const evalLink   = `evals.html`;
+
+        return `
+          <tr onclick="window.location.href='${evalLink}'" title="Go to eval form for ${p.firstName} ${p.lastName}">
+            <td><span class="jersey-badge">${p.jersey || '—'}</span></td>
+            <td class="player-name">${p.firstName} ${p.lastName}</td>
+            <td class="center">${badge(objSt,   { done: '✓ All 3 Done', partial: '⚠ Partial', missing: 'Not Started' })}</td>
+            <td class="center">${badge(coachSt, { done: '✓ Submitted', missing: 'Not Submitted' })}</td>
+            <td class="center">${badge(dirSt,   { done: '✓ Submitted', missing: 'Not Submitted' })}</td>
+          </tr>`;
+      });
+
+      document.getElementById('auditBody').innerHTML = rows.join('');
+
+      // Summary
+      document.getElementById('sumTotal').textContent   = players.length;
+      document.getElementById('sumComplete').textContent = complete;
+      document.getElementById('sumPartial').textContent  = partial;
+      document.getElementById('sumMissing').textContent  = missing;
+      document.getElementById('summaryBar').style.display = '';
+    }
+  </script>
+</body>
+</html>
