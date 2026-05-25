@@ -504,6 +504,34 @@
       // Recruitment levels
       const recruitLevels = [...new Set(playerEvals.map(e => e.recruitment_level).filter(Boolean))].join(', ');
 
+      // Objectives: each eval that submitted any objectives gets its own dropdown
+      const objectivesEvals = playerEvals.filter(e =>
+        e.fundamental_objectives || e.physical_objectives || e.mental_emotional_objectives
+      );
+      const objectivesSection = document.getElementById('aiCardObjectivesSection');
+      const objectivesList = document.getElementById('aiCardObjectivesList');
+      if (objectivesEvals.length) {
+        objectivesSection.style.display = 'block';
+        const esc = s => (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        objectivesList.innerHTML = objectivesEvals.map((ev, idx) => {
+          const dateStr = ev.created_at ? new Date(ev.created_at).toLocaleDateString() : '';
+          const blocks = [];
+          if (ev.fundamental_objectives) blocks.push(`<div style="margin-top:10px;"><div style="font-size:11px;font-weight:700;letter-spacing:1px;color:#b91e2d;text-transform:uppercase;margin-bottom:4px;">Fundamental</div><div style="font-size:13px;color:rgba(255,255,255,0.85);white-space:pre-wrap;">${esc(ev.fundamental_objectives)}</div></div>`);
+          if (ev.physical_objectives) blocks.push(`<div style="margin-top:10px;"><div style="font-size:11px;font-weight:700;letter-spacing:1px;color:#b91e2d;text-transform:uppercase;margin-bottom:4px;">Physical</div><div style="font-size:13px;color:rgba(255,255,255,0.85);white-space:pre-wrap;">${esc(ev.physical_objectives)}</div></div>`);
+          if (ev.mental_emotional_objectives) blocks.push(`<div style="margin-top:10px;"><div style="font-size:11px;font-weight:700;letter-spacing:1px;color:#b91e2d;text-transform:uppercase;margin-bottom:4px;">Mental / Emotional</div><div style="font-size:13px;color:rgba(255,255,255,0.85);white-space:pre-wrap;">${esc(ev.mental_emotional_objectives)}</div></div>`);
+          return `<details ${idx === 0 ? 'open' : ''} style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
+            <summary style="cursor:pointer;font-size:13px;font-weight:600;color:#fff;list-style:none;display:flex;justify-content:space-between;align-items:center;">
+              <span>${esc(ev.director_name || 'Unknown')} <span style="color:rgba(255,255,255,0.5);font-weight:400;font-size:12px;">· ${dateStr}</span></span>
+              <span style="color:rgba(255,255,255,0.4);font-size:11px;">▼</span>
+            </summary>
+            ${blocks.join('')}
+          </details>`;
+        }).join('');
+      } else {
+        objectivesSection.style.display = 'none';
+        objectivesList.innerHTML = '';
+      }
+
       // Show modal
       const modal = document.getElementById('aiCardModal');
       modal.style.display = 'flex';
@@ -689,6 +717,11 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
       <div id="aiCardCollegeSection" style="display:none;padding:0 28px 16px;border-bottom:1px solid rgba(255,255,255,0.07);">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#b91e2d;text-transform:uppercase;margin-bottom:10px;">🎓 College Interest</div>
         <div id="aiCardCollegeContacts" style="display:flex;flex-wrap:wrap;gap:4px;"></div>
+      </div>
+      <!-- Player Objectives -->
+      <div id="aiCardObjectivesSection" style="display:none;padding:16px 28px;border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#b91e2d;text-transform:uppercase;margin-bottom:10px;">🎯 Player Objectives</div>
+        <div id="aiCardObjectivesList"></div>
       </div>
       <!-- AI Report -->
       <div style="padding:20px 28px;">

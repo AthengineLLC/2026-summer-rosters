@@ -337,30 +337,15 @@
           <h2>Evaluator & Team</h2>
           <div class="form-section-body">
             <div class="form-group">
-              <label>Team</label>
-              <select id="teamName" onchange="loadPlayers()" required>
-                <option value="">Select Team</option>
-                <option>2027 Olasin</option>
-                <option>2027 McCoy</option>
-                <option>2027 Menendez</option>
-                <option>2027 Thomas</option>
-                <option>2028 Lawson</option>
-                <option>2028 DiBenedetto</option>
-                <option>2028 Merrell</option>
-                <option>2028 Severidt</option>
-                <option>2029 Pascual</option>
-                <option>2029 Wisser</option>
-                <option>2029 Cates</option>
-                <option>2030 Madsen</option>
-                <option>2030 Chappell</option>
-                <option>2030 Kirst</option>
-                <option>2030 Santiago</option>
+              <label>Evaluator</label>
+              <select id="directorName" onchange="loadTeamsForEvaluator()" required>
+                <option value="">Select Evaluator</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Evaluator</label>
-              <select id="directorName" required>
-                <option value="">Select Evaluator</option>
+              <label>Team</label>
+              <select id="teamName" onchange="loadPlayers()" required disabled>
+                <option value="">Select Evaluator first</option>
               </select>
             </div>
             <div class="form-group">
@@ -1093,6 +1078,7 @@
         document.getElementById('evalScreen').style.display = 'block';
         localStorage.setItem('evalAuth', 'true');
         loadTeamPlayers();
+        populateEvaluatorDropdown();
         initCollegeSearch();
       } else {
         document.getElementById('loginError').textContent = 'Invalid password';
@@ -1178,22 +1164,50 @@
       '2030 Santiago':      ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber', 'Mickey Santiago (HC)', 'Cliff Conners (Asst)'],
     };
 
+    function populateEvaluatorDropdown() {
+      const allEvaluators = [...new Set(Object.values(evaluatorsByTeam).flat())].sort();
+      const evalSelect = document.getElementById('directorName');
+      const current = evalSelect.value;
+      evalSelect.innerHTML = '<option value="">Select Evaluator</option>';
+      allEvaluators.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        evalSelect.appendChild(opt);
+      });
+      if (current) evalSelect.value = current;
+    }
+
+    function loadTeamsForEvaluator() {
+      const evaluator = document.getElementById('directorName').value;
+      const teamSelect = document.getElementById('teamName');
+      const playerSelect = document.getElementById('playerSelect');
+
+      // Reset downstream selections
+      playerSelect.innerHTML = '<option value="">Select Player</option>';
+
+      if (!evaluator) {
+        teamSelect.disabled = true;
+        teamSelect.innerHTML = '<option value="">Select Evaluator first</option>';
+        return;
+      }
+
+      teamSelect.disabled = false;
+      teamSelect.innerHTML = '<option value="">Select Team</option>';
+      Object.keys(evaluatorsByTeam).forEach(team => {
+        if (evaluatorsByTeam[team].includes(evaluator)) {
+          const opt = document.createElement('option');
+          opt.value = team;
+          opt.textContent = team;
+          teamSelect.appendChild(opt);
+        }
+      });
+    }
+
     function loadPlayers() {
       const team = document.getElementById('teamName').value;
       const playerSelect = document.getElementById('playerSelect');
       playerSelect.innerHTML = '<option value="">Select Player</option>';
-
-      // Populate evaluator dropdown
-      const evaluatorSelect = document.getElementById('directorName');
-      evaluatorSelect.innerHTML = '<option value="">Select Evaluator</option>';
-      if (team && evaluatorsByTeam[team]) {
-        evaluatorsByTeam[team].forEach(name => {
-          const opt = document.createElement('option');
-          opt.value = name;
-          opt.textContent = name;
-          evaluatorSelect.appendChild(opt);
-        });
-      }
 
       if (team && playersByTeam[team]) {
         playersByTeam[team].forEach(player => {
@@ -1339,12 +1353,14 @@
           document.getElementById('objectivesToggle').checked = false;
           toggleObjectivesMode();
 
-          // Restore team and evaluator selections
-          if (savedTeam) {
-            document.getElementById('teamName').value = savedTeam;
-            loadPlayers();
-            if (savedEvaluator) {
-              document.getElementById('directorName').value = savedEvaluator;
+          // Restore evaluator first (it filters the team dropdown), then team
+          if (savedEvaluator) {
+            populateEvaluatorDropdown();
+            document.getElementById('directorName').value = savedEvaluator;
+            loadTeamsForEvaluator();
+            if (savedTeam) {
+              document.getElementById('teamName').value = savedTeam;
+              loadPlayers();
             }
           }
         } catch (resetErr) {
@@ -1366,6 +1382,7 @@
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('evalScreen').style.display = 'block';
         loadTeamPlayers();
+        populateEvaluatorDropdown();
         initCollegeSearch();
       }
       document.getElementById('passwordInput').addEventListener('keydown', function(e) {
