@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Director Audit - CBU Summer Rosters</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d1a33;
+      --navy-deep: #08101f;
+      --red: #b91e2d;
+      --powder: #6daed4;
+      --white: #ffffff;
+      --green: #22c55e;
+      --green-bg: #dcfce7;
+      --amber: #f59e0b;
+      --amber-bg: #fef3c7;
+      --gray: #9ca3af;
+      --gray-bg: #f3f4f6;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--navy-deep); color: var(--white); min-height: 100vh; }
+
+    /* NAV */
+    nav {
+      background: var(--navy);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      position: sticky; top: 0; z-index: 1000;
+    }
+    .nav-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; height: 64px; padding: 0 20px; gap: 20px; }
+    .nav-logo { height: 44px; width: auto; }
+    .nav-links { display: flex; gap: 16px; align-items: center; margin-left: auto; }
+    .nav-link { color: var(--white); text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.2s; }
+    .nav-link:hover { color: var(--powder); }
+    .nav-link.logout { background: var(--red); color: #fff; font-weight: 900; letter-spacing: 1px; padding: 8px 16px; border-radius: 6px; cursor: pointer; border: none; }
+    .nav-link.logout:hover { background: #a01a27; }
+
+    /* LOGIN SCREEN */
+    .login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .login-box {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 40px 32px;
+      max-width: 360px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .login-box h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--navy);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .login-box .subtitle {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 28px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(13,26,51,0.1);
+    }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-btn:hover { background: #a01a27; }
+    .login-error {
+      color: var(--red);
+      font-size: 13px;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      background: var(--navy);
+      border-bottom: 3px solid var(--red);
+      padding: 32px 20px 24px;
+      text-align: center;
+    }
+    .page-header h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .page-header p { color: rgba(255,255,255,0.6); font-size: 15px; }
+
+    /* FILTERS */
+    .filter-bar {
+      background: var(--navy);
+      padding: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .filter-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .filter-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: rgba(255,255,255,0.7);
+      white-space: nowrap;
+    }
+    .filter-select {
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1.5px solid rgba(255,255,255,0.18);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 38px;
+    }
+    .filter-select option { background: #1a2a45; color: #fff; }
+
+    /* LEGEND */
+    .legend {
+      display: flex; gap: 20px; align-items: center; flex-wrap: wrap;
+      margin-left: auto;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.65); }
+    .legend-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      display: inline-block; flex-shrink: 0;
+    }
+    .legend-dot.complete { background: var(--green); }
+    .legend-dot.partial  { background: var(--amber); }
+    .legend-dot.missing  { background: #4b5563; border: 1.5px solid #6b7280; }
+
+    /* MAIN */
+    .main { max-width: 1200px; margin: 0 auto; padding: 28px 20px 60px; }
+
+    /* SUMMARY */
+    .summary-bar {
+      display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .summary-card {
+      flex: 1; min-width: 140px;
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .summary-card .sc-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 36px; font-weight: 900;
+      line-height: 1;
+    }
+    .summary-card .sc-label { font-size: 11px; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+    .summary-card.total .sc-num  { color: var(--powder); }
+    .summary-card.done  .sc-num  { color: var(--green); }
+    .summary-card.partial .sc-num { color: var(--amber); }
+    .summary-card.missing .sc-num { color: #9ca3af; }
+
+    /* TABLE */
+    .audit-wrapper {
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      margin-bottom: 20px;
+    }
+    .team-section { margin-bottom: 32px; }
+    .team-header {
+      background: var(--navy);
+      color: #fff;
+      padding: 14px 20px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-bottom: 2px solid var(--red);
+    }
+
+    .audit-table { width: 100%; border-collapse: collapse; }
+    .audit-table th {
+      background: #f3f4f6;
+      padding: 12px 16px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: #374151;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .audit-table th.center { text-align: center; }
+    .audit-table td {
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #111827;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: middle;
+    }
+    .audit-table tbody tr:hover { background: #f8fafc; }
+    .audit-table td.center { text-align: center; }
+
+    .player-name { font-weight: 700; color: var(--navy); font-size: 14px; }
+    .jersey-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      background: var(--navy);
+      color: #fff;
+      border-radius: 50%;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 800;
+    }
+
+    /* CHECK BADGES */
+    .check-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 18px;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .check-badge.done    { background: var(--green-bg); color: #15803d; }
+    .check-badge.partial { background: var(--amber-bg); color: #92400e; }
+    .check-badge.missing { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
+    .check-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .check-badge.done    .dot { background: #22c55e; }
+    .check-badge.partial .dot { background: var(--amber); }
+    .check-badge.missing .dot { background: #d1d5db; }
+
+    .placeholder {
+      text-align: center;
+      padding: 80px 20px;
+      color: rgba(255,255,255,0.35);
+    }
+    .placeholder h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 700px) {
+      .page-header h1 { font-size: 28px; }
+      .filter-inner { flex-direction: column; align-items: flex-start; }
+      .legend { margin-left: 0; }
+      .filter-select { width: 100%; }
+      .audit-table th, .audit-table td { padding: 8px 10px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <h1>Director Audit</h1>
+      <p class="subtitle">Organization-wide completion tracker</p>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="passwordInput" placeholder="Enter password" autocomplete="off">
+        </div>
+        <button type="submit" class="login-btn">Access Dashboard</button>
+        <div id="loginError" class="login-error"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN APP (hidden until login) -->
+  <div id="mainApp" style="display:none;">
+
+    <!-- NAV -->
+    <nav>
+      <div class="nav-container">
+        <a href="index.html" style="text-decoration:none;">
+          <img src="data:image/png;base64,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" class="nav-logo" alt="CBU Logo">
+        </a>
+        <div class="nav-links">
+          <a href="player_audit.html" class="nav-link">Team Audit</a>
+          <button onclick="logout()" class="nav-link logout">Logout</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <h1>Director Audit</h1>
+      <p>Organization-wide completion tracker — see all teams at a glance</p>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filter-bar">
+      <div class="filter-inner">
+        <span class="filter-label">Year</span>
+        <select id="yearFilter" class="filter-select" onchange="filterData()">
+          <option value="">All Years</option>
+          <option value="2027">2027</option>
+          <option value="2028">2028</option>
+          <option value="2029">2029</option>
+          <option value="2030">2030</option>
+        </select>
+
+        <span class="filter-label" style="margin-left:20px;">Status</span>
+        <select id="statusFilter" class="filter-select" onchange="filterData()">
+          <option value="">All Players</option>
+          <option value="complete">Complete</option>
+          <option value="partial">Partial</option>
+          <option value="missing">Missing Data</option>
+        </select>
+
+        <div class="legend" style="margin-left:auto;">
+          <div class="legend-item"><span class="legend-dot complete"></span> Complete</div>
+          <div class="legend-item"><span class="legend-dot partial"></span> Partial</div>
+          <div class="legend-item"><span class="legend-dot missing"></span> Missing</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+      <div class="summary-bar" id="summaryBar">
+        <div class="summary-card total">
+          <div class="sc-num" id="sumTotal">0</div>
+          <div class="sc-label">Total Players</div>
+        </div>
+        <div class="summary-card done">
+          <div class="sc-num" id="sumComplete">0</div>
+          <div class="sc-label">Fully Complete</div>
+        </div>
+        <div class="summary-card partial">
+          <div class="sc-num" id="sumPartial">0</div>
+          <div class="sc-label">Partially Done</div>
+        </div>
+        <div class="summary-card missing">
+          <div class="sc-num" id="sumMissing">0</div>
+          <div class="sc-label">Nothing Yet</div>
+        </div>
+      </div>
+
+      <div id="auditContent"></div>
+    </div>
+
+  </div><!-- #mainApp -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const PASSWORD = 'cbumaindirectors2026';
+    const SUPABASE_URL  = "https://lymuuvixgdjwczviejie.supabase.co";
+    const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bXV1dml4Z2Rqd2N6dmllamllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc0ODksImV4cCI6MjA5NTA2MzQ4OX0.YxJk28Zk3Lhv6MQe4z4PG3cVpp6cKLANRYtDwCX3Dt8";
+
+    const DIRECTORS = ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber'];
+
+    const TEAMS = [
+      '2027 Olasin', '2027 McCoy', '2027 Menendez', '2027 Thomas',
+      '2028 Lawson', '2028 DiBenedetto', '2028 Merrell', '2028 Severidt',
+      '2029 Pascual', '2029 Wisser', '2029 Cates',
+      '2030 Madsen', '2030 Chappell', '2030 Kirst', '2030 Santiago'
+    ];
+
+    const rosterPages = {
+      '2027 Olasin': 'olasin_roster.html',
+      '2027 McCoy': 'mccoy_roster.html',
+      '2027 Menendez': 'menendez_roster.html',
+      '2027 Thomas': 'thomas_roster.html',
+      '2028 Lawson': 'scout_lawson_roster.html',
+      '2028 DiBenedetto': 'scout_dibenedetto_roster.html',
+      '2028 Merrell': 'united_merrell_roster.html',
+      '2028 Severidt': 'united_severidt_roster.html',
+      '2029 Pascual': 'pascual_roster.html',
+      '2029 Wisser': 'wisser_roster.html',
+      '2029 Cates': 'cates_roster.html',
+      '2030 Madsen': 'madsen_roster.html',
+      '2030 Chappell': 'chappell_roster.html',
+      '2030 Kirst': 'kirst_roster.html',
+      '2030 Santiago': 'santiago_roster.html',
+    };
+
+    let db = null;
+    let allData = [];
+
+    function getDb() {
+      if (!db && window.supabase) {
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+      }
+      return db;
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const pwd = document.getElementById('passwordInput').value;
+      if (pwd === PASSWORD) {
+        localStorage.setItem('directorAuditAuth', 'true');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = '';
+        loadAllAuditData();
+      } else {
+        document.getElementById('loginError').textContent = 'Incorrect password';
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('directorAuditAuth');
+      location.reload();
+    }
+
+    function isDirector(name) {
+      return DIRECTORS.some(d => name && name.toLowerCase().includes(d.toLowerCase().split(' ')[0]));
+    }
+
+    function objectivesStatus(evals) {
+      const objEval = evals.find(e => e.is_objectives_only);
+      if (!objEval) return 'missing';
+      const filled = [objEval.fundamental_objectives, objEval.physical_objectives, objEval.mental_emotional_objectives].filter(Boolean);
+      if (filled.length === 3) return 'done';
+      if (filled.length > 0) return 'partial';
+      return 'missing';
+    }
+
+    function coachEvalStatus(evals) {
+      const coachEvals = evals.filter(e => !e.is_objectives_only && !isDirector(e.director_name));
+      if (coachEvals.length > 0) return 'done';
+      return 'missing';
+    }
+
+    function directorEvalStatus(evals) {
+      const dirEvals = evals.filter(e => !e.is_objectives_only && isDirector(e.director_name));
+      if (dirEvals.length > 0) return 'done';
+      return 'missing';
+    }
+
+    function badge(status, labels) {
+      const label = labels[status] || labels['missing'];
+      return `<span class="check-badge ${status}"><span class="dot"></span>${label}</span>`;
+    }
+
+    async function fetchRosterPlayers(team) {
+      const page = rosterPages[team];
+      if (!page) return [];
+      try {
+        const resp = await fetch(page);
+        const html = await resp.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const rows = doc.querySelectorAll('.roster-table tbody tr');
+        const players = [];
+        rows.forEach(row => {
+          const cells = row.querySelectorAll('td');
+          const jersey = cells[0]?.textContent.trim();
+          const firstName = cells[1]?.textContent.trim();
+          const lastName = cells[2]?.textContent.trim();
+          if (firstName && lastName) {
+            players.push({ jersey, firstName, lastName, team });
+          }
+        });
+        return players;
+      } catch(e) {
+        console.error('Error fetching roster:', e);
+        return [];
+      }
+    }
+
+    async function loadAllAuditData() {
+      const client = getDb();
+      if (!client) return;
+
+      const { data: evals, error } = await client
+        .from('player_evaluations')
+        .select('player_first_name, player_last_name, team_name, director_name, is_objectives_only, fundamental_objectives, physical_objectives, mental_emotional_objectives');
+      
+      if (error) { console.error(error); return; }
+
+      const evalMap = {};
+      (evals || []).forEach(e => {
+        const k = `${e.player_first_name.trim().toLowerCase()}|${e.player_last_name.trim().toLowerCase()}|${e.team_name}`;
+        if (!evalMap[k]) evalMap[k] = [];
+        evalMap[k].push(e);
+      });
+
+      allData = await Promise.all(
+        TEAMS.map(async team => {
+          const players = await fetchRosterPlayers(team);
+          return {
+            team,
+            players: players.map(p => {
+              const evals = evalMap[`${p.firstName.trim().toLowerCase()}|${p.lastName.trim().toLowerCase()}|${team}`] || [];
+              const objSt = objectivesStatus(evals);
+              const coachSt = coachEvalStatus(evals);
+              const dirSt = directorEvalStatus(evals);
+              const allDone = objSt === 'done' && coachSt === 'done' && dirSt === 'done';
+              const noneMissing = objSt === 'missing' && coachSt === 'missing' && dirSt === 'missing';
+              return { ...p, objSt, coachSt, dirSt, status: allDone ? 'complete' : (noneMissing ? 'missing' : 'partial') };
+            })
+          };
+        })
+      );
+
+      filterData();
+    }
+
+    function filterData() {
+      const yearFilter = document.getElementById('yearFilter').value;
+      const statusFilter = document.getElementById('statusFilter').value;
+
+      let filteredTeams = allData;
+      if (yearFilter) {
+        filteredTeams = filteredTeams.filter(t => t.team.startsWith(yearFilter));
+      }
+
+      let complete = 0, partial = 0, missing = 0, total = 0;
+      const html = filteredTeams.map(({ team, players }) => {
+        let teamRows = players;
+        if (statusFilter) {
+          teamRows = teamRows.filter(p => p.status === statusFilter);
+        }
+
+        teamRows.forEach(p => {
+          total++;
+          if (p.status === 'complete') complete++;
+          else if (p.status === 'partial') partial++;
+          else missing++;
+        });
+
+        if (teamRows.length === 0) return '';
+
+        const rows = teamRows.map(p => `
+          <tr onclick="window.location.href='evals.html'" title="Go to eval form">
+            <td><span class="jersey-badge">${p.jersey || '—'}</span></td>
+            <td class="player-name">${p.firstName} ${p.lastName}</td>
+            <td class="center">${badge(p.objSt,   { done: '✓ All 3', partial: '⚠ Partial', missing: 'Not Started' })}</td>
+            <td class="center">${badge(p.coachSt, { done: '✓ Yes', missing: 'No' })}</td>
+            <td class="center">${badge(p.dirSt,   { done: '✓ Yes', missing: 'No' })}</td>
+          </tr>`).join('');
+
+        return `
+          <div class="team-section">
+            <div class="audit-wrapper">
+              <div class="team-header">${team}</div>
+              <table class="audit-table">
+                <thead>
+                  <tr>
+                    <th style="width:50px;">#</th>
+                    <th>Player</th>
+                    <th class="center" style="min-width:120px;">Objectives</th>
+                    <th class="center" style="min-width:120px;">Coach Eval</th>
+                    <th class="center" style="min-width:120px;">Director Eval</th>
+                  </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </div>`;
+      }).filter(Boolean).join('');
+
+      document.getElementById('auditContent').innerHTML = html || '<div class="placeholder"><h2>No Players Found</h2></div>';
+      document.getElementById('sumTotal').textContent = total;
+      document.getElementById('sumComplete').textContent = complete;
+      document.getElementById('sumPartial').textContent = partial;
+      document.getElementById('sumMissing').textContent = missing;
+    }
+
+    // Check auth on page load
+    window.addEventListener('load', () => {
+      if (localStorage.getItem('directorAuditAuth') === 'true') {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = '';
+        loadAllAuditData();
+      }
+    });
+  </script>
+</body>
+</html>
