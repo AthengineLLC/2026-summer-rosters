@@ -221,6 +221,55 @@
     // Custom dropdown state
     let selectedTeam = '', selectedPlayer = '', selectedDirector = '';
 
+    // College popup — must be outer scope so openPlayerCard can reference these
+    let popupPinned = false;
+    function _popup() { return document.getElementById('college-popup'); }
+
+    function positionPopup(badge) {
+      const popup = _popup();
+      const rect = badge.getBoundingClientRect();
+      const pw = popup.offsetWidth || 200;
+      let left = rect.left + rect.width / 2 - pw / 2;
+      left = Math.max(8, Math.min(left, window.innerWidth - pw - 8));
+      const top = rect.top - popup.offsetHeight - 10;
+      popup.style.left = left + 'px';
+      popup.style.top = (top < 8 ? rect.bottom + 10 : top) + 'px';
+    }
+
+    function showCollegePopup(e) {
+      const popup = _popup();
+      const badge = e.currentTarget;
+      const college = badge.dataset.college || '';
+      const contacts = (badge.dataset.contacts || '').split('|').filter(Boolean);
+      document.getElementById('cp-college-name').textContent = college;
+      const contactsEl = document.getElementById('cp-contacts');
+      if (contacts.length) {
+        contactsEl.className = 'cp-person';
+        contactsEl.innerHTML = contacts.map(function(p){ return '<div>' + p + '</div>'; }).join('');
+      } else {
+        contactsEl.className = 'cp-none';
+        contactsEl.textContent = 'No coach recorded';
+      }
+      popup.classList.add('visible');
+      positionPopup(badge);
+    }
+
+    function hideCollegePopup() {
+      if (!popupPinned) _popup().classList.remove('visible');
+    }
+
+    function toggleCollegePopup(e) {
+      e.stopPropagation();
+      const popup = _popup();
+      if (popupPinned && popup.classList.contains('visible')) {
+        popupPinned = false;
+        popup.classList.remove('visible');
+      } else {
+        popupPinned = true;
+        showCollegePopup(e);
+      }
+    }
+
     function toggleDropdown(id) {
       document.querySelectorAll('.custom-dropdown').forEach(d => {
         if (d.id !== id) d.classList.remove('open');
@@ -759,58 +808,10 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
         loadRosterPlayers();
         loadAllEvals();
       }
-      // College popup (hover on desktop, click on mobile)
-      const collegePopup = document.getElementById('college-popup');
-      let popupPinned = false;
-
-      function positionPopup(badge) {
-        const rect = badge.getBoundingClientRect();
-        const pw = collegePopup.offsetWidth || 200;
-        let left = rect.left + rect.width / 2 - pw / 2;
-        left = Math.max(8, Math.min(left, window.innerWidth - pw - 8));
-        const top = rect.top - collegePopup.offsetHeight - 10;
-        collegePopup.style.left = left + 'px';
-        collegePopup.style.top = (top < 8 ? rect.bottom + 10 : top) + 'px';
-        // Move caret if popup flipped below
-        collegePopup.style.setProperty('--caret-flip', top < 8 ? 'below' : 'above');
-      }
-
-      function showCollegePopup(e) {
-        const badge = e.currentTarget;
-        const college = badge.dataset.college || '';
-        const contacts = (badge.dataset.contacts || '').split('|').filter(Boolean);
-        document.getElementById('cp-college-name').textContent = college;
-        const contactsEl = document.getElementById('cp-contacts');
-        if (contacts.length) {
-          contactsEl.className = 'cp-person';
-          contactsEl.innerHTML = contacts.map(function(p){ return '<div>' + p + '</div>'; }).join('');
-        } else {
-          contactsEl.className = 'cp-none';
-          contactsEl.textContent = 'No coach recorded';
-        }
-        collegePopup.classList.add('visible');
-        positionPopup(badge);
-      }
-
-      function hideCollegePopup() {
-        if (!popupPinned) collegePopup.classList.remove('visible');
-      }
-
-      function toggleCollegePopup(e) {
-        e.stopPropagation();
-        const badge = e.currentTarget;
-        if (popupPinned && collegePopup.classList.contains('visible')) {
-          popupPinned = false;
-          collegePopup.classList.remove('visible');
-        } else {
-          popupPinned = true;
-          showCollegePopup(e);
-        }
-      }
-
+      // Dismiss college popup on outside click
       document.addEventListener('click', function() {
         popupPinned = false;
-        collegePopup.classList.remove('visible');
+        _popup().classList.remove('visible');
       });
 
       // Allow Enter key on login
