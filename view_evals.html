@@ -583,7 +583,7 @@
       try {
         const { data: contacts } = await dbClient
           .from('college_contacts')
-          .select('college_name, division, contact_date')
+          .select('college_name, division, contact_date, logged_by')
           .eq('player_first_name', firstName)
           .eq('player_last_name', lastName)
           .order('contact_date', { ascending: false });
@@ -595,13 +595,30 @@
       const contactsSection = document.getElementById('aiCardCollegeSection');
       if (collegeContactsList.length) {
         contactsSection.style.display = 'block';
-        contactsEl.innerHTML = collegeContactsList.map(c =>
-          `<span style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.06);border-radius:16px;padding:3px 10px;margin:3px;font-size:12px;">
+        // Dedupe by college name; collect unique coaches/directors per school
+        const collegeMap = {};
+        collegeContactsList.forEach(c => {
+          const key = (c.college_name || '').trim();
+          if (!key) return;
+          if (!collegeMap[key]) {
+            collegeMap[key] = { college_name: key, division: c.division, contacts: [] };
+          }
+          const who = (c.logged_by || '').trim();
+          if (who && !collegeMap[key].contacts.includes(who)) {
+            collegeMap[key].contacts.push(who);
+          }
+        });
+        const dedupedColleges = Object.values(collegeMap);
+        contactsEl.innerHTML = dedupedColleges.map(c => {
+          const tip = c.contacts.length
+            ? `In communication with: ${c.contacts.join(', ')}`
+            : 'No coach/director recorded';
+          return `<span title="${tip.replace(/"/g,'&quot;')}" style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.06);border-radius:16px;padding:3px 10px;margin:3px;font-size:12px;cursor:help;">
             <span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;background:#1a4a2e;color:#6fcf97;">${c.division}</span>
-            ${c.college_name}
-          </span>`
-        ).join('');
-        allNotes.push(`COLLEGE INTEREST:\n${collegeContactsList.map(c => `${c.college_name} (${c.division})`).join(', ')}`);
+            ${c.college_name}${c.contacts.length ? `<span style="font-size:9px;color:rgba(255,255,255,0.4);margin-left:2px;">ⓘ</span>` : ''}
+          </span>`;
+        }).join('');
+        allNotes.push(`COLLEGES IN COMMUNICATION WITH:\n${dedupedColleges.map(c => `${c.college_name} (${c.division})${c.contacts.length ? ' — ' + c.contacts.join(', ') : ''}`).join(', ')}`);
       } else {
         contactsSection.style.display = 'none';
       }
@@ -648,6 +665,65 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
       }
     }
 
+    // Share the currently-open AI player card
+    async function shareAICard() {
+      const name = document.getElementById('aiCardName').textContent.trim();
+      const team = document.getElementById('aiCardTeam').textContent.trim();
+      const def = document.getElementById('aiCardAvgDef').textContent.trim();
+      const off = document.getElementById('aiCardAvgOff').textContent.trim();
+      const pitBox = document.getElementById('aiCardPitBox');
+      const pit = document.getElementById('aiCardAvgPit').textContent.trim();
+      const roster = document.getElementById('aiCardAvgRoster').textContent.trim();
+      const positions = document.getElementById('aiCardPositions').textContent.trim();
+      const recruit = document.getElementById('aiCardRecruitment').textContent.trim();
+      const committedEl = document.getElementById('aiCardCommitted');
+      const committed = committedEl.style.display !== 'none' ? committedEl.textContent.trim() : '';
+      const report = document.getElementById('aiCardReport').textContent.trim();
+
+      // Colleges (deduped) from the rendered chips
+      const collegeSection = document.getElementById('aiCardCollegeSection');
+      let collegesText = '';
+      if (collegeSection.style.display !== 'none') {
+        const chips = document.querySelectorAll('#aiCardCollegeContacts span[title]');
+        const lines = [];
+        chips.forEach(ch => {
+          const collegeName = ch.textContent.replace(/[ⓘ\s]+$/,'').trim();
+          const tip = ch.getAttribute('title') || '';
+          lines.push(tip.startsWith('In communication') ? `${collegeName} (${tip.replace('In communication with: ','')})` : collegeName);
+        });
+        if (lines.length) collegesText = `\nColleges In Communication With:\n- ${lines.join('\n- ')}`;
+      }
+
+      let text = `CBU Baseball — ${name} (${team})`;
+      if (committed) text += `\nCommitted: ${committed.replace(/^[^A-Za-z]+/,'')}`;
+      text += `\n\nAveraged Ratings:`;
+      text += `\nDefense ${def}/10 · Offense ${off}/10`;
+      if (pitBox.style.display !== 'none') text += ` · Pitching ${pit}/10`;
+      text += ` · Roster ${roster}/10`;
+      if (positions && positions !== '—') text += `\nPositions: ${positions}`;
+      if (recruit && recruit !== '—') text += `\nRecruitment: ${recruit}`;
+      text += collegesText;
+      if (report) text += `\n\nScouting Summary:\n${report}`;
+
+      const shareData = { title: `${name} — CBU Baseball`, text };
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+          return;
+        }
+      } catch (e) {
+        if (e.name === 'AbortError') return; // user cancelled
+      }
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('Player card copied to clipboard — paste it to share with a coach.');
+      } catch (e) {
+        // Last resort: prompt
+        window.prompt('Copy this player card to share:', text);
+      }
+    }
+
     // Load evals on page load
     window.addEventListener('load', () => {
       if (localStorage.getItem('viewEvalsAuth') === 'true') {
@@ -675,6 +751,7 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
           <span id="aiCardEvalCount" style="font-size:12px;color:rgba(255,255,255,0.6);background:rgba(0,0,0,0.25);padding:2px 10px;border-radius:20px;"></span>
           <span id="aiCardCommitted" style="display:none;font-size:12px;font-weight:700;color:#fff;background:rgba(0,0,0,0.3);padding:3px 10px;border-radius:20px;"></span>
         </div>
+        <button onclick="shareAICard()" title="Share this player card" style="position:absolute;top:16px;right:64px;background:rgba(0,0,0,0.3);border:none;color:#fff;font-size:15px;width:36px;height:36px;border-radius:50%;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;">⤴</button>
         <button onclick="document.getElementById('aiCardModal').style.display='none'" style="position:absolute;top:16px;right:20px;background:rgba(0,0,0,0.3);border:none;color:#fff;font-size:20px;width:36px;height:36px;border-radius:50%;cursor:pointer;line-height:1;">✕</button>
       </div>
       <!-- Averaged Ratings -->
@@ -715,7 +792,7 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
       </div>
       <!-- College Contacts -->
       <div id="aiCardCollegeSection" style="display:none;padding:0 28px 16px;border-bottom:1px solid rgba(255,255,255,0.07);">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#b91e2d;text-transform:uppercase;margin-bottom:10px;">🎓 College Interest</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#b91e2d;text-transform:uppercase;margin-bottom:10px;">🎓 Colleges In Communication With</div>
         <div id="aiCardCollegeContacts" style="display:flex;flex-wrap:wrap;gap:4px;"></div>
       </div>
       <!-- Player Objectives -->

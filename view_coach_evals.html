@@ -45,8 +45,25 @@
     .search-btn:hover { background: #a01a27; }
     .clear-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--white); padding: 12px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; text-transform: uppercase; }
 
+    /* SINGLE SEARCH BAR (mirrors player page) */
+    .coach-search-bar { width: 100%; padding: 14px 16px; border: 1.5px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: var(--white); border-radius: 8px; font-size: 15px; font-family: 'Inter', sans-serif; }
+    .coach-search-bar::placeholder { color: rgba(255,255,255,0.4); }
+
     /* CARDS */
-    .evals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 24px; }
+    .evals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+    /* AI STAFF CARD (compact, clickable) */
+    .staff-card { background: var(--navy); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+    .staff-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
+    .staff-card-header { background: var(--red); padding: 16px 18px; }
+    .staff-card-header h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 900; color: #fff; letter-spacing: 1px; }
+    .staff-card-header .meta { font-size: 12px; color: rgba(255,255,255,0.85); margin-top: 4px; }
+    .staff-card-body { padding: 16px 18px; }
+    .staff-rating-row { display: flex; gap: 10px; }
+    .staff-rating-box { flex: 1; background: rgba(255,255,255,0.05); border-radius: 10px; padding: 12px; text-align: center; }
+    .staff-rating-box .lbl { font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .staff-rating-box .val { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 900; color: #fff; }
+    .staff-card-cta { margin-top: 14px; font-size: 12px; color: var(--red); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-align: center; }
 
     .eval-card { background: var(--navy); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
     .eval-card-header { background: var(--red); padding: 16px 20px; }
@@ -108,42 +125,10 @@
       <h1 class="page-title">Coach Evaluations</h1>
 
       <div class="search-box">
-        <!-- Dropdowns -->
-        <div class="search-row" style="margin-bottom:12px;">
-          <select class="search-input" id="filterTeam" onchange="searchEvals()">
-            <option value="">All Teams</option>
-            <option>2027 Olasin</option>
-            <option>2027 McCoy</option>
-            <option>2027 Menendez</option>
-            <option>2027 Thomas</option>
-            <option>2028 Lawson</option>
-            <option>2028 DiBenedetto</option>
-            <option>2028 Merrell</option>
-            <option>2028 Severidt</option>
-            <option>2029 Pascual</option>
-            <option>2029 Wisser</option>
-            <option>2029 Cates</option>
-            <option>2030 Madsen</option>
-            <option>2030 Chappell</option>
-            <option>2030 Kirst</option>
-            <option>2030 Santiago</option>
-          </select>
-          <select class="search-input" id="filterDirector" onchange="searchEvals()">
-            <option value="">All Directors</option>
-            <option>Wayne Stofsky</option>
-            <option>Addison Maruszak</option>
-            <option>Richie Warren</option>
-            <option>Nick James</option>
-            <option>Jason Pascual</option>
-            <option>Maddux Faber</option>
-          </select>
-          <button class="search-btn" onclick="searchEvals()">Search</button>
-        </div>
-        <!-- Text Search -->
-        <div class="search-row" style="margin-bottom:12px;">
-          <input type="text" class="search-input" id="searchTeam" placeholder="Or type team name..." />
-          <input type="text" class="search-input" id="searchDirector" placeholder="Or type director name..." />
-          <button class="clear-btn" onclick="clearSearch()">Clear</button>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <input type="text" class="coach-search-bar" id="coachSearch" placeholder="🔍 Search by team name (e.g. Olasin, 2027, Thomas)..." oninput="filterStaffCards()" style="flex:1;" />
+          <button class="search-btn" onclick="filterStaffCards()">Search</button>
+          <button class="clear-btn" onclick="clearCoachSearch()">Clear</button>
         </div>
       </div>
 
@@ -183,88 +168,26 @@
       return '';
     }
 
-    function badge(label, value) {
-      if (!value) return '';
-      const colorClass = ['Yes'].includes(value) ? 'yes' : ['No'].includes(value) ? 'no' : ratingColor(value);
-      return `<div class="rating-badge"><div class="badge-label">${label}</div><div class="badge-value ${colorClass}">${value}</div></div>`;
+    // Numeric 1-5 rating fields used for averaging
+    const COACH_NUMERIC_FIELDS = ['org_prepared','arrived_ontime','pregame_bp','instruction','accountability','playing_time','professionalism','game_mgmt','adjustments','pitching_mgmt','hc_overall','asst_overall'];
+
+    function avg(arr) {
+      const nums = arr.map(v => parseFloat(v)).filter(v => !isNaN(v));
+      if (!nums.length) return null;
+      return (nums.reduce((a,b)=>a+b,0) / nums.length);
     }
 
-    function comment(text) {
-      if (!text) return '';
-      return `<div class="comment-box">${text}</div>`;
-    }
+    function fmtAvg(v) { return v == null ? '—' : (Math.round(v*10)/10).toFixed(1); }
 
-    function renderCard(ev) {
-      return `
-        <div class="eval-card">
-          <div class="eval-card-header">
-            <h2>${ev.team_name || '—'}</h2>
-            <div class="meta">Director: ${ev.director_name || '—'} &nbsp;·&nbsp; ${new Date(ev.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
-          </div>
-          <div class="eval-card-body">
-
-            <div class="eval-section">
-              <div class="eval-section-title">Organization & Preparation</div>
-              <div class="ratings-row">
-                ${badge('Organized & Prepared', ev.org_prepared)}
-                ${badge('Arrived On Time', ev.arrived_ontime)}
-                ${badge('Pregame BP', ev.pregame_bp)}
-              </div>
-              ${comment(ev.org_comments)}
-            </div>
-
-            <div class="eval-section">
-              <div class="eval-section-title">Player Development & Leadership</div>
-              <div class="ratings-row">
-                ${badge('Instruction', ev.instruction)}
-                ${badge('Accountability', ev.accountability)}
-                ${badge('Playing Time', ev.playing_time)}
-                ${badge('Professionalism', ev.professionalism)}
-              </div>
-              ${comment(ev.dev_comments)}
-            </div>
-
-            <div class="eval-section">
-              <div class="eval-section-title">Player Issues & Concerns</div>
-              <div class="ratings-row">
-                ${badge('Behavior Issues', ev.player_behavior)}
-                ${badge('Effort/Attitude', ev.effort_attitude)}
-                ${badge('Favoritism', ev.favoritism)}
-              </div>
-              ${comment(ev.player_issue_comments)}
-            </div>
-
-            <div class="eval-section">
-              <div class="eval-section-title">Parent Issues & Concerns</div>
-              <div class="ratings-row">
-                ${badge('Parent Complaints', ev.parent_complaints)}
-                ${badge('Sideline Behavior', ev.sideline_behavior)}
-                ${badge('Leadership Concerns', ev.leadership_concerns)}
-              </div>
-              ${comment(ev.parent_comments)}
-            </div>
-
-            <div class="eval-section">
-              <div class="eval-section-title">Game Management</div>
-              <div class="ratings-row">
-                ${badge('Game Mgmt', ev.game_mgmt)}
-                ${badge('Adjustments', ev.adjustments)}
-                ${badge('Pitching Mgmt', ev.pitching_mgmt)}
-              </div>
-              ${comment(ev.game_comments)}
-            </div>
-
-            <div class="eval-section">
-              <div class="eval-section-title">Overall Evaluation</div>
-              <div class="ratings-row">
-                ${badge('Head Coach', ev.hc_overall)}
-                ${badge('Asst Coach', ev.asst_overall)}
-              </div>
-              ${comment(ev.overall_comments)}
-            </div>
-
-          </div>
-        </div>`;
+    // Group raw evals by team
+    function groupEvalsByTeam(evals) {
+      const groups = {};
+      evals.forEach(ev => {
+        const team = ev.team_name || 'Unspecified';
+        if (!groups[team]) groups[team] = [];
+        groups[team].push(ev);
+      });
+      return groups;
     }
 
     function renderEvals(data) {
@@ -276,7 +199,49 @@
         return;
       }
       empty.style.display = 'none';
-      grid.innerHTML = data.map(renderCard).join('');
+
+      // Keep raw evals available for the AI modal
+      window._allCoachEvals = data;
+
+      const groups = groupEvalsByTeam(data);
+      // Sort team names for stable display
+      const teamNames = Object.keys(groups).sort();
+
+      grid.innerHTML = teamNames.map(team => {
+        const evs = groups[team];
+        const hcAvg = avg(evs.map(e => e.hc_overall));
+        const asstAvg = avg(evs.map(e => e.asst_overall));
+        const directors = [...new Set(evs.map(e => e.director_name).filter(Boolean))];
+        return `
+          <div class="staff-card" data-team="${(team||'').toLowerCase()}" onclick="openCoachCard('${team.replace(/'/g,"\\'")}')">
+            <div class="staff-card-header">
+              <h2>${team}</h2>
+              <div class="meta">${evs.length} director eval${evs.length>1?'s':''}${directors.length?' · '+directors.join(', '):''}</div>
+            </div>
+            <div class="staff-card-body">
+              <div class="staff-rating-row">
+                <div class="staff-rating-box">
+                  <div class="lbl">Head Coach</div>
+                  <div class="val">${fmtAvg(hcAvg)}<span style="font-size:12px;color:rgba(255,255,255,0.3);">/5</span></div>
+                </div>
+                <div class="staff-rating-box">
+                  <div class="lbl">Asst Coach</div>
+                  <div class="val">${fmtAvg(asstAvg)}<span style="font-size:12px;color:rgba(255,255,255,0.3);">/5</span></div>
+                </div>
+              </div>
+              <div class="staff-card-cta">⚡ View AI Staff Summary →</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // Live filter of staff cards by team text
+    function filterStaffCards() {
+      const q = (document.getElementById('coachSearch').value || '').trim().toLowerCase();
+      document.querySelectorAll('.staff-card').forEach(card => {
+        const team = card.getAttribute('data-team') || '';
+        card.style.display = (!q || team.includes(q)) ? '' : 'none';
+      });
     }
 
     async function loadAllEvals() {
@@ -292,33 +257,105 @@
       }
     }
 
-    async function searchEvals() {
-      const teamDropdown = document.getElementById('filterTeam').value;
-      const directorDropdown = document.getElementById('filterDirector').value;
-      const teamText = document.getElementById('searchTeam').value.trim();
-      const directorText = document.getElementById('searchDirector').value.trim();
-
-      const teamVal = teamDropdown || teamText;
-      const directorVal = directorDropdown || directorText;
-
-      try {
-        let query = dbClient.from('coach_evaluations').select('*');
-        if (teamVal) query = query.ilike('team_name', `%${teamVal}%`);
-        if (directorVal) query = query.ilike('director_name', `%${directorVal}%`);
-        const { data, error } = await query.order('created_at', { ascending: false });
-        if (error) throw error;
-        renderEvals(data);
-      } catch (err) {
-        console.error('Search error:', err);
-      }
+    function clearCoachSearch() {
+      const cs = document.getElementById('coachSearch');
+      if (cs) cs.value = '';
+      filterStaffCards();
     }
 
-    function clearSearch() {
-      document.getElementById('filterTeam').value = '';
-      document.getElementById('filterDirector').value = '';
-      document.getElementById('searchTeam').value = '';
-      document.getElementById('searchDirector').value = '';
-      loadAllEvals();
+    // Open AI staff summary card for a team (aggregates all director evals)
+    function openCoachCard(team) {
+      const all = window._allCoachEvals || [];
+      const evs = all.filter(e => (e.team_name || 'Unspecified') === team);
+      if (!evs.length) return;
+
+      const modal = document.getElementById('coachCardModal');
+      modal.style.display = 'flex';
+      document.getElementById('coachCardTeam').textContent = team;
+      document.getElementById('coachCardCount').textContent = `${evs.length} director eval${evs.length>1?'s':''}`;
+
+      const hcAvg = avg(evs.map(e => e.hc_overall));
+      const asstAvg = avg(evs.map(e => e.asst_overall));
+      document.getElementById('coachCardHC').textContent = fmtAvg(hcAvg);
+      document.getElementById('coachCardAsst').textContent = fmtAvg(asstAvg);
+
+      // Category averages
+      const catLabels = {
+        org_prepared:'Organized & Prepared', arrived_ontime:'Arrived On Time', pregame_bp:'Pregame BP',
+        instruction:'Instruction', accountability:'Accountability', playing_time:'Playing Time', professionalism:'Professionalism',
+        game_mgmt:'Game Mgmt', adjustments:'Adjustments', pitching_mgmt:'Pitching Mgmt'
+      };
+      const catEl = document.getElementById('coachCardCats');
+      catEl.innerHTML = Object.keys(catLabels).map(f => {
+        const a = avg(evs.map(e => e[f]));
+        if (a == null) return '';
+        return `<div style="background:rgba(255,255,255,0.05);border-radius:8px;padding:8px 10px;text-align:center;">
+          <div style="font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:3px;">${catLabels[f]}</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:#fff;">${fmtAvg(a)}<span style="font-size:10px;color:rgba(255,255,255,0.3);">/5</span></div>
+        </div>`;
+      }).join('');
+
+      // Reset AI area
+      document.getElementById('coachCardLoading').style.display = 'flex';
+      document.getElementById('coachCardReportWrap').style.display = 'none';
+      document.getElementById('coachCardReport').textContent = '';
+
+      // Build the prompt distinguishing Head Coach vs Assistant Coach
+      const directors = [...new Set(evs.map(e => e.director_name).filter(Boolean))];
+      const notes = [];
+      evs.forEach(e => {
+        const parts = [];
+        if (e.org_comments) parts.push(`Organization: ${e.org_comments}`);
+        if (e.dev_comments) parts.push(`Player Development & Leadership: ${e.dev_comments}`);
+        if (e.player_issue_comments) parts.push(`Player Issues: ${e.player_issue_comments}`);
+        if (e.parent_comments) parts.push(`Parent Issues: ${e.parent_comments}`);
+        if (e.game_comments) parts.push(`Game Management: ${e.game_comments}`);
+        if (e.overall_comments) parts.push(`Overall: ${e.overall_comments}`);
+        // Concern flags
+        const concerns = [];
+        ['player_behavior','effort_attitude','favoritism','parent_complaints','sideline_behavior','leadership_concerns'].forEach(c => {
+          if (e[c]) concerns.push(`${c.replace(/_/g,' ')}: ${e[c]}`);
+        });
+        if (concerns.length) parts.push(`Flags: ${concerns.join('; ')}`);
+        if (parts.length) notes.push(`Evaluation by ${e.director_name || 'a director'}:\n${parts.join('\n')}`);
+      });
+
+      const prompt = `You are an evaluator writing a unified coaching-staff assessment for CBU Baseball. This is based on ${evs.length} director evaluation(s) of the coaching staff for team "${team}"${directors.length ? `, submitted by: ${directors.join(', ')}` : ''}.
+
+RATING SCALE: All numeric ratings are 1-5 (1 = Poor, 3 = Average, 5 = Excellent).
+
+AVERAGED OVERALL RATINGS:
+- Head Coach overall: ${fmtAvg(hcAvg)}/5
+- Assistant Coach overall: ${fmtAvg(asstAvg)}/5
+
+AVERAGED CATEGORY RATINGS:
+${Object.keys(catLabels).map(f => { const a = avg(evs.map(e=>e[f])); return a==null?null:`- ${catLabels[f]}: ${fmtAvg(a)}/5`; }).filter(Boolean).join('\n')}
+
+DIRECTOR NOTES:
+${notes.length ? notes.join('\n\n') : 'No written comments provided.'}
+
+Write a 3-4 paragraph professional assessment of this coaching staff. IMPORTANT: clearly distinguish between the HEAD COACH and the ASSISTANT COACH throughout — discuss each separately where the evaluations allow. Cover organization and preparation, player development and leadership, game management, and any player or parent concerns raised. In the final paragraph, give a clear overall outlook on the staff and note any areas needing attention. Do not use bullet points. Write in a professional, even-handed tone.`;
+
+      generateCoachReport(prompt);
+    }
+
+    async function generateCoachReport(prompt) {
+      try {
+        const response = await fetch('/api/scout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        });
+        const data = await response.json();
+        const text = data.text || data.error || 'Unable to generate report.';
+        document.getElementById('coachCardLoading').style.display = 'none';
+        document.getElementById('coachCardReportWrap').style.display = 'block';
+        document.getElementById('coachCardReport').textContent = text;
+      } catch (err) {
+        document.getElementById('coachCardLoading').style.display = 'none';
+        document.getElementById('coachCardReportWrap').style.display = 'block';
+        document.getElementById('coachCardReport').textContent = 'Error: ' + err.message;
+      }
     }
 
     window.addEventListener('load', () => {
@@ -333,5 +370,53 @@
       });
     });
   </script>
+
+  <!-- AI Coach Staff Card Modal -->
+  <div id="coachCardModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#0d1a33;border-radius:16px;max-width:720px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.08);">
+      <!-- Header -->
+      <div style="background:#b91e2d;padding:24px 28px;border-radius:16px 16px 0 0;position:relative;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-bottom:4px;">AI Coaching Staff Summary</div>
+        <div id="coachCardTeam" style="font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:900;color:#fff;letter-spacing:1px;"></div>
+        <div style="margin-top:6px;">
+          <span id="coachCardCount" style="font-size:12px;color:rgba(255,255,255,0.7);background:rgba(0,0,0,0.25);padding:2px 10px;border-radius:20px;"></span>
+        </div>
+        <button onclick="document.getElementById('coachCardModal').style.display='none'" style="position:absolute;top:16px;right:20px;background:rgba(0,0,0,0.3);border:none;color:#fff;font-size:20px;width:36px;height:36px;border-radius:50%;cursor:pointer;line-height:1;">✕</button>
+      </div>
+      <!-- Overall ratings -->
+      <div style="padding:20px 28px;border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#b91e2d;text-transform:uppercase;margin-bottom:12px;">Averaged Overall Ratings</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px;letter-spacing:1px;">HEAD COACH</div>
+            <div id="coachCardHC" style="font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:#fff;"></div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);">/5</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px;letter-spacing:1px;">ASSISTANT COACH</div>
+            <div id="coachCardAsst" style="font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:#fff;"></div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);">/5</div>
+          </div>
+        </div>
+      </div>
+      <!-- Category averages -->
+      <div style="padding:18px 28px;border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#b91e2d;text-transform:uppercase;margin-bottom:12px;">Category Averages</div>
+        <div id="coachCardCats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;"></div>
+      </div>
+      <!-- AI Report -->
+      <div style="padding:20px 28px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#b91e2d;text-transform:uppercase;margin-bottom:14px;">⚡ AI Staff Assessment</div>
+        <div id="coachCardLoading" style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,0.5);font-size:14px;padding:20px 0;">
+          <div style="width:20px;height:20px;border:2px solid rgba(185,30,45,0.3);border-top-color:#b91e2d;border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;"></div>
+          Generating staff assessment...
+        </div>
+        <div id="coachCardReportWrap" style="display:none;">
+          <p id="coachCardReport" style="font-size:14px;line-height:1.75;color:rgba(255,255,255,0.85);white-space:pre-wrap;"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 </body>
 </html>

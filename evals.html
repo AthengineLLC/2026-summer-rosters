@@ -489,7 +489,7 @@
           <div class="form-section-body">
             <div class="form-group">
               <label>Projected College Level</label>
-              <select id="recruitmentLevel" required>
+              <select id="recruitmentLevel">
                 <option value="">Select Level</option>
                 <option>High Draft</option>
                 <option>Power 4 D1</option>
@@ -1061,7 +1061,7 @@
       } else {
         evalSections.style.display = '';
         objectivesSection.style.display = 'none';
-        recruitmentLevel.required = true;
+        recruitmentLevel.required = false;
         // Clear objectives fields when switching off
         document.getElementById('fundamentalObjectives').value = '';
         document.getElementById('physicalObjectives').value = '';
