@@ -97,6 +97,22 @@
       .evals-container { grid-template-columns: 1fr; }
       .login-container { margin: 30px 16px; }
     }
+    .college-badge { cursor: pointer; }
+    #college-popup {
+      position: fixed; z-index: 10001;
+      background: #131f35; border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 10px; padding: 11px 15px;
+      box-shadow: 0 10px 36px rgba(0,0,0,0.6);
+      min-width: 160px; max-width: 240px;
+      pointer-events: none; opacity: 0;
+      transition: opacity 0.13s ease;
+    }
+    #college-popup.visible { opacity: 1; pointer-events: auto; }
+    #college-popup .cp-college { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.5px; margin-bottom: 7px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }
+    #college-popup .cp-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #b91e2d; text-transform: uppercase; margin-bottom: 5px; }
+    #college-popup .cp-person { font-size: 12px; color: rgba(255,255,255,0.78); line-height: 1.7; }
+    #college-popup .cp-none { font-size: 11px; color: rgba(255,255,255,0.3); font-style: italic; }
+    #college-popup::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid #131f35; }
   </style>
 </head>
 <body>
@@ -610,14 +626,17 @@
         });
         const dedupedColleges = Object.values(collegeMap);
         contactsEl.innerHTML = dedupedColleges.map(c => {
-          const tip = c.contacts.length
-            ? `In communication with: ${c.contacts.join(', ')}`
-            : 'No coach/director recorded';
-          return `<span title="${tip.replace(/"/g,'&quot;')}" style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.06);border-radius:16px;padding:3px 10px;margin:3px;font-size:12px;cursor:help;">
+          const contactsAttr = c.contacts.join('|').replace(/"/g, '&quot;');
+          return `<span class="college-badge" data-college="${c.college_name.replace(/"/g,'&quot;')}" data-division="${(c.division||'').replace(/"/g,'&quot;')}" data-contacts="${contactsAttr}" style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.06);border-radius:16px;padding:3px 10px;margin:3px;font-size:12px;cursor:pointer;">
             <span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;background:#1a4a2e;color:#6fcf97;">${c.division}</span>
             ${c.college_name}${c.contacts.length ? `<span style="font-size:9px;color:rgba(255,255,255,0.4);margin-left:2px;">ⓘ</span>` : ''}
           </span>`;
         }).join('');
+        document.querySelectorAll('#aiCardCollegeContacts .college-badge').forEach(badge => {
+          badge.addEventListener('mouseenter', showCollegePopup);
+          badge.addEventListener('mouseleave', hideCollegePopup);
+          badge.addEventListener('click', toggleCollegePopup);
+        });
         allNotes.push(`COLLEGES IN COMMUNICATION WITH:\n${dedupedColleges.map(c => `${c.college_name} (${c.division})${c.contacts.length ? ' — ' + c.contacts.join(', ') : ''}`).join(', ')}`);
       } else {
         contactsSection.style.display = 'none';
@@ -684,12 +703,12 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
       const collegeSection = document.getElementById('aiCardCollegeSection');
       let collegesText = '';
       if (collegeSection.style.display !== 'none') {
-        const chips = document.querySelectorAll('#aiCardCollegeContacts span[title]');
+        const chips = document.querySelectorAll('#aiCardCollegeContacts .college-badge');
         const lines = [];
         chips.forEach(ch => {
-          const collegeName = ch.textContent.replace(/[ⓘ\s]+$/,'').trim();
-          const tip = ch.getAttribute('title') || '';
-          lines.push(tip.startsWith('In communication') ? `${collegeName} (${tip.replace('In communication with: ','')})` : collegeName);
+          const collegeName = ch.dataset.college || ch.textContent.replace(/[ⓘ\s]+$/,'').trim();
+          const contacts = (ch.dataset.contacts || '').split('|').filter(Boolean);
+          lines.push(contacts.length ? `${collegeName} (${contacts.join(', ')})` : collegeName);
         });
         if (lines.length) collegesText = `\nColleges In Communication With:\n- ${lines.join('\n- ')}`;
       }
@@ -733,6 +752,60 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
         loadRosterPlayers();
         loadAllEvals();
       }
+      // College popup (hover on desktop, click on mobile)
+      const collegePopup = document.getElementById('college-popup');
+      let popupPinned = false;
+
+      function positionPopup(badge) {
+        const rect = badge.getBoundingClientRect();
+        const pw = collegePopup.offsetWidth || 200;
+        let left = rect.left + rect.width / 2 - pw / 2;
+        left = Math.max(8, Math.min(left, window.innerWidth - pw - 8));
+        const top = rect.top - collegePopup.offsetHeight - 10;
+        collegePopup.style.left = left + 'px';
+        collegePopup.style.top = (top < 8 ? rect.bottom + 10 : top) + 'px';
+        // Move caret if popup flipped below
+        collegePopup.style.setProperty('--caret-flip', top < 8 ? 'below' : 'above');
+      }
+
+      function showCollegePopup(e) {
+        const badge = e.currentTarget;
+        const college = badge.dataset.college || '';
+        const contacts = (badge.dataset.contacts || '').split('|').filter(Boolean);
+        document.getElementById('cp-college-name').textContent = college;
+        const contactsEl = document.getElementById('cp-contacts');
+        if (contacts.length) {
+          contactsEl.className = 'cp-person';
+          contactsEl.innerHTML = contacts.map(function(p){ return '<div>' + p + '</div>'; }).join('');
+        } else {
+          contactsEl.className = 'cp-none';
+          contactsEl.textContent = 'No coach recorded';
+        }
+        collegePopup.classList.add('visible');
+        positionPopup(badge);
+      }
+
+      function hideCollegePopup() {
+        if (!popupPinned) collegePopup.classList.remove('visible');
+      }
+
+      function toggleCollegePopup(e) {
+        e.stopPropagation();
+        const badge = e.currentTarget;
+        if (popupPinned && collegePopup.classList.contains('visible')) {
+          popupPinned = false;
+          collegePopup.classList.remove('visible');
+        } else {
+          popupPinned = true;
+          showCollegePopup(e);
+        }
+      }
+
+      document.addEventListener('click', function() {
+        popupPinned = false;
+        collegePopup.classList.remove('visible');
+      });
+
       // Allow Enter key on login
       document.getElementById('loginPassword').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') authenticate();
@@ -814,6 +887,11 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
     </div>
   </div>
   <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+  <div id="college-popup">
+    <div class="cp-college" id="cp-college-name"></div>
+    <div class="cp-label">Logged by</div>
+    <div id="cp-contacts"></div>
+  </div>
 
 </body>
 </html>
