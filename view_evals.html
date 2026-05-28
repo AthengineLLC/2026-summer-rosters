@@ -580,8 +580,15 @@
         el.style.color = color;
         box.style.border = val <= 5 && val >= 5 ? '1px solid rgba(255,255,255,0.1)' : '';
       });
-      // Hide pitching box if no pitching reports
-      document.getElementById('aiCardPitBox').style.display = pitReports.length ? 'block' : 'none';
+      // Determine which rating boxes to show
+      const PITCH_POSITIONS = ['RHP','LHP','SP','RP','P','PITCHER'];
+      const posArr = positions.split(',').map(p => p.trim().toUpperCase()).filter(Boolean);
+      const isPitchingOnly = posArr.length > 0 && posArr.every(p => PITCH_POSITIONS.includes(p));
+      const hasPitchingData = avgPit !== 'N/A' || pitReports.length > 0;
+
+      document.getElementById('aiCardDefBox').style.display = isPitchingOnly ? 'none' : 'block';
+      document.getElementById('aiCardOffBox').style.display = isPitchingOnly ? 'none' : 'block';
+      document.getElementById('aiCardPitBox').style.display = hasPitchingData ? 'block' : 'none';
       document.getElementById('aiCardPositions').textContent = positions || '—';
       document.getElementById('aiCardRecruitment').textContent = recruitLevels || '—';
       document.getElementById('aiCardReport').textContent = '';
@@ -830,13 +837,13 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
       <!-- Averaged Ratings -->
       <div style="padding:20px 28px;border-bottom:1px solid rgba(255,255,255,0.07);">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:#b91e2d;text-transform:uppercase;margin-bottom:12px;">Averaged Ratings</div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
-          <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;text-align:center;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;">
+          <div id="aiCardDefBox" style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;text-align:center;">
             <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px;letter-spacing:1px;">DEFENSE</div>
             <div id="aiCardAvgDef" style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;"></div>
             <div style="font-size:10px;color:rgba(255,255,255,0.3);">/10</div>
           </div>
-          <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;text-align:center;">
+          <div id="aiCardOffBox" style="background:rgba(255,255,255,0.05);border-radius:10px;padding:14px;text-align:center;">
             <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px;letter-spacing:1px;">OFFENSE</div>
             <div id="aiCardAvgOff" style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;"></div>
             <div style="font-size:10px;color:rgba(255,255,255,0.3);">/10</div>
@@ -846,7 +853,7 @@ Write a 3-4 paragraph professional scouting summary. Cover their overall profile
             <div id="aiCardAvgPit" style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;"></div>
             <div style="font-size:10px;color:rgba(255,255,255,0.3);">/10</div>
           </div>
-          <div style="background:rgba(185,30,45,0.15);border-radius:10px;padding:14px;text-align:center;border:1px solid rgba(185,30,45,0.3);">
+          <div id="aiCardRosterBox" style="background:rgba(185,30,45,0.15);border-radius:10px;padding:14px;text-align:center;border:1px solid rgba(185,30,45,0.3);">
             <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px;letter-spacing:1px;">ROSTER</div>
             <div id="aiCardAvgRoster" style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#b91e2d;"></div>
             <div style="font-size:10px;color:rgba(255,255,255,0.3);">/10</div>
