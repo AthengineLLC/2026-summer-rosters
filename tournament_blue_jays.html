@@ -514,6 +514,11 @@
   .opp-name { font-weight: 800; color: #fff; }
   .venue-col { padding: 12px 14px; font-size: 16px; font-weight: 600; color: #8a9ab8; text-transform: uppercase; letter-spacing: 0.5px; }
   .pool-col { width: 80px; padding: 12px 14px; font-size: 16px; font-weight: 700; color: #b91e2d; text-align: center; letter-spacing: 1px; }
+  .result-col { width: 90px; padding: 12px 14px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 900; letter-spacing: 1px; white-space: nowrap; }
+  .result-col.win  { color: #22c55e; }
+  .result-col.loss { color: #ef4444; }
+  .result-col.tie  { color: #f59e0b; }
+  .result-col.pending { color: #444e61; font-size: 14px; font-weight: 600; letter-spacing: 0; }
 
   /* FOOTER */
   .footer { margin-top: 36px; padding-top: 22px; border-top: 2px solid #b91e2d; display: flex; justify-content: space-between; align-items: center; }
@@ -747,7 +752,7 @@
     </div>
     <table>
       <thead><tr>
-        <th>Time</th><th>Team</th><th>Opponent</th><th>Venue</th><th>Div</th>
+        <th>Time</th><th>Team</th><th>Opponent</th><th>Venue</th><th>Div</th><th>Result</th>
       </tr></thead>
       <tbody>
         <tr>
@@ -756,14 +761,16 @@
           <td class="opp-col">vs. <span class="opp-name">Ostingers Baseball 2027</span></td>
           <td class="venue-col">BJ Spring Training · Field 4 · Dunedin, FL</td>
           <td class="pool-col">17U</td>
+        <td class="result-col loss">L 3-5</td>
         </tr>
-        <tr class="time-spacer"><td colspan="5"></td></tr>
+        <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr>
           <td class="time-col">6:15 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 Scout DiBenedetto</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Franklin Scout Team/BTD 2028</span></td>
           <td class="venue-col">IMG Academy · Field 4 · Bradenton, FL</td>
           <td class="pool-col">16U</td>
+          <td class="result-col pending">—</td>
         </tr>
         <tr>
           <td class="time-col">6:15 PM</td>
@@ -771,6 +778,7 @@
           <td class="opp-col">vs. <span class="opp-name">Franklin Scout Team/BTD 2029</span></td>
           <td class="venue-col">IMG Academy · Field 5 · Bradenton, FL</td>
           <td class="pool-col">15U</td>
+          <td class="result-col pending">—</td>
         </tr>
       </tbody>
     </table>
@@ -794,8 +802,9 @@
           <td class="opp-col">vs. <span class="opp-name">Top Tier Roos American 2027</span></td>
           <td class="venue-col">BJ Spring Training · Field 4 · Dunedin, FL</td>
           <td class="pool-col">17U</td>
+        <td class="result-col loss">L 3-5</td>
         </tr>
-        <tr class="time-spacer"><td colspan="5"></td></tr>
+        <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr>
           <td class="time-col">10:20 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 Scout DiBenedetto</strong></td>
@@ -817,8 +826,9 @@
           <td class="opp-col">@ <span class="opp-name">Power Baseball 2027 Marucci</span></td>
           <td class="venue-col">BJ Spring Training · Field 6 · Dunedin, FL</td>
           <td class="pool-col">17U</td>
+        <td class="result-col loss">L 3-5</td>
         </tr>
-        <tr class="time-spacer"><td colspan="5"></td></tr>
+        <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr>
           <td class="time-col">12:40 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 Scout Pascual</strong></td>
