@@ -1,15 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CBU 2027 Scout Team McCoy | 2026 Summer Rosters</title>
+  <title>CBU 2027 United Fleming | 2026 Summer Rosters</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
+
     :root {
       --navy: #0d1a33;
       --navy-deep: #08101f;
@@ -19,7 +19,7 @@
       --text-muted: #5a6478;
       --white: #ffffff;
     }
-    
+
     body {
       font-family: 'Inter', sans-serif;
       background: var(--navy-deep);
@@ -27,7 +27,7 @@
       margin: 0;
       padding: 0;
     }
-    
+
     /* NAVIGATION */
     nav {
       background: var(--navy);
@@ -188,7 +188,7 @@
       margin: 0 auto;
       padding: 50px 40px;
     }
-    
+
     /* SCHEDULE SECTION */
     .schedule-section {
       margin-bottom: 60px;
@@ -197,14 +197,14 @@
       overflow: hidden;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
     }
-    
+
     .schedule-frame {
       width: 100%;
       height: 1400px;
       border: none;
       display: block;
     }
-    
+
     /* ROSTER SECTION */
     .roster-section {
       background: var(--white);
@@ -218,7 +218,7 @@
       padding-bottom: 30px;
       border-bottom: 3px solid var(--red);
     }
-    
+
     .roster-title {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 52px;
@@ -227,7 +227,7 @@
       letter-spacing: -0.5px;
       margin-bottom: 12px;
     }
-    
+
     .roster-subtitle {
       font-size: 16px;
       color: var(--text-muted);
@@ -235,7 +235,7 @@
       text-transform: uppercase;
       font-weight: 600;
     }
-    
+
     /* ROSTER TABLE */
     .roster-table-wrapper {
       background: var(--white);
@@ -243,18 +243,18 @@
       overflow: hidden;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
     }
-    
+
     .roster-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 14px;
     }
-    
+
     .roster-table thead {
       background: var(--navy);
       color: var(--white);
     }
-    
+
     .roster-table th {
       padding: 18px 10px;
       text-align: left;
@@ -271,26 +271,26 @@
     .roster-table th:nth-child(5) { min-width: 60px; }
     .roster-table th:nth-child(6) { min-width: 50px; width: 50px; }
     .roster-table td:nth-child(6) { white-space: nowrap; }
-    
+
     .roster-table th:last-child {
       border-right: none;
     }
-    
+
     .roster-table td {
       padding: 16px 14px;
       border-bottom: 1px solid #e0e0e0;
       color: var(--text-dark);
     }
-    
+
     .roster-table tbody tr:hover {
       background: #f9f9f9;
       transition: background 0.2s ease;
     }
-    
+
     .roster-table tbody tr:last-child td {
       border-bottom: none;
     }
-    
+
     /* JERSEY NUMBER - PROMINENT */
     .jersey-num {
       font-weight: 900;
@@ -299,80 +299,80 @@
       min-width: 50px;
       text-align: center;
     }
-    
+
     /* NAME COLUMNS */
     .player-name {
       font-weight: 600;
       color: var(--navy);
       white-space: nowrap;
     }
-    
+
     /* POSITION COLUMNS */
     .position {
       font-weight: 500;
       color: var(--text-dark);
     }
-    
+
     /* ATTRIBUTE COLUMNS */
     .attribute {
       font-weight: 500;
       color: var(--text-muted);
       font-size: 13px;
     }
-    
+
     .high-school {
       font-weight: 500;
       color: var(--text-dark);
     }
-    
+
     .committed {
       font-weight: 600;
       color: var(--red);
     }
-    
+
     .committed.empty {
       color: var(--text-muted);
       font-weight: 400;
     }
-    
+
     /* RESPONSIVE */
     @media (max-width: 1200px) {
       .container {
         padding: 40px 25px;
       }
-      
+
       .roster-table {
         font-size: 13px;
       }
-      
+
       .roster-table th,
       .roster-table td {
         padding: 12px 10px;
       }
     }
-    
+
     @media (max-width: 768px) {
       .nav-container {
         padding: 0 20px;
       }
-      
+
       .nav-menu {
         gap: 15px;
       }
-      
+
       .nav-link {
         font-size: 13px;
       }
-      
+
       .roster-title {
         font-size: 36px;
       }
-      
+
       .roster-table {
         font-size: 12px;
         overflow-x: auto;
       }
-      
+
       .roster-table th,
       .roster-table td {
         padding: 10px 8px;
@@ -442,17 +442,104 @@
       color: var(--red);
     }
 
+    /* EXPANDABLE TOURNAMENT SCHEDULE */
+    .tourn-schedule-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 9px 18px;
+      background: #0d1a33;
+      border: 2px solid #b91e2d;
+      border-radius: 6px;
+      color: #ffffff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      justify-content: center;
+    }
+    .tourn-schedule-btn:hover { background: #b91e2d; color: #fff; }
+    .tourn-schedule-btn .btn-arrow { transition: transform 0.3s; display: inline-block; font-size: 12px; }
+    .tourn-schedule-btn.open { background: #b91e2d; color: #fff; }
+    .tourn-schedule-btn.open .btn-arrow { transform: rotate(180deg); }
+    .tourn-game-table {
+      display: none;
+      margin-top: 10px;
+      background: #0d1a33;
+      border-radius: 8px;
+      overflow: hidden;
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .tourn-game-table.open { display: table; }
+    .full-sched-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #b91e2d;
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .full-sched-link:hover { color: #fff; }
+
+    /* MOBILE GAME TABLE FIX */
+    @media (max-width: 600px) {
+      .tourn-game-table { font-size: 13px; }
+      .tourn-game-table tr td:nth-child(4) { display: none; } /* hide venue on tiny screens */
+      .tourn-game-table tr td { padding: 10px 8px !important; font-size: 13px !important; }
+      .tourn-game-table tr[style*="background:#b91e2d"] td {
+        padding: 7px 10px !important;
+        font-size: 12px !important;
+      }
+      /* Stack opponent + venue vertically in one cell */
+      .game-opp-wrap { display: flex; flex-direction: column; gap: 2px; }
+      .game-opp-name { font-size: 14px; font-weight: 700; color: #fff; }
+      .game-venue-name { font-size: 13px; color: #aab4c8; text-transform: uppercase; letter-spacing: 0.5px; display: inline; }
+      .game-opp-name::after { content: " · "; color: #aab4c8; font-weight: 400; }
+      .tourn-schedule-btn { font-size: 13px; padding: 8px 12px; }
+    }
+
+    /* HAT ICON */
     .hat-icon {
       display: inline-block;
       width: 22px;
       height: 18px;
-      background-image: url('data:image/png;base64,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');
+      background-image: url('data:image/png;base64,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');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
       vertical-align: middle;
       margin-right: 5px;
     }
+
+    /* GAME RESULTS */
+    .game-result { padding: 10px 14px; text-align: center; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 900; letter-spacing: 1px; min-width: 70px; }
+    .game-result.win  { color: #22c55e; }
+    .game-result.loss { color: #ef4444; }
+    .game-result.tie  { color: #f59e0b; }
+    .game-result.rainout { color: #7b8fa6; font-size: 13px; font-weight: 600; letter-spacing: 0; }
+    .game-result.pending { color: #555e72; font-size: 13px; font-weight: 600; letter-spacing: 0; }
+    @media (max-width: 600px) {
+      .game-result { font-size: 13px; padding: 8px 6px; min-width: 52px; }
+    }
+
+    /* PAGE-LEVEL RECORD BADGE (next to team name) */
+    .page-record-badge { display: inline-block; margin-left: 16px; background: #b91e2d; color: #ffffff; border-radius: 20px; padding: 3px 14px; font-size: 18px; font-weight: 900; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; vertical-align: middle; position: relative; top: -3px; }
+    @media (max-width: 600px) { .page-record-badge { font-size: 14px; padding: 2px 10px; margin-left: 10px; } }
+
+    /* BRACKET TAG */
+    .bracket-tag { display: inline-block; background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%); color: #0d1a33; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 11px; border-radius: 5px; margin-left: 10px; vertical-align: middle; box-shadow: 0 2px 6px rgba(245,158,11,0.4); }
   </style>
 </head>
 <body>
@@ -574,7 +661,7 @@
     <!-- ROSTER SECTION -->
     <div class="roster-section">
       <div class="roster-header">
-        <h2 class="roster-title">CBU 2027 Scout Team McCoy</h2>
+        <h2 class="roster-title">CBU 2027 United Fleming<span id="page-record-badge" class="page-record-badge">0-3</span></h2>
         <p class="roster-subtitle">Team Roster</p>
       </div>
 
@@ -583,296 +670,143 @@
         <table class="roster-table">
           <thead>
             <tr>
-              <th>#</th><th>First Name</th><th>Last Name</th><th>Position</th><th>B/T</th><th>Height</th><th>Weight</th><th>City</th><th>State</th><th>High School</th><th>Committed To</th>
+              <th>#</th><th>First Name</th><th>Last Name</th><th>Position</th><th>B/T</th><th>Height</th><th>Weight</th><th>High School</th><th>Committed To</th>
             </tr>
           </thead>
           <tbody>
 <tr>
-            <td class="jersey-num">1</td>
-            <td class="player-name">Ethan</td>
-            <td class="player-name">Bissell</td>
-            <td class="position">RHP/SS</td>
+            <td class="jersey-num">5</td>
+            <td class="player-name">Chance</td>
+            <td class="player-name">Crawford</td>
+            <td class="position">P/CIF</td>
             <td class="attribute">R/R</td>
-            <td class="attribute">6'0</td>
-            <td class="attribute">180</td>
-            <td>St Johns</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">St. John’s Country Day</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">2</td>
-            <td class="player-name">Paul (trace)</td>
-            <td class="player-name">Zalman</td>
-            <td class="position">RF/RF</td>
-            <td class="attribute">R/R</td>
-            <td class="attribute">5'10</td>
-            <td class="attribute">180</td>
-            <td>Hollywood</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">St Thomas Aquinas</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">3</td>
-            <td class="player-name">Jarod</td>
-            <td class="player-name">Flowers</td>
-            <td class="position">2B/UT</td>
-            <td class="attribute">R/R</td>
-            <td class="attribute">5'9</td>
-            <td class="attribute">165</td>
-            <td>Orange Park</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Trinity Christian Academy</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">4</td>
-            <td class="player-name">Kevin</td>
-            <td class="player-name">Sullivan</td>
-            <td class="position">LHP/RF</td>
-            <td class="attribute">L/L</td>
-            <td class="attribute">6'0</td>
-            <td class="attribute">185</td>
-            <td>Jacksonville</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Episcopal School of Jacksonville</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">4</td>
-            <td class="player-name"><span class="hat-icon"></span>Omari</td>
-            <td class="player-name">Burse</td>
-            <td class="position">SS/2B</td>
-            <td class="attribute">R/R</td>
-            <td class="attribute">6'0</td>
-            <td class="attribute">165</td>
-            <td>Pooler</td>
-            <td class="attribute">GA</td>
-            <td class="high-school">Benedictine Military School</td>
-            <td class="committed">UAB</td>
-          </tr><tr>
-            <td class="jersey-num">6</td>
-            <td class="player-name">Dominic</td>
-            <td class="player-name">Ferreira</td>
-            <td class="position">RHP/RF</td>
-            <td class="attribute">R/R</td>
-            <td class="attribute">6'4</td>
-            <td class="attribute">200</td>
-            <td>Coral Springs</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">American Heritage School Plantation</td>
+            <td class="attribute">5'7</td>
+            <td class="attribute">195</td>
+            <td class="high-school">Ridgeview High School</td>
             <td class="committed empty">—</td>
           </tr><tr>
             <td class="jersey-num">7</td>
-            <td class="player-name">2027 Caleb</td>
-            <td class="player-name">Stanton</td>
-            <td class="position">C/1B</td>
-            <td class="attribute">S/R</td>
-            <td class="attribute">6'2</td>
-            <td class="attribute">230</td>
-            <td>Jacksonville</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Episcopal School of Jacksonville</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">9</td>
-            <td class="player-name">Jaeger</td>
-            <td class="player-name">Bedford</td>
-            <td class="position">RHP/RHP</td>
-            <td class="attribute">R/R</td>
-            <td class="attribute">6'3</td>
-            <td class="attribute">185</td>
-            <td>Tampa</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Jesuit Tampa</td>
+            <td class="player-name">Josh</td>
+            <td class="player-name">Lysiak</td>
+            <td class="position">P/OF</td>
+            <td class="attribute">L/R</td>
+            <td class="attribute">5'4</td>
+            <td class="attribute">145</td>
+            <td class="high-school">First Baptist Academy</td>
             <td class="committed empty">—</td>
           </tr><tr>
             <td class="jersey-num">10</td>
-            <td class="player-name">Boston</td>
-            <td class="player-name">Selig</td>
-            <td class="position">RHP/3B</td>
-            <td class="attribute">R/R</td>
-            <td class="attribute">6'5</td>
-            <td class="attribute">190</td>
-            <td>Bonita Springs</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Bishop Verot</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">11</td>
-            <td class="player-name">Nolan</td>
-            <td class="player-name">Parmer</td>
-            <td class="position">RHP/RHP</td>
-            <td class="attribute">R/R</td>
-            <td class="attribute">6'1</td>
-            <td class="attribute">165</td>
-            <td>Tampa</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Berkeley Prep</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">12</td>
-            <td class="player-name">Dylan</td>
-            <td class="player-name">Monile</td>
-            <td class="position">1B/LF</td>
-            <td class="attribute">L/L</td>
-            <td class="attribute">5'9</td>
-            <td class="attribute">175</td>
-            <td>Tampa</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Clearwater Central Catholic High School</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">12</td>
-            <td class="player-name">Brant</td>
-            <td class="player-name">Bivens</td>
-            <td class="position">SS/RHP</td>
-            <td class="attribute">R/R</td>
-            <td class="attribute">6'1</td>
-            <td class="attribute">165</td>
-            <td>Trenton</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Trenton High School</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">13</td>
-            <td class="player-name">Bryson</td>
-            <td class="player-name">Mitchell</td>
-            <td class="position">RHP/RHP</td>
+            <td class="player-name">Matthew</td>
+            <td class="player-name">Smith</td>
+            <td class="position">P/IF</td>
             <td class="attribute">R/R</td>
             <td class="attribute">5'11</td>
-            <td class="attribute">158</td>
-            <td>Bushnell</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">South Sumter</td>
+            <td class="attribute">167</td>
+            <td class="high-school">Providence</td>
             <td class="committed empty">—</td>
           </tr><tr>
-            <td class="jersey-num">15</td>
-            <td class="player-name">Joel</td>
-            <td class="player-name">Ortiz</td>
-            <td class="position">SS/3B</td>
-            <td class="attribute">L/L</td>
-            <td class="attribute">6'1</td>
-            <td class="attribute">160</td>
-            <td>Orlando</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Montverde Academy</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">16</td>
-            <td class="player-name">Gavin</td>
-            <td class="player-name">Shefsky</td>
-            <td class="position">LHP/1B</td>
-            <td class="attribute">L/L</td>
-            <td class="attribute">6'3</td>
-            <td class="attribute">190</td>
-            <td>Wesley Chapel</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Cypress Creek</td>
+            <td class="jersey-num">12</td>
+            <td class="player-name">Matthew</td>
+            <td class="player-name">Teachout</td>
+            <td class="position">P/1B</td>
+            <td class="attribute">R/R</td>
+            <td class="attribute">6'2</td>
+            <td class="attribute">220</td>
+            <td class="high-school">Providence</td>
             <td class="committed empty">—</td>
           </tr><tr>
             <td class="jersey-num">17</td>
-            <td class="player-name">Jack</td>
-            <td class="player-name">Hurlburt</td>
-            <td class="position">SS/RHP</td>
+            <td class="player-name">Jake</td>
+            <td class="player-name">Parker</td>
+            <td class="position">P</td>
             <td class="attribute">R/R</td>
             <td class="attribute">6'3</td>
             <td class="attribute">175</td>
-            <td>Odessa</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">A3 Academy</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">18</td>
-            <td class="player-name">Nelson</td>
-            <td class="player-name">Ong</td>
-            <td class="position">CF/RHP</td>
-            <td class="attribute">R/R</td>
-            <td class="attribute">5'11</td>
-            <td class="attribute">175</td>
-            <td>Key West</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Key West High School</td>
+            <td class="high-school">IMG</td>
             <td class="committed empty">—</td>
           </tr><tr>
             <td class="jersey-num">19</td>
-            <td class="player-name">Austin</td>
-            <td class="player-name">Smith</td>
-            <td class="position">RHP/1B</td>
+            <td class="player-name">Carson</td>
+            <td class="player-name">Bechan</td>
+            <td class="position">IF</td>
             <td class="attribute">R/R</td>
-            <td class="attribute">6'0</td>
-            <td class="attribute">190</td>
-            <td>Jacksonville</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Episcopal School of Jacksonville</td>
+            <td class="attribute">5'10</td>
+            <td class="attribute">162</td>
+            <td class="high-school">Trinity Christian Academy</td>
             <td class="committed empty">—</td>
           </tr><tr>
-            <td class="jersey-num">20</td>
-            <td class="player-name">JD</td>
-            <td class="player-name">James</td>
-            <td class="position">LF/RHP</td>
-            <td class="attribute">R/R</td>
-            <td class="attribute">6'1</td>
-            <td class="attribute">170</td>
-            <td>Sarasota</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Cardinal Mooney</td>
+            <td class="jersey-num">21</td>
+            <td class="player-name">Jayden</td>
+            <td class="player-name">Justo</td>
+            <td class="position">P/OF</td>
+            <td class="attribute">L/L</td>
+            <td class="attribute">5'6</td>
+            <td class="attribute">145</td>
+            <td class="high-school">Stanton College Prep</td>
             <td class="committed empty">—</td>
           </tr><tr>
             <td class="jersey-num">23</td>
-            <td class="player-name">Taylor</td>
-            <td class="player-name">Ancheta</td>
-            <td class="position">CF/LF</td>
-            <td class="attribute">L/R</td>
-            <td class="attribute">5'10</td>
-            <td class="attribute">185</td>
-            <td>Miami</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Miami Springs Senior High</td>
-            <td class="committed empty">—</td>
-          </tr><tr>
-            <td class="jersey-num">24</td>
-            <td class="player-name">Adrian</td>
-            <td class="player-name">Alfonso</td>
-            <td class="position">C/RHP</td>
+            <td class="player-name">William</td>
+            <td class="player-name">Spellman</td>
+            <td class="position">IF</td>
             <td class="attribute">R/R</td>
-            <td class="attribute">6'0</td>
-            <td class="attribute">180</td>
-            <td>Miramar</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Archbishop Mccarthy High School</td>
+            <td class="attribute">5'11</td>
+            <td class="attribute">145</td>
+            <td class="high-school">Stanton College Prep</td>
             <td class="committed empty">—</td>
           </tr><tr>
             <td class="jersey-num">27</td>
-            <td class="player-name">Alejandro J</td>
-            <td class="player-name">Rivero</td>
-            <td class="position">CF/1B</td>
+            <td class="player-name">Austin</td>
+            <td class="player-name">Gilson</td>
+            <td class="position">C/CIF</td>
             <td class="attribute">R/R</td>
-            <td class="attribute">6'0</td>
-            <td class="attribute">178</td>
-            <td>Miami</td>
-            <td class="attribute">FL</td>
-            <td class="high-school">Christopher Columbus</td>
+            <td class="attribute">5'10</td>
+            <td class="attribute">160</td>
+            <td class="high-school">Beachside High School</td>
+            <td class="committed empty">—</td>
+          </tr><tr>
+            <td class="jersey-num">49</td>
+            <td class="player-name">Baylin</td>
+            <td class="player-name">Rodger</td>
+            <td class="position">P/OF</td>
+            <td class="attribute">L/L</td>
+            <td class="attribute">6'4</td>
+            <td class="attribute">170</td>
+            <td class="high-school">IMG</td>
+            <td class="committed empty">—</td>
+          </tr><tr>
+            <td class="jersey-num">55</td>
+            <td class="player-name">Ethan</td>
+            <td class="player-name">Abram</td>
+            <td class="position">P/IF/OF</td>
+            <td class="attribute">R/R</td>
+            <td class="attribute">5'9</td>
+            <td class="attribute">180</td>
+            <td class="high-school">Stanton College Prep</td>
+            <td class="committed empty">—</td>
+          </tr><tr>
+            <td class="jersey-num">74</td>
+            <td class="player-name">Evan</td>
+            <td class="player-name">Voor</td>
+            <td class="position">C/CIF</td>
+            <td class="attribute">R/R</td>
+            <td class="attribute">6'1</td>
+            <td class="attribute">230</td>
+            <td class="high-school">Jesuit</td>
+            <td class="committed empty">—</td>
+          </tr><tr>
+            <td class="jersey-num">99</td>
+            <td class="player-name">Dane</td>
+            <td class="player-name">Todhunter</td>
+            <td class="position">P/CIF/OF</td>
+            <td class="attribute">R/R</td>
+            <td class="attribute">6'6</td>
+            <td class="attribute">235</td>
+            <td class="high-school">Bishop Snyder</td>
             <td class="committed empty">—</td>
           </tr>
-        </tbody>
+          </tbody>
         </table>
-      </div>
-    </div><!-- end roster-section -->
-
-    <!-- COACHING STAFF -->
-    <div class="coaches-section" style="margin: 50px auto; max-width: 1000px; padding: 0 20px;">
-      <h2 style="font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; color: #ffffff; letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase;">Coaching Staff & Leadership</h2>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-        <!-- Left: Coaching Staff -->
-        <div style="background: #ffffff; border-radius: 12px; padding: 30px; border-left: 4px solid #b91e2d;">
-          <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 900; color: #b91e2d; letter-spacing: 2px; margin-bottom: 16px; text-transform: uppercase;">Coaching Staff</div>
-          <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; color: #0d1a33; margin-bottom: 12px; letter-spacing: 1px;">HEAD COACH: Mark McCoy</div>
-          <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; color: #0d1a33; margin-bottom: 12px; letter-spacing: 1px;">Assistant: Tom Stanton</div>
-        </div>
-        <!-- Right: Directors -->
-        <div style="background: #ffffff; border-radius: 12px; padding: 30px; border-left: 4px solid #b91e2d;">
-          <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 900; color: #b91e2d; letter-spacing: 2px; margin-bottom: 16px; text-transform: uppercase;">Grad Class Directors</div>
-          <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; color: #0d1a33; margin-bottom: 12px; letter-spacing: 1px;">Wayne Stofsky</div>
-          <div style="font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 700; color: #0d1a33; margin-bottom: 12px; letter-spacing: 1px;">Addison Maruszak</div>
-        </div>
       </div>
     </div>
 
@@ -906,29 +840,62 @@
   </style>
   <div class="sched-poster">
     <div class="sched-header">
-      <div class="sched-team-label"><span class="sched-line"></span><span>✦</span>CBU 2027 SCOUT TEAM MCCOY<span>✦</span><span class="sched-line"></span></div>
+      <div class="sched-team-label"><span class="sched-line"></span><span>✦</span>CBU 2027 UNITED FLEMING<span>✦</span><span class="sched-line"></span></div>
       <div class="sched-logo-underline"></div>
       <div class="sched-title">2026<br>SUMMER<br>SCHEDULE</div>
     </div>
     <div class="sched-games">
       <div class="sched-game-card">
+        <div class="sched-date-block"><div class="sched-month">MAY</div><div class="sched-day">22</div></div>
+        <div class="sched-game-info"><div class="sched-event-name">PG Memorial</div><div class="sched-venue">Fort Myers, FL</div>
+          <button class="tourn-schedule-btn" onclick="toggleGameSchedule(this, 'games_fleming_pgmemorial')">
+            ⚾ View PG Memorial Games <span class="btn-arrow">▼</span>
+          </button>
+          <table class="tourn-game-table" id="games_fleming_pgmemorial">
+            <tbody>
+            <tr style="background:#b91e2d;">
+              <td colspan="4" style="padding:8px 12px;font-weight:900;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#fff;font-family:'Barlow Condensed',sans-serif;">SATURDAY · May 23</td>
+            </tr><tr>
+              <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">12:30 PM</td>
+              <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">vs.</td>
+              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">Natty Boys 2027</span><span style="color:#aab4c8;"> · </span><span class="game-venue-name">Terry Park · Brett</span></div></td>
+              <td class="game-result loss">L 0-3</td>
+            </tr><tr>
+              <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">5:00 PM</td>
+              <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">vs.</td>
+              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">FL Elite Angels Scout Team 2027</span><span style="color:#aab4c8;"> · </span><span class="game-venue-name">Terry Park · Brett</span></div></td>
+              <td class="game-result loss">L 0-7</td>
+            </tr><tr style="background:#b91e2d;">
+              <td colspan="4" style="padding:8px 12px;font-weight:900;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#fff;font-family:'Barlow Condensed',sans-serif;">SUNDAY · May 24</td>
+            </tr><tr>
+              <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">8:00 AM</td>
+              <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">vs.</td>
+              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">CBC Elite-Naples</span><span style="color:#aab4c8;"> · </span><span class="game-venue-name">5 Plex · Field 2</span></div></td>
+              <td class="game-result loss">L 0-14</td>
+            </tr><tr>
+              <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">2:45 PM</td>
+              <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">vs.</td>
+              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">Scorpions West</span><span style="color:#aab4c8;"> · </span><span class="game-venue-name">5 Plex · Field 3</span></div></td>
+              <td class="game-result rainout">Rain Out</td>
+            </tr>
+            </tbody>
+          </table>
+          <a href="tournament_pg_memorial.html" class="full-sched-link">View full composite schedule →</a></div>
+        <div class="sched-status"><div class="sched-tag">Event 1</div></div>
+      </div>
+      <div class="sched-game-card">
         <div class="sched-date-block"><div class="sched-month">JUNE</div><div class="sched-day">5</div></div>
         <div class="sched-game-info"><div class="sched-event-name">PS Palm Beach Classic</div><div class="sched-venue">Jupiter, FL</div></div>
-        <div class="sched-status"><div class="sched-tag">Event 1</div></div>
+        <div class="sched-status"><div class="sched-tag">Event 2</div></div>
       </div>
       <div class="sched-game-card">
         <div class="sched-date-block"><div class="sched-month">JUNE</div><div class="sched-day">17</div></div>
         <div class="sched-game-info"><div class="sched-event-name">PS Black Bear</div><div class="sched-venue">Greenville, SC</div></div>
-        <div class="sched-status"><div class="sched-tag">Event 2</div></div>
+        <div class="sched-status"><div class="sched-tag">Event 3</div></div>
       </div>
       <div class="sched-game-card">
         <div class="sched-date-block"><div class="sched-month">JUNE</div><div class="sched-day">23</div></div>
         <div class="sched-game-info"><div class="sched-event-name">PG WWBA</div><div class="sched-venue">Atlanta, GA</div></div>
-        <div class="sched-status"><div class="sched-tag">Event 3</div></div>
-      </div>
-      <div class="sched-game-card">
-        <div class="sched-date-block"><div class="sched-month">JULY</div><div class="sched-day">11</div></div>
-        <div class="sched-game-info"><div class="sched-event-name">PG National Elite</div><div class="sched-venue">Hoover, AL</div></div>
         <div class="sched-status"><div class="sched-tag">Event 4</div></div>
       </div>
       <div class="sched-game-card">
@@ -943,13 +910,8 @@
       </div>
       <div class="sched-game-card">
         <div class="sched-date-block"><div class="sched-month">SEPT</div><div class="sched-tbd">TBD</div></div>
-        <div class="sched-game-info"><div class="sched-event-name">PS World Invite</div><div class="sched-venue">Jupiter, FL</div></div>
+        <div class="sched-game-info"><div class="sched-event-name">PS Palm Beach</div><div class="sched-venue">Jupiter, FL</div></div>
         <div class="sched-status"><div class="sched-tag">Event 7</div></div>
-      </div>
-      <div class="sched-game-card">
-        <div class="sched-date-block"><div class="sched-month">OCT</div><div class="sched-tbd">TBD</div></div>
-        <div class="sched-game-info"><div class="sched-event-name">PG Jupiter</div><div class="sched-venue">Jupiter, FL</div><div class="sched-venue" style="color:#b91e2d; font-weight:800; font-size:13px; margin-top:4px; letter-spacing:0.5px;">&#9733;&#9733;&#9733; INVITE ONLY — Players must be invited &#9733;&#9733;&#9733;</div></div>
-        <div class="sched-status"><div class="sched-tag">Event 8</div></div>
       </div>
     </div>
     <div class="sched-footer">
@@ -968,5 +930,11 @@
     </div>
 
   </div><!-- end container -->
+<script>
+  function toggleGameSchedule(btn, tableId) {
+    btn.classList.toggle('open');
+    document.getElementById(tableId).classList.toggle('open');
+  }
+</script>
 </body>
 </html>
