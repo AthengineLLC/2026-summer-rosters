@@ -436,7 +436,17 @@
         <!-- Ratings Section -->
         <div class="form-section">
           <h2>Performance Ratings</h2>
-          <div class="form-section-body">
+          <div class="objectives-toggle-section" style="display:flex; align-items:center; gap:14px; margin:0 0 16px;">
+            <label class="toggle-switch">
+              <input type="checkbox" id="perfToggle" checked onchange="togglePerformance()">
+              <span class="toggle-slider"></span>
+            </label>
+            <div class="toggle-label-block">
+              <div class="toggle-title">Include Performance Ratings</div>
+              <div class="toggle-description">On by default. Toggle OFF if you don't want to submit a performance rating for this player.</div>
+            </div>
+          </div>
+          <div class="form-section-body" id="performanceBody">
             <p style="font-size: 13px; color: #6b7280; background: #f3f4f6; border-left: 3px solid var(--red); padding: 12px 14px; border-radius: 6px; line-height: 1.6; margin-bottom: 24px;">
               <strong style="color: var(--navy);">Rating Scale:</strong> Rate this player relative to their peers at the same age group. A <strong style="color: var(--navy);">5</strong> represents a player who performs at the expected level for a typical player their age. Scores above 5 indicate above-average ability for their age group, while scores below 5 indicate below-average performance compared to their peers.
             </p>
@@ -1047,6 +1057,11 @@
       show('offenseSlider', hasPosition);
     }
 
+    function togglePerformance() {
+      const on = document.getElementById('perfToggle').checked;
+      document.getElementById('performanceBody').style.display = on ? '' : 'none';
+    }
+
     function toggleObjectivesMode() {
       objectivesOnly = document.getElementById('objectivesToggle').checked;
       const evalSections = document.getElementById('evaluationSections');
@@ -1221,6 +1236,8 @@
 
     function selectPlayer() {
       currentReports = { defensive: [], offensive: [], pitching: [] };
+      const pt = document.getElementById('perfToggle');
+      if (pt) { pt.checked = true; togglePerformance(); }
       document.getElementById('defenseRating').value = 5;
       document.getElementById('offenseRating').value = 5;
       document.getElementById('pitchingRating').value = 5;
@@ -1298,6 +1315,7 @@
       
       const playerData = JSON.parse(document.getElementById('playerSelect').value);
       const positions = Array.from(document.querySelectorAll('input[name="position"]:checked')).map(cb => cb.value).join(', ');
+      const perfOn = document.getElementById('perfToggle').checked;
 
       const evalData = {
         director_name: document.getElementById('directorName').value,
@@ -1305,9 +1323,9 @@
         player_first_name: playerData.firstName,
         player_last_name: playerData.lastName,
         projected_positions: objectivesOnly ? null : positions,
-        defense_rating: objectivesOnly ? null : parseInt(document.getElementById('defenseRating').value),
-        offense_rating: objectivesOnly ? null : parseInt(document.getElementById('offenseRating').value),
-        pitching_rating: objectivesOnly ? null : parseInt(document.getElementById('pitchingRating').value),
+        defense_rating: (objectivesOnly || !perfOn) ? null : parseInt(document.getElementById('defenseRating').value),
+        offense_rating: (objectivesOnly || !perfOn) ? null : parseInt(document.getElementById('offenseRating').value),
+        pitching_rating: (objectivesOnly || !perfOn) ? null : parseInt(document.getElementById('pitchingRating').value),
         roster_level: objectivesOnly ? null : parseInt(document.getElementById('rosterLevel').value),
         recruitment_level: objectivesOnly ? null : document.getElementById('recruitmentLevel').value,
         defensive_reports: objectivesOnly ? null : JSON.stringify(currentReports.defensive),
