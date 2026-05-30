@@ -453,6 +453,80 @@
       vertical-align: middle;
       margin-right: 5px;
     }
+
+
+    .tourn-schedule-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 9px 18px;
+      background: #0d1a33;
+      border: 2px solid #b91e2d;
+      border-radius: 6px;
+      color: #ffffff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      justify-content: center;
+    }
+    .tourn-schedule-btn:hover { background: #b91e2d; color: #fff; }
+    .tourn-schedule-btn .btn-arrow { transition: transform 0.3s; display: inline-block; font-size: 12px; }
+    .tourn-schedule-btn.open { background: #b91e2d; color: #fff; }
+    .tourn-schedule-btn.open .btn-arrow { transform: rotate(180deg); }
+    .tourn-game-table {
+      display: none;
+      margin-top: 10px;
+      background: #0d1a33;
+      border-radius: 8px;
+      overflow: hidden;
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .tourn-game-table.open { display: table; }
+    .full-sched-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #b91e2d;
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .full-sched-link:hover { color: #fff; }
+
+    .game-result { padding: 10px 14px; text-align: center; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 900; letter-spacing: 1px; min-width: 70px; }
+    .game-result.win  { color: #22c55e; }
+    .game-result.loss { color: #ef4444; }
+    .game-result.tie  { color: #f59e0b; }
+    .game-result.pending { color: #555e72; font-size: 13px; font-weight: 600; letter-spacing: 0; }
+
+    /* MOBILE GAME TABLE FIX */
+    @media (max-width: 600px) {
+      .tourn-game-table { font-size: 13px; }
+      .tourn-game-table tr td:nth-child(4) { display: none; } /* hide venue on tiny screens */
+      .tourn-game-table tr td { padding: 10px 8px !important; font-size: 13px !important; }
+      .tourn-game-table tr[style*="background:#b91e2d"] td {
+        padding: 7px 10px !important;
+        font-size: 12px !important;
+      }
+      /* Stack opponent + venue vertically in one cell */
+      .game-opp-wrap { display: flex; flex-direction: column; gap: 2px; }
+      .game-opp-name { font-size: 14px; font-weight: 700; color: #fff; }
+      .game-venue-name { font-size: 13px; color: #aab4c8; text-transform: uppercase; letter-spacing: 0.5px; display: inline; }
+      .game-opp-name::after { content: " · "; color: #aab4c8; font-weight: 400; }
+      .tourn-schedule-btn { font-size: 13px; padding: 8px 12px; }
+    }
   </style>
 </head>
 <body>
@@ -978,5 +1052,11 @@
     </div>
 
   </div><!-- end container -->
+<script>
+  function toggleGameSchedule(btn, tableId) {
+    btn.classList.toggle('open');
+    document.getElementById(tableId).classList.toggle('open');
+  }
+</script>
 </body>
 </html>
