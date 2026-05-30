@@ -522,8 +522,8 @@
           <div class="section">
             <div class="section-title">Ratings</div>
             <div class="rating-display">
-              <div class="rating-badge" style="${ratingStyle(e.defense_rating)}">DEF: ${e.defense_rating}/10</div>
-              <div class="rating-badge" style="${ratingStyle(e.offense_rating)}">OFF: ${e.offense_rating}/10</div>
+              <div class="rating-badge" style="${ratingStyle(e.defense_rating)}">DEF: ${e.defense_rating == null ? 'Not Rated' : e.defense_rating + '/10'}</div>
+              <div class="rating-badge" style="${ratingStyle(e.offense_rating)}">OFF: ${e.offense_rating == null ? 'Not Rated' : e.offense_rating + '/10'}</div>
               ${pitBadge}
               <div class="rating-badge" style="${ratingStyle(e.roster_level)}">ROSTER: ${e.roster_level}/10</div>
             </div>
