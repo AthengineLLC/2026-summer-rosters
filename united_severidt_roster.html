@@ -396,9 +396,14 @@
       /* Schedule mobile fixes */
       .sched-poster { padding: 30px 20px 25px; }
       .sched-title { font-size: 48px; }
-      .sched-team-label { font-size: 18px; letter-spacing: 2px; }
+      .sched-teambar .tb-kicker { font-size: 13px; letter-spacing: 3px; }
+      .sched-teambar .tb-name { font-size: 34px; }
       .sched-event-banner { font-size: 18px; padding: 8px 30px; }
       .sched-game-card { grid-template-columns: 90px 1fr !important; }
+      /* When the games table is expanded on a phone, drop the side date
+         (the day already shows inside the table) and use the full width */
+      .sched-game-card:has(.tourn-game-table.open) { grid-template-columns: 1fr !important; }
+      .sched-game-card:has(.tourn-game-table.open) .sched-date-block { display: none !important; }
       .sched-status { display: none !important; }
       .sched-date-block .sched-month { font-size: 14px; }
       .sched-date-block .sched-day { font-size: 34px; }
@@ -478,6 +483,23 @@
       border: 1px solid rgba(255,255,255,0.1);
     }
     .tourn-game-table.open { display: table; }
+    /* GAME TAGS — consolation / bracket / championship. Sit on their own line, flush left with the text above. */
+    .consolation-tag, .bracket-tag, .championship-tag {
+      display: inline-block;
+      margin-top: 6px;
+      margin-left: 0;
+      color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 11px;
+      border-radius: 5px;
+    }
+    .consolation-tag  { background: linear-gradient(180deg, #e23b4a 0%, #b91e2d 100%); box-shadow: 0 2px 6px rgba(185,30,45,0.4); }
+    .bracket-tag      { background: linear-gradient(180deg, #1e3a63 0%, #0d1a33 100%); box-shadow: 0 2px 6px rgba(13,26,51,0.4); }
+    .championship-tag { background: linear-gradient(180deg, #d8b24a 0%, #b8902a 100%); box-shadow: 0 2px 6px rgba(184,144,42,0.4); color: #0d1a33; }
     .full-sched-link {
       display: inline-flex;
       align-items: center;
@@ -538,21 +560,86 @@
     .tourn-game-table td.game-result.rainout { color: #4a6f93 !important; }
     .tourn-game-table td.game-result.pending { color: #555e72 !important; }
 
-    /* MOBILE GAME TABLE FIX */
-    @media (max-width: 600px) {
-      .tourn-game-table { font-size: 13px; }
+    /* RESULT PILLS — colored badge, white text (wins green / losses red / ties navy) */
+    .game-result .result-pill {
+      display: inline-block;
+      padding: 4px 13px;
+      border-radius: 999px;
+      color: #ffffff !important;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing: 1px;
+      line-height: 1.4;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.18);
+      white-space: nowrap;
+    }
+    .game-result.win  .result-pill { background: #16a34a; }
+    .game-result.loss .result-pill { background: #b91e2d; }
+    .game-result.tie  .result-pill { background: #0d1a33; }
+    .game-result.rainout .result-pill { background: #4a6f93; font-size: 12px; }
 
-      .tourn-game-table tr td { padding: 10px 8px !important; font-size: 13px !important; }
-      .tourn-game-table tr[style*="background:#b91e2d"] td {
-        padding: 7px 10px !important;
-        font-size: 12px !important;
-      }
-      /* Stack opponent + venue vertically in one cell */
-      .game-opp-wrap { display: flex; flex-direction: column; gap: 2px; }
-      .game-opp-name { font-size: 14px; font-weight: 700; color: #fff; }
-      .game-venue-name { font-size: 13px; color: #aab4c8; text-transform: uppercase; letter-spacing: 0.5px; display: inline; }
-      .game-opp-name::after { content: " · "; color: #aab4c8; font-weight: 400; }
+    /* MOBILE GAME TABLE — stacked card layout (portrait phones only) */
+    @media (max-width: 600px) {
       .tourn-schedule-btn { font-size: 13px; padding: 8px 12px; }
+
+      /* When opened on a phone, collapse the table into a vertical stack.
+         (Scoped to .open so the closed-state display:none still hides it.) */
+      .tourn-game-table.open,
+      .tourn-game-table.open tbody,
+      .tourn-game-table.open tr,
+      .tourn-game-table.open td { display: block; width: 100%; }
+
+      /* Day header = full-width navy bar on top of its games */
+      .tourn-game-table tr[style*="background:#b91e2d"] td {
+        padding: 9px 14px !important;
+        font-size: 13px !important;
+        letter-spacing: 2px;
+      }
+
+      /* Divider only between two consecutive games on the same day */
+      .tourn-game-table tr:not([style*="background:#b91e2d"]) + tr:not([style*="background:#b91e2d"]) {
+        border-top: 2px solid #0d1a33;
+      }
+      .tourn-game-table tr:not([style*="background:#b91e2d"]) + tr:not([style*="background:#b91e2d"]) td {
+        border-top: none;
+      }
+
+      /* Game cells: one item per line, left aligned */
+      .tourn-game-table tr:not([style*="background:#b91e2d"]) td {
+        padding: 3px 16px !important;
+        font-size: 15px !important;
+        text-align: left !important;
+        white-space: normal !important;
+      }
+      /* Time (first line of the card) — prominent */
+      .tourn-game-table tr:not([style*="background:#b91e2d"]) td:first-child {
+        padding-top: 14px !important;
+        font-size: 17px !important;
+        font-weight: 900 !important;
+      }
+      /* vs / @ indicator — small line just under the time */
+      .tourn-game-table tr:not([style*="background:#b91e2d"]) td:nth-child(2) {
+        color: #5a6478 !important;
+        font-size: 12px !important;
+        font-weight: 900 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding-bottom: 6px !important;
+      }
+      /* Opponent / venue / pitchers each on their own line */
+      .game-opp-wrap { display: block; }
+      .game-opp-name { display: block; font-size: 16px; font-weight: 700; }
+      .game-venue-name { display: block !important; margin-top: 3px; font-size: 13px; }
+      /* Hide any leftover inline " · " separators inside the card */
+      .game-opp-wrap span[style*="#aab4c8"] { display: none !important; }
+      /* Score — its own line, left aligned, keep its colour */
+      .tourn-game-table tr:not([style*="background:#b91e2d"]) td.game-result {
+        min-width: 0 !important;
+        text-align: left !important;
+        font-size: 18px !important;
+        padding: 8px 16px 14px !important;
+      }
     }
 
     /* HAT ICON */
@@ -568,13 +655,10 @@
       margin-right: 5px;
     }
 
-
     /* PAGE-LEVEL RECORD BADGE (next to team name) */
     .page-record-badge { display: inline-block; margin-left: 16px; background: #b91e2d; color: #ffffff; border-radius: 20px; padding: 3px 14px; font-size: 18px; font-weight: 900; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; vertical-align: middle; position: relative; top: -3px; }
     @media (max-width: 600px) { .page-record-badge { font-size: 14px; padding: 2px 10px; margin-left: 10px; } }
 
-    /* CONSOLATION TAG (red pill in schedule) */
-    .consolation-tag { display: inline-block; background: linear-gradient(180deg, #e23b4a 0%, #b91e2d 100%); color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 11px; border-radius: 5px; margin-left: 8px; vertical-align: middle; box-shadow: 0 2px 6px rgba(185,30,45,0.4); }
   </style>
 </head>
 <body>
@@ -925,32 +1009,59 @@
 <div class="schedule-inline-wrapper">
   <style>
   .schedule-inline-wrapper { width: 100%; background: #08101f; border-radius: 12px; overflow: hidden; }
-  .sched-poster { width: 100%; padding: 55px 50px 40px; background: radial-gradient(ellipse at top left, rgba(180,30,45,0.10) 0%, transparent 50%), radial-gradient(ellipse at bottom right, rgba(180,30,45,0.07) 0%, transparent 50%), linear-gradient(180deg, #0d1a33 0%, #08101f 100%); position: relative; font-family: 'Barlow Condensed', sans-serif; color: #fff; box-sizing: border-box; }
+  .sched-poster { width: 100%; padding: 55px 50px 40px; background: radial-gradient(ellipse at top left, rgba(180,30,45,0.10) 0%, transparent 50%), linear-gradient(180deg, #0d1a33 0%, #08101f 100%); position: relative; font-family: 'Barlow Condensed', sans-serif; color: #fff; box-sizing: border-box; }
   .sched-logo-underline { height: 3px; width: 70%; margin: 20px auto 18px; background: linear-gradient(90deg, transparent, #b91e2d 20%, #b91e2d 80%, transparent); }
-  .sched-team-label { color: #b91e2d; font-weight: 700; font-size: 32px; letter-spacing: 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 18px; }
-  .sched-team-label .sched-line { height: 1px; width: 60px; background: #b91e2d; }
+  /* Team-type accent: scout = powder blue, united = red. Set on .sched-poster. */
+  .sched-poster.scout .tb-kicker { color: #6daed4; }
+  .sched-poster.scout .sched-logo-underline { background: linear-gradient(90deg, transparent, #6daed4 20%, #6daed4 80%, transparent); }
+  .sched-poster.united .tb-kicker { color: #b91e2d; }
+  .sched-poster.united .sched-logo-underline { background: linear-gradient(90deg, transparent, #b91e2d 20%, #b91e2d 80%, transparent); }
+  .sched-teambar {
+    text-align: center;
+    margin: 0 auto 16px;
+    line-height: 1.0;
+  }
+  .sched-teambar .tb-kicker {
+    display: block;
+    color: #6daed4;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .sched-teambar .tb-name {
+    display: block;
+    color: #ffffff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 54px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 0.95;
+  }
   .sched-title { font-weight: 900; font-size: 80px; letter-spacing: -1px; line-height: 0.92; color: #fff; text-shadow: 0 4px 12px rgba(0,0,0,0.3); margin-bottom: 25px; text-transform: uppercase; text-align: center; }
-  .sched-event-banner { display: inline-block; background: #b91e2d; color: #fff; font-weight: 700; font-size: 26px; letter-spacing: 2px; padding: 10px 50px; margin-bottom: 35px; clip-path: polygon(18px 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 18px 100%, 0 50%); }
   .sched-header { position: relative; z-index: 2; text-align: center; padding-top: 10px; }
   .sched-games { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 14px; }
   .sched-game-card { display: grid; grid-template-columns: 130px 1fr 110px; background: #f4f4f4; border-radius: 8px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.35); min-height: 90px; align-items: stretch; }
   .sched-date-block { background: #0d1a33; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 14px 0; }
   .sched-date-block .sched-month { font-weight: 700; font-size: 20px; letter-spacing: 2px; }
   .sched-date-block .sched-day { font-weight: 900; font-size: 48px; line-height: 1; margin: 2px 0; }
-  .sched-date-block .sched-tbd { font-weight: 900; font-size: 26px; line-height: 1; margin: 2px 0; color: #b91e2d; letter-spacing: 2px; }
+  .sched-date-block .sched-tbd { font-weight: 900; font-size: 26px; line-height: 1; color: #b91e2d; letter-spacing: 2px; }
   .sched-game-info { display: flex; flex-direction: column; justify-content: center; padding: 16px 20px; color: #0d1a33; }
   .sched-game-info .sched-event-name { font-weight: 800; font-size: 24px; line-height: 1.1; color: #0d1a33; text-transform: uppercase; margin-bottom: 4px; }
   .sched-game-info .sched-venue { font-weight: 600; font-size: 16px; letter-spacing: 1px; color: #5a6478; text-transform: uppercase; }
   .sched-status { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff; border-left: 1px solid #d8d8d8; padding: 14px 8px; }
   .sched-status .sched-tag { font-weight: 900; font-size: 12px; color: #b91e2d; letter-spacing: 2px; text-transform: uppercase; text-align: center; }
   .sched-footer { margin-top: 30px; padding-top: 22px; border-top: 2px solid #b91e2d; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
-  .sched-footer-tag { display: flex; align-items: center; gap: 12px; color: #fff; font-weight: 700; font-size: 17px; letter-spacing: 1.5px; line-height: 1.15; text-transform: uppercase; }
-  .sched-hashtag { font-weight: 900; font-size: 42px; letter-spacing: 1px; color: #fff; }
+  .sched-footer-tag { display: flex; align-items: center; gap: 12px; color: #fff; font-weight: 700; font-size: 17px; letter-spacing: 1.5px; text-transform: uppercase; }
+  .sched-hashtag { font-weight: 900; font-size: 42px; color: #fff; }
   .sched-hashtag .sched-red { color: #b91e2d; }
   </style>
-  <div class="sched-poster">
+  <div class="sched-poster united">
     <div class="sched-header">
-      <div class="sched-team-label"><span class="sched-line"></span><span>✦</span>CBU 2028 UNITED SEVERIDT<span>✦</span><span class="sched-line"></span></div>
+      <div class="sched-teambar"><span class="tb-kicker">CBU 2028 United</span><span class="tb-name">Severidt</span></div>
       <div class="sched-logo-underline"></div>
       <div class="sched-title">2026<br>SUMMER<br>SCHEDULE</div>
     </div>
@@ -969,26 +1080,26 @@
               <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">8:30 PM</td>
               <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">@</td>
               <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">FL Burn 2028 Guthrie</span><span class="game-venue-name">Terry Park · Mack</span></div></td>
-              <td class="game-result loss">L 1-7</td>
+              <td class="game-result loss"><span class="result-pill">L 1-7</span></td>
             </tr><tr style="background:#b91e2d;">
               <td colspan="4" style="padding:8px 12px;font-weight:900;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#fff;font-family:'Barlow Condensed',sans-serif;">SATURDAY · May 23</td>
             </tr><tr>
               <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">2:45 PM</td>
               <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">vs.</td>
               <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">USA Scout Nike Florida 16U</span><span class="game-venue-name">5 Plex · Field 2</span></div></td>
-              <td class="game-result loss">L 2-7</td>
+              <td class="game-result loss"><span class="result-pill">L 2-7</span></td>
             </tr><tr style="background:#b91e2d;">
               <td colspan="4" style="padding:8px 12px;font-weight:900;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#fff;font-family:'Barlow Condensed',sans-serif;">SUNDAY · May 24</td>
             </tr><tr>
               <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">10:15 AM</td>
               <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">@</td>
               <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">SBA Bolts FL 2028 National</span><span class="game-venue-name">Lee Health · Twins 4</span></div></td>
-              <td class="game-result loss">L 2-5</td>
+              <td class="game-result loss"><span class="result-pill">L 2-5</span></td>
             </tr><tr>
               <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">2:45 PM</td>
               <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">vs.</td>
               <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">FL Elite Scout Team 2028</span><span class="game-venue-name">Lee Health · Twins 4</span> <span class="consolation-tag">Consolation</span></div></td>
-              <td class="game-result rainout">Rain Out</td>
+              <td class="game-result rainout"><span class="result-pill">Rain Out</span></td>
             </tr>
             </tbody>
           </table>
