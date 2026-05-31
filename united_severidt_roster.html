@@ -493,10 +493,55 @@
     }
     .full-sched-link:hover { color: #fff; }
 
+    /* GAME RESULTS */
+    .game-result { padding: 10px 14px; text-align: center; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 900; letter-spacing: 1px; min-width: 70px; }
+    .game-result.win  { color: #22c55e; }
+    .game-result.loss { color: #ef4444; }
+    .game-result.tie { color: #6daed4; }
+    .game-result.pending { color: #555e72; font-size: 13px; font-weight: 600; letter-spacing: 0; }
+    .game-result.rainout { color: #6b8cae; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+    @media (max-width: 600px) {
+      .game-result { font-size: 13px; padding: 8px 6px; min-width: 52px; }
+    }
+
+    /* --- TABLE LOOK: navy day bars, white game rows, navy text + outline --- */
+    .tourn-game-table {
+      background: #ffffff !important;
+      border: none !important;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35) !important;
+    }
+    /* Day header bars -> navy */
+    .tourn-game-table tr[style*="background:#b91e2d"] td {
+      background: #0d1a33 !important;
+      color: #ffffff !important;
+    }
+    /* Game (data) rows -> white bg, navy text, navy divider between games */
+    .tourn-game-table tr:not([style*="background:#b91e2d"]) td {
+      background: #ffffff !important;
+      color: #0d1a33 !important;
+    }
+    /* Divider only between two consecutive game rows — not under the last game of a day */
+    .tourn-game-table tr:not([style*="background:#b91e2d"]) + tr:not([style*="background:#b91e2d"]) td {
+      border-top: 1px solid #0d1a33;
+    }
+    .tourn-game-table .game-opp-name,
+    .tourn-game-table .game-venue-name { color: #0d1a33 !important; }
+    .tourn-game-table .game-venue-name { display: block !important; margin-top: 3px; }
+    .probable-pitchers { display: block; margin-top: 5px; font-size: 11px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.8px; text-transform: uppercase; }
+    .probable-pitchers .pp-label { color: #b91e2d; font-weight: 900; margin-right: 5px; }
+    .probable-pitchers .pp-names { color: #0d1a33; font-weight: 600; }
+    .tourn-game-table .game-opp-wrap span[style*="#aab4c8"] { color: #5a6478 !important; }
+    /* Keep results colour-coded, tuned for the white background */
+    .tourn-game-table td.game-result.win     { color: #16a34a !important; }
+    .tourn-game-table td.game-result.loss    { color: #b91e2d !important; }
+    .tourn-game-table td.game-result.tie     { color: #2d6da4 !important; }
+    .tourn-game-table td.game-result.rainout { color: #4a6f93 !important; }
+    .tourn-game-table td.game-result.pending { color: #555e72 !important; }
+
     /* MOBILE GAME TABLE FIX */
     @media (max-width: 600px) {
       .tourn-game-table { font-size: 13px; }
-      .tourn-game-table tr td:nth-child(4) { display: none; } /* hide venue on tiny screens */
+
       .tourn-game-table tr td { padding: 10px 8px !important; font-size: 13px !important; }
       .tourn-game-table tr[style*="background:#b91e2d"] td {
         padding: 7px 10px !important;
@@ -523,15 +568,6 @@
       margin-right: 5px;
     }
 
-    /* GAME RESULTS */
-    .game-result { padding: 10px 14px; text-align: center; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 900; letter-spacing: 1px; min-width: 70px; }
-    .game-result.win  { color: #22c55e; }
-    .game-result.loss { color: #ef4444; }
-    .game-result.pending { color: #555e72; font-size: 13px; font-weight: 600; letter-spacing: 0; }
-    .game-result.rainout { color: #6b8cae; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-    @media (max-width: 600px) {
-      .game-result { font-size: 13px; padding: 8px 6px; min-width: 52px; }
-    }
 
     /* PAGE-LEVEL RECORD BADGE (next to team name) */
     .page-record-badge { display: inline-block; margin-left: 16px; background: #b91e2d; color: #ffffff; border-radius: 20px; padding: 3px 14px; font-size: 18px; font-weight: 900; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; vertical-align: middle; position: relative; top: -3px; }
@@ -923,7 +959,7 @@
         <div class="sched-date-block"><div class="sched-month">MAY</div><div class="sched-day">22</div></div>
         <div class="sched-game-info"><div class="sched-event-name">PG Memorial</div><div class="sched-venue">Fort Myers, FL</div>
           <button class="tourn-schedule-btn" onclick="toggleGameSchedule(this, 'games_united_severidt_pgmemorial')">
-            ⚾ View PG Memorial Games <span class="btn-arrow">▼</span>
+            View PG Memorial Games <span class="btn-arrow">▼</span>
           </button>
           <table class="tourn-game-table" id="games_united_severidt_pgmemorial">
             <tbody>
@@ -932,26 +968,26 @@
             </tr><tr>
               <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">8:30 PM</td>
               <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">@</td>
-              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">FL Burn 2028 Guthrie</span><span style="color:#aab4c8;"> · </span><span class="game-venue-name">Terry Park · Mack</span></div></td>
+              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">FL Burn 2028 Guthrie</span><span class="game-venue-name">Terry Park · Mack</span></div></td>
               <td class="game-result loss">L 1-7</td>
             </tr><tr style="background:#b91e2d;">
               <td colspan="4" style="padding:8px 12px;font-weight:900;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#fff;font-family:'Barlow Condensed',sans-serif;">SATURDAY · May 23</td>
             </tr><tr>
               <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">2:45 PM</td>
               <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">vs.</td>
-              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">USA Scout Nike Florida 16U</span><span style="color:#aab4c8;"> · </span><span class="game-venue-name">5 Plex · Field 2</span></div></td>
+              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">USA Scout Nike Florida 16U</span><span class="game-venue-name">5 Plex · Field 2</span></div></td>
               <td class="game-result loss">L 2-7</td>
             </tr><tr style="background:#b91e2d;">
               <td colspan="4" style="padding:8px 12px;font-weight:900;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#fff;font-family:'Barlow Condensed',sans-serif;">SUNDAY · May 24</td>
             </tr><tr>
               <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">10:15 AM</td>
               <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">@</td>
-              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">SBA Bolts FL 2028 National</span><span style="color:#aab4c8;"> · </span><span class="game-venue-name">Lee Health · Twins 4</span></div></td>
+              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">SBA Bolts FL 2028 National</span><span class="game-venue-name">Lee Health · Twins 4</span></div></td>
               <td class="game-result loss">L 2-5</td>
             </tr><tr>
               <td style="padding:12px 14px;font-weight:900;font-size:16px;color:#ffffff;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;">2:45 PM</td>
               <td style="padding:12px 8px;font-size:14px;font-weight:900;color:#aab4c8;font-family:'Barlow Condensed',sans-serif;">vs.</td>
-              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">FL Elite Scout Team 2028</span><span style="color:#aab4c8;"> · </span><span class="game-venue-name">Lee Health · Twins 4</span> <span class="consolation-tag">Consolation</span></div></td>
+              <td style="padding:12px 14px;font-size:16px;font-weight:700;color:#ffffff;font-family:'Barlow Condensed',sans-serif;"><div class="game-opp-wrap"><span class="game-opp-name">FL Elite Scout Team 2028</span><span class="game-venue-name">Lee Health · Twins 4</span> <span class="consolation-tag">Consolation</span></div></td>
               <td class="game-result rainout">Rain Out</td>
             </tr>
             </tbody>
