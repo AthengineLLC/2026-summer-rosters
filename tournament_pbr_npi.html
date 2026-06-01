@@ -491,6 +491,30 @@
   .legend-item { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
   .legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
 
+  /* TEAM FILTER */
+  .team-filter { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto 34px; padding: 0 20px; }
+  .team-filter-label { color: #6daed4; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; }
+  .team-filter-control { position: relative; display: inline-block; }
+  .team-filter-control select {
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
+    background: #17284a; color: #fff; border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 6px; padding: 10px 42px 10px 16px; font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 17px; letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; min-width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .team-filter-control select:focus { outline: none; border-color: #6daed4; }
+  .team-filter-control optgroup { color: #6daed4; font-style: normal; background: #0d1a33; }
+  .team-filter-control option { color: #fff; background: #17284a; font-weight: 600; }
+  .team-filter-arrow { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #6daed4; font-size: 11px; pointer-events: none; }
+  .team-filter-clear { background: transparent; color: #b91e2d; border: 1px solid #b91e2d; border-radius: 6px; padding: 9px 16px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .team-filter-clear:hover { background: #b91e2d; color: #fff; }
+  .day-section.filtered-empty { display: none; }
+  @media (max-width: 600px) {
+    .team-filter-control select { min-width: 0; width: 100%; font-size: 15px; }
+    .team-filter-control { width: 100%; }
+    .team-filter { gap: 10px; }
+  }
+
   /* DAY SECTION */
   .day-section { margin-bottom: 36px; }
   .day-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
@@ -515,6 +539,10 @@
   .org-tag.pg  { background:#1a6b2a; color:#fff; }
   .opp-col { padding: 12px 14px; font-size: 18px; font-weight: 600; color: #c8d4e8; }
   .opp-name { font-weight: 800; color: #fff; }
+  /* PROBABLE PITCHERS (composite — light text on dark rows) */
+  .probable-pitchers { display: block; margin-top: 6px; font-size: 12px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.8px; text-transform: uppercase; }
+  .probable-pitchers .pp-label { color: #6daed4; font-weight: 900; margin-right: 6px; }
+  .probable-pitchers .pp-names { color: #aab4c8; font-weight: 600; }
   .venue-col { padding: 12px 14px; font-size: 16px; font-weight: 600; color: #8a9ab8; text-transform: uppercase; letter-spacing: 0.5px; }
   .pool-col { width: 80px; padding: 12px 14px; font-size: 16px; font-weight: 700; color: #b91e2d; text-align: center; letter-spacing: 1px; }
 
@@ -743,6 +771,27 @@
     <div class="legend-item"><div class="legend-dot" style="background:#7b4fa6"></div>15U Division (2029)</div>
   </div>
 
+  <div class="team-filter">
+    <label class="team-filter-label" for="teamFilter">Filter by Team</label>
+    <div class="team-filter-control">
+      <select id="teamFilter" onchange="filterByTeam(this.value)">
+        <option value="all">All Teams</option>
+        <optgroup label="2027 Teams">
+          <option value="2027-scout-olasin">2027 Scout Olasin</option>
+        </optgroup>
+        <optgroup label="2028 Teams">
+          <option value="2028-scout-lawson">2028 Scout Lawson</option>
+          <option value="2028-scout-dibenedetto">2028 Scout DiBenedetto</option>
+        </optgroup>
+        <optgroup label="2029 Teams">
+          <option value="2029-scout-pascual">2029 Scout Pascual</option>
+        </optgroup>
+      </select>
+      <span class="team-filter-arrow">▼</span>
+    </div>
+    <button class="team-filter-clear" onclick="filterByTeam('all'); document.getElementById('teamFilter').value='all';">Show All</button>
+  </div>
+
   <!-- THURSDAY JUNE 4 -->
   <div class="day-section">
     <div class="day-header">
@@ -755,7 +804,7 @@
         <th>Time</th><th>Team</th><th>Opponent</th><th>Venue</th><th>Div</th>
       </tr></thead>
       <tbody>
-        <tr>
+        <tr data-team="2028-scout-lawson">
           <td class="time-col">2:00 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><span class="org-tag pbr">PBR</span><br><strong>2028 Scout Lawson</strong></td>
           <td class="opp-col">@ <span class="opp-name">USA Prime Southeast Scout</span></td>
@@ -763,7 +812,7 @@
           <td class="pool-col">16U</td>
         </tr>
         <tr class="time-spacer"><td colspan="5"></td></tr>
-        <tr>
+        <tr data-team="2029-scout-pascual">
           <td class="time-col">4:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><span class="org-tag pbr">PBR</span><br><strong>2029 Scout Pascual</strong></td>
           <td class="opp-col">vs. <span class="opp-name">USA Scout-Team Nike U.S. 15u</span></td>
@@ -786,14 +835,14 @@
         <th>Time</th><th>Team</th><th>Opponent</th><th>Venue</th><th>Div</th>
       </tr></thead>
       <tbody>
-        <tr>
+        <tr data-team="2027-scout-olasin">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><span class="org-tag pbr">PBR</span><br><strong>2027 Scout Olasin</strong></td>
           <td class="opp-col">@ <span class="opp-name">Spects National 17U</span></td>
           <td class="venue-col">LakePoint Sports Complex · LakePoint 10 · Emerson, GA</td>
           <td class="pool-col">17U</td>
         </tr>
-        <tr>
+        <tr data-team="2029-scout-pascual">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><span class="org-tag pbr">PBR</span><br><strong>2029 Scout Pascual</strong></td>
           <td class="opp-col">@ <span class="opp-name">East Coast Sox 2029 Marucci</span></td>
@@ -801,7 +850,7 @@
           <td class="pool-col">15U</td>
         </tr>
         <tr class="time-spacer"><td colspan="5"></td></tr>
-        <tr>
+        <tr data-team="2027-scout-olasin">
           <td class="time-col">10:20 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><span class="org-tag pbr">PBR</span><br><strong>2027 Scout Olasin</strong></td>
           <td class="opp-col">@ <span class="opp-name">USA Prime Southeast Scout</span></td>
@@ -809,21 +858,21 @@
           <td class="pool-col">17U</td>
         </tr>
         <tr class="time-spacer"><td colspan="5"></td></tr>
-        <tr>
+        <tr data-team="2028-scout-dibenedetto">
           <td class="time-col">3:00 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><span class="org-tag pg">PG</span><br><strong>2028 Scout DiBenedetto</strong></td>
           <td class="opp-col">vs. <span class="opp-name">USA Prime 16U American</span></td>
           <td class="venue-col">East Cobb Complex · Field 2 · Marietta, GA</td>
           <td class="pool-col">16U</td>
         </tr>        <tr class="time-spacer"><td colspan="5"></td></tr>
-        <tr>
+        <tr data-team="2028-scout-dibenedetto">
           <td class="time-col">5:20 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><span class="org-tag pg">PG</span><br><strong>2028 Scout DiBenedetto</strong></td>
           <td class="opp-col">vs. <span class="opp-name">South Charlotte Panthers 2028</span></td>
           <td class="venue-col">East Cobb Complex · Field 2 · Marietta, GA</td>
           <td class="pool-col">16U</td>
         </tr>
-        <tr>
+        <tr data-team="2028-scout-lawson">
           <td class="time-col">5:20 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><span class="org-tag pbr">PBR</span><br><strong>2028 Scout Lawson</strong></td>
           <td class="opp-col">@ <span class="opp-name">Indiana Bulls Black National 16U</span></td>
@@ -846,7 +895,7 @@
         <th>Time</th><th>Team</th><th>Opponent</th><th>Venue</th><th>Div</th>
       </tr></thead>
       <tbody>
-        <tr>
+        <tr data-team="2028-scout-dibenedetto">
           <td class="time-col">11:20 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><span class="org-tag pg">PG</span><br><strong>2028 Scout DiBenedetto</strong></td>
           <td class="opp-col">@ <span class="opp-name">16u Wow Factor American</span></td>
@@ -854,7 +903,7 @@
           <td class="pool-col">16U</td>
         </tr>
         <tr class="time-spacer"><td colspan="5"></td></tr>
-        <tr>
+        <tr data-team="2027-scout-olasin">
           <td class="time-col">11:30 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><span class="org-tag pbr">PBR</span><br><strong>2027 Scout Olasin</strong></td>
           <td class="opp-col">@ <span class="opp-name">Southeast Sox 17U</span></td>
@@ -862,7 +911,7 @@
           <td class="pool-col">17U</td>
         </tr>
         <tr class="time-spacer"><td colspan="5"></td></tr>
-        <tr>
+        <tr data-team="2029-scout-pascual">
           <td class="time-col">12:40 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><span class="org-tag pbr">PBR</span><br><strong>2029 Scout Pascual</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Canes West 2029</span></td>
@@ -870,7 +919,7 @@
           <td class="pool-col">15U</td>
         </tr>
         <tr class="time-spacer"><td colspan="5"></td></tr>
-        <tr>
+        <tr data-team="2028-scout-lawson">
           <td class="time-col">7:40 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><span class="org-tag pbr">PBR</span><br><strong>2028 Scout Lawson</strong></td>
           <td class="opp-col">@ <span class="opp-name">ProStock Baseball Club</span></td>
@@ -925,6 +974,37 @@
     }
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', buildRecord); else buildRecord();
   })();
+  </script>
+  <script>
+    function filterByTeam(team) {
+      var showAll = (team === 'all');
+      document.querySelectorAll('.day-section').forEach(function (section) {
+        var rows = section.querySelectorAll('tbody tr');
+        var visibleGames = 0;
+        // First pass: show/hide actual game rows (those with data-team)
+        rows.forEach(function (row) {
+          if (row.classList.contains('time-spacer')) return;
+          var t = row.getAttribute('data-team');
+          if (!t) return; // not a game row
+          var show = showAll || (t === team);
+          row.style.display = show ? '' : 'none';
+          if (show) visibleGames++;
+        });
+        // Second pass: handle spacer rows — only show a spacer if it sits
+        // between two visible game rows (avoids double gaps when filtering)
+        rows.forEach(function (row) {
+          if (!row.classList.contains('time-spacer')) return;
+          if (showAll) { row.style.display = ''; return; }
+          var prev = row.previousElementSibling;
+          var next = row.nextElementSibling;
+          var prevVisible = prev && prev.style.display !== 'none' && prev.getAttribute('data-team');
+          var nextVisible = next && next.style.display !== 'none' && next.getAttribute('data-team');
+          row.style.display = (prevVisible && nextVisible) ? '' : 'none';
+        });
+        // Hide the whole day if it has no games for this team
+        section.classList.toggle('filtered-empty', !showAll && visibleGames === 0);
+      });
+    }
   </script>
 </body>
 </html>

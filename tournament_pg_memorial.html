@@ -491,6 +491,30 @@
   .legend-item { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
   .legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
 
+  /* TEAM FILTER */
+  .team-filter { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto 34px; padding: 0 20px; }
+  .team-filter-label { color: #6daed4; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; }
+  .team-filter-control { position: relative; display: inline-block; }
+  .team-filter-control select {
+    appearance: none; -webkit-appearance: none; -moz-appearance: none;
+    background: #17284a; color: #fff; border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 6px; padding: 10px 42px 10px 16px; font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 17px; letter-spacing: 1px; text-transform: uppercase;
+    cursor: pointer; min-width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .team-filter-control select:focus { outline: none; border-color: #6daed4; }
+  .team-filter-control optgroup { color: #6daed4; font-style: normal; background: #0d1a33; }
+  .team-filter-control option { color: #fff; background: #17284a; font-weight: 600; }
+  .team-filter-arrow { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #6daed4; font-size: 11px; pointer-events: none; }
+  .team-filter-clear { background: transparent; color: #b91e2d; border: 1px solid #b91e2d; border-radius: 6px; padding: 9px 16px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .team-filter-clear:hover { background: #b91e2d; color: #fff; }
+  .day-section.filtered-empty { display: none; }
+  @media (max-width: 600px) {
+    .team-filter-control select { min-width: 0; width: 100%; font-size: 15px; }
+    .team-filter-control { width: 100%; }
+    .team-filter { gap: 10px; }
+  }
+
   /* DAY SECTION */
   .day-section { margin-bottom: 36px; }
   .day-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
@@ -512,6 +536,10 @@
   .div-badge { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 1.5px; color: #fff; padding: 2px 10px; border-radius: 3px; text-transform: uppercase; }
   .opp-col { padding: 12px 14px; font-size: 18px; font-weight: 600; color: #c8d4e8; }
   .opp-name { font-weight: 800; color: #fff; }
+  /* PROBABLE PITCHERS (composite — light text on dark rows) */
+  .probable-pitchers { display: block; margin-top: 6px; font-size: 12px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.8px; text-transform: uppercase; }
+  .probable-pitchers .pp-label { color: #6daed4; font-weight: 900; margin-right: 6px; }
+  .probable-pitchers .pp-names { color: #aab4c8; font-weight: 600; }
   .venue-col { padding: 12px 14px; font-size: 16px; font-weight: 600; color: #8a9ab8; text-transform: uppercase; letter-spacing: 0.5px; }
   .pool-col { width: 80px; padding: 12px 14px; font-size: 16px; font-weight: 700; color: #b91e2d; text-align: center; letter-spacing: 1px; }
   .bracket-tag { display: inline-block; background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%); color: #0d1a33; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 6px; box-shadow: 0 2px 6px rgba(245,158,11,0.4); }
@@ -701,6 +729,36 @@
     <div class="legend-item"><div class="legend-dot" style="background:#b91e2d"></div> 17U</div>
   </div>
 
+  <div class="team-filter">
+    <label class="team-filter-label" for="teamFilter">Filter by Team</label>
+    <div class="team-filter-control">
+      <select id="teamFilter" onchange="filterByTeam(this.value)">
+        <option value="all">All Teams</option>
+        <optgroup label="2027 Teams">
+          <option value="2027-united-thomas">2027 United Thomas</option>
+          <option value="2027-united-fleming">2027 United Fleming</option>
+        </optgroup>
+        <optgroup label="2028 Teams">
+          <option value="2028-united-merrell">2028 United Merrell</option>
+          <option value="2028-united-severidt">2028 United Severidt</option>
+          <option value="2028-scout-lawson">2028 Scout Lawson</option>
+        </optgroup>
+        <optgroup label="2029 Teams">
+          <option value="2029-scout-wisser">2029 Scout Wisser</option>
+          <option value="2029-united-cates">2029 United Cates</option>
+        </optgroup>
+        <optgroup label="2030 Teams">
+          <option value="2030-scout-madsen">2030 Scout Madsen</option>
+          <option value="2030-scout-kirst">2030 Scout Kirst</option>
+          <option value="2030-scout-chappell">2030 Scout Chappell</option>
+          <option value="2030-united-santiago">2030 United Santiago</option>
+        </optgroup>
+      </select>
+      <span class="team-filter-arrow">▼</span>
+    </div>
+    <button class="team-filter-clear" onclick="filterByTeam('all'); document.getElementById('teamFilter').value='all';">Show All</button>
+  </div>
+
   <!-- FRIDAY -->
   <div class="day-section">
     <div class="day-header">
@@ -713,7 +771,7 @@
         <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
       </tr></thead>
       <tbody>
-        <tr>
+        <tr data-team="2030-scout-madsen">
           <td class="time-col">6:15 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Madsen</strong></td>
           <td class="opp-col">@ <span class="opp-name">Ghost Evolve 14U</span></td>
@@ -721,7 +779,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col win">W 18-2</td>
         </tr>
-        <tr>
+        <tr data-team="2028-united-merrell">
           <td class="time-col">6:15 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Merrell</strong></td>
           <td class="opp-col">vs. <span class="opp-name">FL Elite Scout Team 2028</span></td>
@@ -729,7 +787,7 @@
           <td class="pool-col">Pool B</td>
           <td class="result-col win">W 14-3</td>
         </tr><tr class="time-spacer"><td colspan="6"></td></tr>
-        <tr>
+        <tr data-team="2030-scout-kirst">
           <td class="time-col">8:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Kirst</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Gulf Coast Knights-Palomba</span></td>
@@ -737,7 +795,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col win">W 9-0</td>
         </tr>
-        <tr>
+        <tr data-team="2028-united-severidt">
           <td class="time-col">8:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Severidt</strong></td>
           <td class="opp-col">@ <span class="opp-name">FL Burn 2028 Guthrie</span></td>
@@ -760,7 +818,7 @@
         <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
       </tr></thead>
       <tbody>
-        <tr>
+        <tr data-team="2030-scout-madsen">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Madsen</strong></td>
           <td class="opp-col">vs. <span class="opp-name">SBA Bolts Florida 2030</span></td>
@@ -769,7 +827,7 @@
           <td class="result-col win">W 19-0</td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
-        <tr>
+        <tr data-team="2029-scout-wisser">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 Scout Wisser</strong></td>
           <td class="opp-col">vs. <span class="opp-name">USA Prime Tampa 15U Scout</span></td>
@@ -777,7 +835,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col win">W 5-3</td>
         </tr>
-        <tr>
+        <tr data-team="2028-scout-lawson">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 Scout Lawson</strong></td>
           <td class="opp-col">@ <span class="opp-name">Haymakers Baseball</span></td>
@@ -785,7 +843,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col win">W 13-0</td>
         </tr><tr class="time-spacer"><td colspan="6"></td></tr>
-        <tr>
+        <tr data-team="2029-scout-wisser">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 Scout Wisser</strong></td>
           <td class="opp-col">vs. <span class="opp-name">FL Burn 2029 LBI</span></td>
@@ -793,7 +851,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col loss">L 4-11</td>
         </tr>
-        <tr>
+        <tr data-team="2028-scout-lawson">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 Scout Lawson</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Swamp Baseball</span></td>
@@ -801,7 +859,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col win">W 5-0</td>
         </tr>
-        <tr>
+        <tr data-team="2030-scout-chappell">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Chappell</strong></td>
           <td class="opp-col">@ <span class="opp-name">Southern Squeeze 14u</span></td>
@@ -809,7 +867,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col win">W 8-3</td>
         </tr>
-        <tr>
+        <tr data-team="2030-united-santiago">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U AA</span><br><strong>2030 United Santiago</strong></td>
           <td class="opp-col">vs. <span class="opp-name">ConchBall 14u</span></td>
@@ -817,7 +875,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col loss">L 2-4</td>
         </tr><tr class="time-spacer"><td colspan="6"></td></tr>
-        <tr>
+        <tr data-team="2027-united-thomas">
           <td class="time-col">12:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Thomas</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Florida Flames 16u</span></td>
@@ -825,7 +883,7 @@
           <td class="pool-col">Pool E</td>
           <td class="result-col win">W 4-2</td>
         </tr>
-        <tr>
+        <tr data-team="2027-united-fleming">
           <td class="time-col">12:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Fleming</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Natty Boys 2027</span></td>
@@ -833,7 +891,7 @@
           <td class="pool-col">Pool Play</td>
           <td class="result-col loss">L 0-3</td>
         </tr>
-        <tr>
+        <tr data-team="2028-united-merrell">
           <td class="time-col">12:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Merrell</strong></td>
           <td class="opp-col">@ <span class="opp-name">Turn 2 Garcia</span></td>
@@ -841,7 +899,7 @@
           <td class="pool-col">Pool B</td>
           <td class="result-col tie">T 2-2</td>
         </tr>
-        <tr>
+        <tr data-team="2029-united-cates">
           <td class="time-col">12:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Cates</strong></td>
           <td class="opp-col">@ <span class="opp-name">Natty Boys 2029</span></td>
@@ -849,7 +907,7 @@
           <td class="pool-col">Pool D</td>
           <td class="result-col loss">L 1-13</td>
         </tr>
-        <tr>
+        <tr data-team="2030-scout-chappell">
           <td class="time-col">12:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Chappell</strong></td>
           <td class="opp-col">vs. <span class="opp-name">West Boynton Cobras</span></td>
@@ -857,7 +915,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col tie">T 4-4</td>
         </tr>
-        <tr>
+        <tr data-team="2030-united-santiago">
           <td class="time-col">12:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 United Santiago</strong></td>
           <td class="opp-col">@ <span class="opp-name">FL Burn 2030 Shambora</span></td>
@@ -865,7 +923,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col win">W 11-1</td>
         </tr><tr class="time-spacer"><td colspan="6"></td></tr>
-        <tr>
+        <tr data-team="2027-united-thomas">
           <td class="time-col">2:45 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Thomas</strong></td>
           <td class="opp-col">@ <span class="opp-name">USA Prime Tampa Scout 2027</span></td>
@@ -873,7 +931,7 @@
           <td class="pool-col">Pool E</td>
           <td class="result-col tie">T 1-1</td>
         </tr>
-        <tr>
+        <tr data-team="2028-united-severidt">
           <td class="time-col">2:45 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Severidt</strong></td>
           <td class="opp-col">vs. <span class="opp-name">USA Scout Nike Florida 16U</span></td>
@@ -881,7 +939,7 @@
           <td class="pool-col">Pool C</td>
           <td class="result-col loss">L 2-7</td>
         </tr>
-        <tr>
+        <tr data-team="2029-united-cates">
           <td class="time-col">2:45 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Cates</strong></td>
           <td class="opp-col">@ <span class="opp-name">Ghost Evolve 15U</span></td>
@@ -889,7 +947,7 @@
           <td class="pool-col">Pool D</td>
           <td class="result-col loss">L 6-11</td>
         </tr>
-        <tr>
+        <tr data-team="2030-scout-kirst">
           <td class="time-col">2:45 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Kirst</strong></td>
           <td class="opp-col">@ <span class="opp-name">FL Burn 2030 American</span></td>
@@ -897,7 +955,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col win">W 11-0</td>
         </tr><tr class="time-spacer"><td colspan="6"></td></tr>
-        <tr>
+        <tr data-team="2027-united-fleming">
           <td class="time-col">5:00 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Fleming</strong></td>
           <td class="opp-col">vs. <span class="opp-name">FL Elite Angels Scout Team 2027</span></td>
@@ -921,7 +979,7 @@
         <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
       </tr></thead>
       <tbody>
-        <tr>
+        <tr data-team="2027-united-thomas">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Thomas</strong></td>
           <td class="opp-col">vs. <span class="opp-name">5 Star National Tampa Black</span></td>
@@ -929,7 +987,7 @@
           <td class="pool-col">Pool E</td>
           <td class="result-col win">W 4-3</td>
         </tr>
-        <tr>
+        <tr data-team="2027-united-fleming">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Fleming</strong></td>
           <td class="opp-col">vs. <span class="opp-name">CBC Elite-Naples</span></td>
@@ -937,7 +995,7 @@
           <td class="pool-col">Pool Play</td>
           <td class="result-col loss">L 0-14</td>
         </tr>
-        <tr>
+        <tr data-team="2028-united-merrell">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Merrell</strong></td>
           <td class="opp-col">vs. <span class="opp-name">FL Burn 2028 Trovinger</span></td>
@@ -945,7 +1003,7 @@
           <td class="pool-col">Pool B</td>
           <td class="result-col win">W 11-9</td>
         </tr>
-        <tr>
+        <tr data-team="2029-united-cates">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Cates</strong></td>
           <td class="opp-col">vs. <span class="opp-name">FL Burn 2029 Callan</span></td>
@@ -953,7 +1011,7 @@
           <td class="pool-col">Pool D</td>
           <td class="result-col win">W 11-9</td>
         </tr>
-        <tr>
+        <tr data-team="2030-scout-madsen">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Madsen</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Barwis Baseball</span></td>
@@ -961,7 +1019,7 @@
           <td class="pool-col"><span class="bracket-tag">Bracket</span></td>
           <td class="result-col win">W 4-2</td>
         </tr>
-        <tr>
+        <tr data-team="2030-scout-chappell">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Chappell</strong></td>
           <td class="opp-col">vs. <span class="opp-name">ConchBall 14u</span></td>
@@ -969,7 +1027,7 @@
           <td class="pool-col"><span class="bracket-tag">Bracket</span></td>
           <td class="result-col win">W 8-4</td>
         </tr><tr class="time-spacer"><td colspan="6"></td></tr>
-        <tr>
+        <tr data-team="2028-scout-lawson">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 Scout Lawson</strong></td>
           <td class="opp-col">vs. <span class="opp-name">SBA Bolts FL 2028 Scout</span></td>
@@ -977,7 +1035,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col win">W 5-3</td>
         </tr>
-        <tr>
+        <tr data-team="2028-united-severidt">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Severidt</strong></td>
           <td class="opp-col">@ <span class="opp-name">SBA Bolts FL 2028 National</span></td>
@@ -985,7 +1043,7 @@
           <td class="pool-col">Pool C</td>
           <td class="result-col loss">L 2-5</td>
         </tr>
-        <tr>
+        <tr data-team="2029-scout-wisser">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 Scout Wisser</strong></td>
           <td class="opp-col">@ <span class="opp-name">Original FL Pokers 2029</span></td>
@@ -993,7 +1051,7 @@
           <td class="pool-col">Pool A</td>
           <td class="result-col win">W 7-0</td>
         </tr>
-        <tr>
+        <tr data-team="2030-scout-kirst">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Kirst</strong></td>
           <td class="opp-col">vs. <span class="opp-name">VSA Sluggers SWFL STNP</span></td>
@@ -1001,7 +1059,7 @@
           <td class="pool-col"><span class="bracket-tag">Bracket</span></td>
           <td class="result-col loss">L 3-10</td>
         </tr>
-        <tr>
+        <tr data-team="2030-scout-chappell">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Chappell</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Original Florida Pokers 2030</span></td>
@@ -1009,7 +1067,7 @@
           <td class="pool-col"><span class="bracket-tag">Bracket</span></td>
           <td class="result-col loss">L 3-4</td>
         </tr><tr class="time-spacer"><td colspan="6"></td></tr>
-        <tr>
+        <tr data-team="2030-scout-madsen">
           <td class="time-col">12:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 Scout Madsen</strong></td>
           <td class="opp-col">vs. <span class="opp-name">VSA Sluggers SWFL STNP</span></td>
@@ -1017,7 +1075,7 @@
           <td class="pool-col"><span class="bracket-tag">Bracket</span></td>
           <td class="result-col win">W 8-0</td>
         </tr>
-        <tr>
+        <tr data-team="2029-scout-wisser">
           <td class="time-col">12:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 Scout Wisser</strong></td>
           <td class="opp-col">vs. <span class="opp-name">USA Prime Tampa 15u Scout</span></td>
@@ -1025,7 +1083,7 @@
           <td class="pool-col"><span class="bracket-tag">Bracket</span></td>
           <td class="result-col loss">L 5-10</td>
         </tr>
-        <tr>
+        <tr data-team="2028-united-merrell">
           <td class="time-col">12:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Merrell</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Swamp Underclass</span></td>
@@ -1033,7 +1091,7 @@
           <td class="pool-col"><span class="bracket-tag">Bracket</span></td>
           <td class="result-col win">W 14-2</td>
         </tr><tr class="time-spacer"><td colspan="6"></td></tr>
-        <tr>
+        <tr data-team="2027-united-fleming">
           <td class="time-col">2:45 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Fleming</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Scorpions West</span></td>
@@ -1041,7 +1099,7 @@
           <td class="pool-col"><span class="consolation-tag">Consolation</span></td>
           <td class="result-col rainout">Rain Out</td>
         </tr>
-        <tr>
+        <tr data-team="2029-united-cates">
           <td class="time-col">2:45 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Cates</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Bayside Yankees/Grit 15U</span></td>
@@ -1049,7 +1107,7 @@
           <td class="pool-col"><span class="consolation-tag">Consolation</span></td>
           <td class="result-col rainout">Rain Out</td>
         </tr>
-        <tr>
+        <tr data-team="2028-united-severidt">
           <td class="time-col">2:45 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Severidt</strong></td>
           <td class="opp-col">vs. <span class="opp-name">FL Elite Scout Team 2028</span></td>
@@ -1057,7 +1115,7 @@
           <td class="pool-col"><span class="consolation-tag">Consolation</span></td>
           <td class="result-col rainout">Rain Out</td>
         </tr>
-        <tr>
+        <tr data-team="2030-united-santiago">
           <td class="time-col">2:45 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br><strong>2030 United Santiago</strong></td>
           <td class="opp-col">vs. <span class="opp-name">FL Burn 2030 Olsen</span></td>
@@ -1065,7 +1123,7 @@
           <td class="pool-col"><span class="consolation-tag">Consolation</span></td>
           <td class="result-col loss">L 0-15</td>
         </tr>
-        <tr>
+        <tr data-team="2030-scout-madsen">
           <td class="time-col">2:45 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#1a8a3c">14U</span><br>🏆 <strong>2030 Scout Madsen</strong> 🏆</td>
           <td class="opp-col">vs. <span class="opp-name">CBU North Nation Alpha</span></td>
@@ -1088,7 +1146,7 @@
         <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
       </tr></thead>
       <tbody>
-        <tr>
+        <tr data-team="2027-united-thomas">
           <td class="time-col">8:00 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Thomas</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Florida Burn 2027 Orlosky</span></td>
@@ -1096,7 +1154,7 @@
           <td class="pool-col"><span class="bracket-tag">Bracket</span></td>
           <td class="result-col win">W 9-8</td>
         </tr><tr class="time-spacer"><td colspan="6"></td></tr>
-        <tr>
+        <tr data-team="2028-scout-lawson">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 Scout Lawson</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Turn 2 Garcia</span></td>
@@ -1104,7 +1162,7 @@
           <td class="pool-col"><span class="bracket-tag">Bracket</span></td>
           <td class="result-col win">W 9-0</td>
         </tr>
-        <tr>
+        <tr data-team="2028-united-merrell">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br>🥉 <strong>2028 United Merrell</strong> 🥉</td>
           <td class="opp-col">vs. <span class="opp-name">Florida Burn 2028 Guthrie</span></td>
@@ -1112,7 +1170,7 @@
           <td class="pool-col"><span class="bronze-tag">🥉 3rd Place</span></td>
           <td class="result-col loss">L 2-4</td>
         </tr>
-        <tr>
+        <tr data-team="2027-united-thomas">
           <td class="time-col">10:15 AM</td>
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br>🥉 <strong>2027 United Thomas</strong> 🥉</td>
           <td class="opp-col">vs. <span class="opp-name">VSA Scout 17u</span></td>
@@ -1120,7 +1178,7 @@
           <td class="pool-col"><span class="bronze-tag">🥉 3rd Place</span></td>
           <td class="result-col loss">L 2-6</td>
         </tr><tr class="time-spacer"><td colspan="6"></td></tr>
-        <tr>
+        <tr data-team="2028-scout-lawson">
           <td class="time-col">12:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br>🏆 <strong>2028 Scout Lawson</strong> 🏆</td>
           <td class="opp-col">vs. <span class="opp-name">Florida Burn 2028 Guthrie</span></td>
@@ -1175,6 +1233,37 @@
     }
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', buildRecord); else buildRecord();
   })();
+  </script>
+  <script>
+    function filterByTeam(team) {
+      var showAll = (team === 'all');
+      document.querySelectorAll('.day-section').forEach(function (section) {
+        var rows = section.querySelectorAll('tbody tr');
+        var visibleGames = 0;
+        // First pass: show/hide actual game rows (those with data-team)
+        rows.forEach(function (row) {
+          if (row.classList.contains('time-spacer')) return;
+          var t = row.getAttribute('data-team');
+          if (!t) return; // not a game row
+          var show = showAll || (t === team);
+          row.style.display = show ? '' : 'none';
+          if (show) visibleGames++;
+        });
+        // Second pass: handle spacer rows — only show a spacer if it sits
+        // between two visible game rows (avoids double gaps when filtering)
+        rows.forEach(function (row) {
+          if (!row.classList.contains('time-spacer')) return;
+          if (showAll) { row.style.display = ''; return; }
+          var prev = row.previousElementSibling;
+          var next = row.nextElementSibling;
+          var prevVisible = prev && prev.style.display !== 'none' && prev.getAttribute('data-team');
+          var nextVisible = next && next.style.display !== 'none' && next.getAttribute('data-team');
+          row.style.display = (prevVisible && nextVisible) ? '' : 'none';
+        });
+        // Hide the whole day if it has no games for this team
+        section.classList.toggle('filtered-empty', !showAll && visibleGames === 0);
+      });
+    }
   </script>
 </body>
 </html>
