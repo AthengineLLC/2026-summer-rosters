@@ -581,6 +581,11 @@
   .result-col.tie  { color: #f59e0b; }
   .result-col.pending { color: #444e61; font-size: 14px; font-weight: 600; letter-spacing: 0; }
   .result-col.rainout { color: #6b8cae; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+  .result-pill { display: inline-block; padding: 4px 13px; border-radius: 999px; color: #ffffff; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 14px; letter-spacing: 1px; white-space: nowrap; }
+  .result-col > .result-pill { display: inline-block; padding: 4px 13px; border-radius: 999px; color: #ffffff !important; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 14px; letter-spacing: 1px; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.18); }
+  .result-col.win > .result-pill { background: #16a34a; }
+  .result-col.loss > .result-pill { background: #b91e2d; }
+  .result-col.tie > .result-pill { background: #0d1a33; }
   @media (max-width: 700px) { .result-col { font-size: 14px; width: 68px; padding: 10px 8px; } }
   </style>
 </head>
