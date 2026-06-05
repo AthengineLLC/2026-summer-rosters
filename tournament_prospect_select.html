@@ -547,6 +547,11 @@
   .result-col.loss { color: #ef4444; }
   .result-col.tie  { color: #f59e0b; }
   .result-col.pending { color: #444e61; font-size: 14px; font-weight: 600; letter-spacing: 0; }
+  .result-pill { display: inline-block; padding: 4px 13px; border-radius: 999px; color: #ffffff; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 14px; letter-spacing: 1px; white-space: nowrap; }
+  .result-col > .result-pill { display: inline-block; padding: 4px 13px; border-radius: 999px; color: #ffffff !important; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 14px; letter-spacing: 1px; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.18); }
+  .result-col.win > .result-pill { background: #16a34a; }
+  .result-col.loss > .result-pill { background: #b91e2d; }
+  .result-col.tie > .result-pill { background: #0d1a33; }
 
   /* FOOTER */
   .footer { margin-top: 36px; padding-top: 22px; border-top: 2px solid #b91e2d; display: flex; justify-content: space-between; align-items: center; }
@@ -819,7 +824,7 @@
           <td class="opp-col">vs. <span class="opp-name">USA Prime Tampa Scout - 2027</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Jaegar Bedford · Dominic Ferreira · Kevin Sullivan</span></span></td>
           <td class="venue-col">CPOP Astros 3</td>
           <td class="pool-col">17U</td>
-          <td class="result-col"><span class="result-pill">W 5-4</span></td>
+          <td class="result-col win"><span class="result-pill">W 5-4</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr data-team="2028-united-merrell">
@@ -828,7 +833,7 @@
           <td class="opp-col">vs. <span class="opp-name">IS Elite - 2028 Pazos American</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Will Eaton · Eli Sabatino</span></span></td>
           <td class="venue-col">Santaluces Field 1</td>
           <td class="pool-col">16U</td>
-          <td class="result-col"><span class="result-pill">W 4-0</span></td>
+          <td class="result-col win"><span class="result-pill">W 4-0</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr data-team="2028-united-severidt">
@@ -837,7 +842,7 @@
           <td class="opp-col">vs. <span class="opp-name">SF Bulls Libertatem - 16U Jozwiak</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Trey Fountain</span></span></td>
           <td class="venue-col">Santaluces Field 2</td>
           <td class="pool-col">16U</td>
-          <td class="result-col"><span class="result-pill">L 2-11</span></td>
+          <td class="result-col loss"><span class="result-pill">L 2-11</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr data-team="2027-scout-menendez">
@@ -846,7 +851,7 @@
           <td class="opp-col">vs. <span class="opp-name">ECB Astros - 17U Navy</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Josh Rogerson · Teegan Turner · Trey Glaser</span></span></td>
           <td class="venue-col">CPOP Astros 4</td>
           <td class="pool-col">17U</td>
-          <td class="result-col"><span class="result-pill">W 12-2</span></td>
+          <td class="result-col win"><span class="result-pill">W 12-2</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr data-team="2029-scout-wisser">
@@ -855,7 +860,7 @@
           <td class="opp-col">@ <span class="opp-name">IS Elite - 2029 Riddle</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Brayden Johns · Adrian Ochoa · Alec Gallardo</span></span></td>
           <td class="venue-col">RD Cardinals 2</td>
           <td class="pool-col">15U</td>
-          <td class="result-col"><span class="result-pill">L 7-6</span></td>
+          <td class="result-col loss"><span class="result-pill">L 7-6</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr data-team="2029-united-cates">
@@ -864,7 +869,7 @@
           <td class="opp-col">vs. <span class="opp-name">Power Baseball - 2029 Gold</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Angel Camacho · Christopher Huard</span></span></td>
           <td class="venue-col">Lawnwood Field 4</td>
           <td class="pool-col">15U</td>
-          <td class="result-col"><span class="result-pill">W 6-3</span></td>
+          <td class="result-col win"><span class="result-pill">W 6-3</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr data-team="2027-scout-mccoy">
@@ -873,7 +878,7 @@
           <td class="opp-col">@ <span class="opp-name">Showtime Florida - 17u</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Gavin Shefsky · Nolan Parmer · JD James</span></span></td>
           <td class="venue-col">RD Cardinals 3</td>
           <td class="pool-col">17U</td>
-          <td class="result-col"><span class="result-pill">W 12-1</span></td>
+          <td class="result-col win"><span class="result-pill">W 12-1</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr data-team="2027-united-fleming">
@@ -882,7 +887,7 @@
           <td class="opp-col">vs. <span class="opp-name">Figs - 17U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Joshua Lysiak · Joshua Stembridge</span></span></td>
           <td class="venue-col">Santaluces Field 3</td>
           <td class="pool-col">17U</td>
-          <td class="result-col"><span class="result-pill">W 15-6</span></td>
+          <td class="result-col win"><span class="result-pill">W 15-6</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr data-team="2027-united-thomas">
@@ -891,7 +896,7 @@
           <td class="opp-col">@ <span class="opp-name">Scorpions West - 17U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Peyton Woodward · Joshua Stembridge · Kenneth Martinez</span></span></td>
           <td class="venue-col">RD Cardinals 5</td>
           <td class="pool-col">17U</td>
-          <td class="result-col"><span class="result-pill">W 4-0</span></td>
+          <td class="result-col win"><span class="result-pill">W 4-0</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr data-team="2029-united-murphy">
