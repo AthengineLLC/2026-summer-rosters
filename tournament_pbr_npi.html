@@ -539,6 +539,11 @@
   .org-tag.pg  { background:#1a6b2a; color:#fff; }
   .opp-col { padding: 12px 14px; font-size: 18px; font-weight: 600; color: #c8d4e8; }
   .opp-name { font-weight: 800; color: #fff; }
+  .result-col { width: 90px; padding: 12px 14px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 900; letter-spacing: 1px; white-space: nowrap; }
+  .result-col.win  { color: #22c55e; }
+  .result-col.loss { color: #ef4444; }
+  .result-col.tie  { color: #f59e0b; }
+  .result-col.pending { color: #444e61; font-size: 14px; font-weight: 600; letter-spacing: 0; }
   /* PROBABLE PITCHERS (composite — light text on dark rows) */
   .probable-pitchers { display: block; margin-top: 6px; font-size: 12px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.8px; text-transform: uppercase; }
   .probable-pitchers .pp-label { color: #6daed4; font-weight: 900; margin-right: 6px; }
@@ -620,6 +625,11 @@
   .div-badge { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 1.5px; color: #fff; padding: 2px 10px; border-radius: 3px; text-transform: uppercase; }
   .opp-col { padding: 12px 14px; font-size: 18px; font-weight: 600; color: #c8d4e8; }
   .opp-name { font-weight: 800; color: #fff; }
+  .result-col { width: 90px; padding: 12px 14px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 900; letter-spacing: 1px; white-space: nowrap; }
+  .result-col.win  { color: #22c55e; }
+  .result-col.loss { color: #ef4444; }
+  .result-col.tie  { color: #f59e0b; }
+  .result-col.pending { color: #444e61; font-size: 14px; font-weight: 600; letter-spacing: 0; }
   .venue-col { padding: 12px 14px; font-size: 16px; font-weight: 600; color: #8a9ab8; text-transform: uppercase; letter-spacing: 0.5px; }
   .pool-col { width: 80px; padding: 12px 14px; font-size: 16px; font-weight: 700; color: #b91e2d; text-align: center; letter-spacing: 1px; }
 
@@ -812,7 +822,7 @@
     </div>
     <table>
       <thead><tr>
-        <th>Time</th><th>Team</th><th>Opponent</th><th>Venue</th><th>Div</th>
+        <th>Time</th><th>Team</th><th>Opponent</th><th>Venue</th><th>Div</th><th>Result</th>
       </tr></thead>
       <tbody>
         <tr data-team="2028-scout-lawson">
@@ -822,13 +832,14 @@
           <td class="venue-col">WHS Varsity Field · Emerson, GA</td>
           <td class="pool-col">16U</td>
         </tr>
-        <tr class="time-spacer"><td colspan="5"></td></tr>
+        <tr class="time-spacer"><td colspan="6"></td></tr>
         <tr data-team="2029-scout-pascual">
           <td class="time-col">4:30 PM</td>
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><span class="org-tag pbr">PBR</span><br><strong>2029 Scout Pascual</strong></td>
           <td class="opp-col">vs. <span class="opp-name">USA Scout-Team Nike U.S. 15u</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Will Dunn · Jake Murray · Andrew Wallace</span></span></td>
           <td class="venue-col">WHS Varsity Field · Emerson, GA</td>
           <td class="pool-col">15U</td>
+          <td class="result-col win">W 4-3</td>
         </tr>
       </tbody>
     </table>
