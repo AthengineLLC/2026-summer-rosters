@@ -1,0 +1,6 @@
+# Local Claude Code / IDE artifacts — never commit these
+.claude/
+
+# Scratch files from transform scripts
+*.scratch
+_*.cjs
