@@ -542,6 +542,7 @@
   .probable-pitchers .pp-names { color: #aab4c8; font-weight: 600; }
   .venue-col { padding: 12px 14px; font-size: 16px; font-weight: 600; color: #8a9ab8; text-transform: uppercase; letter-spacing: 0.5px; }
   .pool-col { width: 80px; padding: 12px 14px; font-size: 16px; font-weight: 700; color: #b91e2d; text-align: center; letter-spacing: 1px; }
+  .pool-play-tag { display: inline-block; background: #d4dae3; color: #0d1a33; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
   .result-col { width: 90px; padding: 12px 14px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 900; letter-spacing: 1px; white-space: nowrap; }
   .result-col.win  { color: #22c55e; }
   .result-col.loss { color: #ef4444; }
@@ -815,7 +816,7 @@
     </div>
     <table>
       <thead><tr>
-        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
+        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Game</th><th>Result</th>
       </tr></thead>
       <tbody>
         <tr data-team="2027-scout-mccoy">
@@ -823,7 +824,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 Scout McCoy</strong></td>
           <td class="opp-col">vs. <span class="opp-name">USA Prime Tampa Scout - 2027</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Jaegar Bedford · Dominic Ferreira · Kevin Sullivan</span></span></td>
           <td class="venue-col">CPOP Astros 3</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 5-4</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -832,7 +833,7 @@
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Merrell</strong></td>
           <td class="opp-col">vs. <span class="opp-name">IS Elite - 2028 Pazos American</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Will Eaton · Eli Sabatino</span></span></td>
           <td class="venue-col">Santaluces Field 1</td>
-          <td class="pool-col">16U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 4-0</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -841,7 +842,7 @@
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Severidt</strong></td>
           <td class="opp-col">vs. <span class="opp-name">SF Bulls Libertatem - 16U Jozwiak</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Trey Fountain</span></span></td>
           <td class="venue-col">Santaluces Field 2</td>
-          <td class="pool-col">16U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 2-11</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -850,7 +851,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 Scout Menendez</strong></td>
           <td class="opp-col">vs. <span class="opp-name">ECB Astros - 17U Navy</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Josh Rogerson · Teegan Turner · Trey Glaser</span></span></td>
           <td class="venue-col">CPOP Astros 4</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 12-2</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -859,7 +860,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 Scout Wisser</strong></td>
           <td class="opp-col">@ <span class="opp-name">IS Elite - 2029 Riddle</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Brayden Johns · Adrian Ochoa · Alec Gallardo</span></span></td>
           <td class="venue-col">RD Cardinals 2</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 7-6</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -868,7 +869,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Cates</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Power Baseball - 2029 Gold</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Angel Camacho · Christopher Huard</span></span></td>
           <td class="venue-col">Lawnwood Field 4</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 6-3</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -877,7 +878,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 Scout McCoy</strong></td>
           <td class="opp-col">@ <span class="opp-name">Showtime Florida - 17u</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Gavin Shefsky · Nolan Parmer · JD James</span></span></td>
           <td class="venue-col">RD Cardinals 3</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 12-1</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -886,7 +887,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Fleming</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Figs - 17U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Joshua Lysiak · Joshua Stembridge</span></span></td>
           <td class="venue-col">Santaluces Field 3</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 15-6</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -895,7 +896,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Thomas</strong></td>
           <td class="opp-col">@ <span class="opp-name">Scorpions West - 17U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Peyton Woodward · Joshua Stembridge · Kenneth Martinez</span></span></td>
           <td class="venue-col">RD Cardinals 5</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 4-0</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -904,7 +905,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Murphy</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Gatorball - 2029</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Caleb Kahn · Brooks Hubbard</span></span></td>
           <td class="venue-col">CPOP Astros 3</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 7-6</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -913,7 +914,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 Scout Menendez</strong></td>
           <td class="opp-col">@ <span class="opp-name">BPA - Black 2027</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Bryan Eberly · Matej Spimr · Ryan Dejnak</span></span></td>
           <td class="venue-col">RD Marlins 6</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 0-1</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -922,7 +923,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Murphy</strong></td>
           <td class="opp-col">@ <span class="opp-name">Natty Boys - 2029</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Davis Acree · Brady Weber</span></span></td>
           <td class="venue-col">CPOP Stadium</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 5-3</span></td>
         </tr>
       </tbody>
@@ -937,7 +938,7 @@
     </div>
     <table>
       <thead><tr>
-        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
+        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Game</th><th>Result</th>
       </tr></thead>
       <tbody>
         <tr data-team="2027-scout-menendez">
@@ -945,7 +946,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 Scout Menendez</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Gatorball - 2027</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Nico Perez · JoJo Guevara · Alejandro Fernandez</span></span></td>
           <td class="venue-col">CPOP Astros 5</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 1-5</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -954,7 +955,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Thomas</strong></td>
           <td class="opp-col">@ <span class="opp-name">Elite Squad 305 - 17U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Benji Cohen · Bryce Moody · Jackson Palmer</span></span></td>
           <td class="venue-col">RD Cardinals 3</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 0-13</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -963,7 +964,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Cates</strong></td>
           <td class="opp-col">@ <span class="opp-name">NLB - 15U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Jagger Coil · Samuel Ortmeier</span></span></td>
           <td class="venue-col">Clover Park Field 3</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 11-4</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -972,7 +973,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 Scout McCoy</strong></td>
           <td class="opp-col">vs. <span class="opp-name">BPA - 2027</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Ethan Bissell · Austin Smith · Brant Bivens</span></span></td>
           <td class="venue-col">RD Marlins 3</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 1-7</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -981,7 +982,7 @@
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Merrell</strong></td>
           <td class="opp-col">@ <span class="opp-name">Beast Baseball - 16U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Joey Hageman</span></span></td>
           <td class="venue-col">Lawnwood Field 4</td>
-          <td class="pool-col">16U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 9-1</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -990,7 +991,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Fleming</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Lakeland Legends - 17U Black</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Jake Parker · Dane Todhunter</span></span></td>
           <td class="venue-col">RD Marlins 4</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 3-8</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -999,7 +1000,7 @@
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Severidt</strong></td>
           <td class="opp-col">vs. <span class="opp-name">FL Elite - Honor the Game 16U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Evan MacDonald</span></span></td>
           <td class="venue-col">Lawnwood Field 4</td>
-          <td class="pool-col">16U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 10-5</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1008,7 +1009,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 Scout Wisser</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Lion Mode Baseball</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Robby Bonanno · Channing Bikos · Beckett Lavenia</span></span></td>
           <td class="venue-col">CPOP Astros 5</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 1-9</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1017,7 +1018,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Murphy</strong></td>
           <td class="opp-col">@ <span class="opp-name">X Team - 2029 Bielski</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Riley Weidman · Ryan Broughton</span></span></td>
           <td class="venue-col">CPOP Astros 6</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col tie"><span class="result-pill">T 6-6</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1026,7 +1027,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 Scout Wisser</strong></td>
           <td class="opp-col">@ <span class="opp-name">BPA - 2029</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Owen Schmitt · Avery LeGree</span></span></td>
           <td class="venue-col">RD Marlins 3</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 0-2</span></td>
         </tr>
       </tbody>
@@ -1041,7 +1042,7 @@
     </div>
     <table>
       <thead><tr>
-        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
+        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Game</th><th>Result</th>
       </tr></thead>
       <tbody>
         <tr data-team="2027-scout-mccoy">
@@ -1049,7 +1050,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 Scout McCoy</strong></td>
           <td class="opp-col">@ <span class="opp-name">Original Florida Pokers - 2027 National</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Boston Selig · Bryson Mitchell · Nelson Ong</span></span></td>
           <td class="venue-col">CPOP Astros 5</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 7-4</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1058,7 +1059,7 @@
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Severidt</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Beast Baseball - 16U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Conor Riley</span></span></td>
           <td class="venue-col">RD Marlins 5</td>
-          <td class="pool-col">16U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 5-8</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1067,7 +1068,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 Scout Menendez</strong></td>
           <td class="opp-col">@ <span class="opp-name">561 Ghost - 17U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Kiano Noa · Jaden Sosa</span></span></td>
           <td class="venue-col">CPOP Astros 6</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 3-11</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1076,7 +1077,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Thomas</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Power Baseball - 2027 Gold</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">David Paredes · Layton Chandler · Brady Lavenia</span></span></td>
           <td class="venue-col">Clover Park Field 3</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 9-3</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1085,7 +1086,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Cates</strong></td>
           <td class="opp-col">vs. <span class="opp-name">VSA Scout - 15U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Toby Jackson · Jacob Kuipers</span></span></td>
           <td class="venue-col">Santaluces Field 2</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 5-4</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1094,7 +1095,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Fleming</strong></td>
           <td class="opp-col">vs. <span class="opp-name">South Florida Riot - 2027</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Jayden Justo · Ethan Abram</span></span></td>
           <td class="venue-col">RD Cardinals 4</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 4-2</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1103,7 +1104,7 @@
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Merrell</strong></td>
           <td class="opp-col">@ <span class="opp-name">Scorpions South Florida - 2028</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Liam Caban</span></span></td>
           <td class="venue-col">Clover Park Field 2</td>
-          <td class="pool-col">16U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 7-5</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1112,7 +1113,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 Scout Wisser</strong></td>
           <td class="opp-col">vs. <span class="opp-name">Ostingers Baseball - 2029 Green</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Max Quintero · Ty Minerva</span></span></td>
           <td class="venue-col">CPOP Astros 5</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 7-8</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1121,7 +1122,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Murphy</strong></td>
           <td class="opp-col">@ <span class="opp-name">Southern Squeeze - 2029 Woodley</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Christian Below · Beau Crews</span></span></td>
           <td class="venue-col">CPOP Astros 4</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 15-1</span></td>
         </tr>
       </tbody>
@@ -1136,7 +1137,7 @@
     </div>
     <table>
       <thead><tr>
-        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
+        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Game</th><th>Result</th>
       </tr></thead>
       <tbody>
         <tr data-team="2028-united-severidt">
@@ -1144,7 +1145,7 @@
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Severidt</strong></td>
           <td class="opp-col">@ <span class="opp-name">SBO Florida JV - 16U</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Ethen Cason</span></span></td>
           <td class="venue-col">Santaluces Field 3</td>
-          <td class="pool-col">16U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 5-2</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1180,7 +1181,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Thomas</strong></td>
           <td class="opp-col">vs. <span class="opp-name">East Coast Sox - 17U</span></td>
           <td class="venue-col">Clover Park Field 2</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 12-0</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1189,7 +1190,7 @@
           <td class="team-col"><span class="div-badge" style="background:#0a4a8f">16U</span><br><strong>2028 United Merrell</strong></td>
           <td class="opp-col">vs. <span class="opp-name">East Cobb Select - 16U</span></td>
           <td class="venue-col">CPOP Stadium</td>
-          <td class="pool-col">16U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 4-0</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1198,7 +1199,7 @@
           <td class="team-col"><span class="div-badge" style="background:#b91e2d">17U</span><br><strong>2027 United Fleming</strong></td>
           <td class="opp-col">@ <span class="opp-name">FBH Angels - 17U Grey</span></td>
           <td class="venue-col">RD Cardinals 4</td>
-          <td class="pool-col">17U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col loss"><span class="result-pill">L 1-4</span></td>
         </tr>
         <tr class="time-spacer"><td colspan="6"></td></tr>
@@ -1207,7 +1208,7 @@
           <td class="team-col"><span class="div-badge" style="background:#7b4fa6">15U</span><br><strong>2029 United Cates</strong></td>
           <td class="opp-col">@ <span class="opp-name">Florida Burn - 2030 Brown</span></td>
           <td class="venue-col">CPOP Stadium</td>
-          <td class="pool-col">15U</td>
+          <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
           <td class="result-col win"><span class="result-pill">W 4-1</span></td>
         </tr>
       </tbody>
@@ -1222,7 +1223,7 @@
     </div>
     <table>
       <thead><tr>
-        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Pool</th><th>Result</th>
+        <th>Time</th><th>CBU Team</th><th>Opponent</th><th>Venue</th><th>Game</th><th>Result</th>
       </tr></thead>
       <tbody>
         <tr data-team="2028-united-merrell">
