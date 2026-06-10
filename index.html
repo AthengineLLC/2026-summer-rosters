@@ -36,6 +36,13 @@
     .hero-title .red { color: var(--red); }
     .hero-subtitle { font-size: 20px; color: rgba(255,255,255,0.6); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; margin-bottom: 50px; }
     .hero-divider { height: 3px; width: 200px; margin: 0 auto 50px; background: linear-gradient(90deg, transparent, var(--red), transparent); }
+    .cbu-stats { margin: 0 auto 44px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .cbu-stats .cbu-rec { display: flex; align-items: baseline; gap: 14px; }
+    .cbu-stats .cbu-rec-label { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+    .cbu-stats .cbu-rec-val { font-family: 'Barlow Condensed', sans-serif; font-size: 44px; font-weight: 900; letter-spacing: 1px; color: #fff; line-height: 1; }
+    .cbu-stats .cbu-medals { display: flex; gap: 22px; font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 900; letter-spacing: 1px; color: rgba(255,255,255,0.9); }
+    .cbu-stats .cbu-medals span { display: inline-flex; align-items: center; gap: 7px; }
+    @media (max-width: 600px) { .cbu-stats .cbu-rec-val { font-size: 34px; } .cbu-stats .cbu-medals { font-size: 20px; gap: 16px; } }
     .hashtag { font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 900; letter-spacing: 2px; color: rgba(255,255,255,0.3); }
     .hashtag span { color: var(--red); }
 
@@ -334,6 +341,10 @@
       <div class="hero-title">2026<br><span class="red">Summer</span><br>Rosters</div>
       <div class="hero-subtitle">CBU Baseball · Team Rosters &amp; Schedules</div>
       <div class="hero-divider"></div>
+      <div class="cbu-stats">
+        <div class="cbu-rec"><span class="cbu-rec-label">CBU Record</span><span class="cbu-rec-val" id="cbuRecord">—</span></div>
+        <div class="cbu-medals" id="cbuMedals"></div>
+      </div>
       <div class="hashtag">#<span>REDHAT</span>NATION</div>
     </div>
   </div>
@@ -396,5 +407,18 @@
   </div>
 
   <footer>© 2026 CBU Baseball · #REDHATNATION</footer>
+  <script>
+    (function(){
+      var W=0,L=0,T=0,gold=0,silver=0,bronze=0;
+      document.querySelectorAll('.team-card').forEach(function(card){
+        var rec=card.querySelector('.team-record');
+        if(rec){ var p=rec.textContent.trim().split('-'); if(p.length>=2 && p[0]!==''){ W+=parseInt(p[0],10)||0; L+=parseInt(p[1],10)||0; T+=parseInt(p[2],10)||0; } }
+        card.querySelectorAll('.trophy-badge').forEach(function(b){ var t=b.textContent; if(t.indexOf('🏆')>=0) gold++; else if(t.indexOf('🥈')>=0) silver++; else if(t.indexOf('🥉')>=0) bronze++; });
+      });
+      var r=document.getElementById('cbuRecord'); if(r) r.textContent=W+'-'+L+(T>0?'-'+T:'');
+      var parts=[]; if(gold)parts.push('<span>🏆 '+gold+'</span>'); if(silver)parts.push('<span>🥈 '+silver+'</span>'); if(bronze)parts.push('<span>🥉 '+bronze+'</span>');
+      var m=document.getElementById('cbuMedals'); if(m) m.innerHTML = parts.join('') || '<span style="color:rgba(255,255,255,0.4);font-size:18px;">No hardware yet</span>';
+    })();
+  </script>
 </body>
 </html>
