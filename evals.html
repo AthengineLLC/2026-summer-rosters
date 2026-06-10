@@ -337,15 +337,15 @@
           <h2>Evaluator & Team</h2>
           <div class="form-section-body">
             <div class="form-group">
-              <label>Evaluator</label>
-              <select id="directorName" onchange="loadTeamsForEvaluator()" required>
-                <option value="">Select Evaluator</option>
+              <label>Team</label>
+              <select id="teamName" onchange="loadEvaluatorsForTeam()" required>
+                <option value="">Select Team</option>
               </select>
             </div>
             <div class="form-group">
-              <label>Team</label>
-              <select id="teamName" onchange="loadPlayers()" required disabled>
-                <option value="">Select Evaluator first</option>
+              <label>Evaluator</label>
+              <select id="directorName" required disabled>
+                <option value="">Select Team first</option>
               </select>
             </div>
             <div class="form-group">
@@ -1093,7 +1093,7 @@
         document.getElementById('evalScreen').style.display = 'block';
         localStorage.setItem('evalAuth', 'true');
         loadTeamPlayers();
-        populateEvaluatorDropdown();
+        populateTeamDropdown();
         initCollegeSearch();
       } else {
         document.getElementById('loginError').textContent = 'Invalid password';
@@ -1217,6 +1217,38 @@
           teamSelect.appendChild(opt);
         }
       });
+    }
+
+    function populateTeamDropdown() {
+      const teamSelect = document.getElementById('teamName');
+      const current = teamSelect.value;
+      teamSelect.innerHTML = '<option value="">Select Team</option>';
+      Object.keys(evaluatorsByTeam).forEach(team => {
+        const opt = document.createElement('option');
+        opt.value = team;
+        opt.textContent = team;
+        teamSelect.appendChild(opt);
+      });
+      if (current) teamSelect.value = current;
+    }
+
+    function loadEvaluatorsForTeam() {
+      const team = document.getElementById('teamName').value;
+      const evalSelect = document.getElementById('directorName');
+      if (!team) {
+        evalSelect.disabled = true;
+        evalSelect.innerHTML = '<option value="">Select Team first</option>';
+      } else {
+        evalSelect.disabled = false;
+        evalSelect.innerHTML = '<option value="">Select Evaluator</option>';
+        (evaluatorsByTeam[team] || []).forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          evalSelect.appendChild(opt);
+        });
+      }
+      loadPlayers();
     }
 
     function loadPlayers() {
@@ -1371,14 +1403,13 @@
           document.getElementById('objectivesToggle').checked = false;
           toggleObjectivesMode();
 
-          // Restore evaluator first (it filters the team dropdown), then team
-          if (savedEvaluator) {
-            populateEvaluatorDropdown();
-            document.getElementById('directorName').value = savedEvaluator;
-            loadTeamsForEvaluator();
-            if (savedTeam) {
-              document.getElementById('teamName').value = savedTeam;
-              loadPlayers();
+          // Restore team first (it filters the evaluator dropdown), then evaluator
+          if (savedTeam) {
+            populateTeamDropdown();
+            document.getElementById('teamName').value = savedTeam;
+            loadEvaluatorsForTeam();
+            if (savedEvaluator) {
+              document.getElementById('directorName').value = savedEvaluator;
             }
           }
         } catch (resetErr) {
@@ -1400,7 +1431,7 @@
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('evalScreen').style.display = 'block';
         loadTeamPlayers();
-        populateEvaluatorDropdown();
+        populateTeamDropdown();
         initCollegeSearch();
       }
       document.getElementById('passwordInput').addEventListener('keydown', function(e) {
