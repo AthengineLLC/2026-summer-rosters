@@ -554,6 +554,16 @@
   .venue-col { padding: 12px 14px; font-size: 16px; font-weight: 600; color: #8a9ab8; text-transform: uppercase; letter-spacing: 0.5px; }
   .pool-col { width: 80px; padding: 12px 14px; font-size: 16px; font-weight: 700; color: #b91e2d; text-align: center; letter-spacing: 1px; }
   .pool-play-tag { display: inline-block; background: #d4dae3; color: #0d1a33; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; padding: 5px 14px; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+  .result-col { width: 90px; padding: 12px 14px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 900; letter-spacing: 1px; white-space: nowrap; }
+  .result-col.win  { color: #22c55e; }
+  .result-col.loss { color: #ef4444; }
+  .result-col.tie  { color: #f59e0b; }
+  .result-col.pending { color: #444e61; font-size: 14px; font-weight: 600; letter-spacing: 0; }
+  .result-pill { display: inline-block; padding: 4px 13px; border-radius: 999px; color: #ffffff; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 14px; letter-spacing: 1px; white-space: nowrap; }
+  .result-col > .result-pill { display: inline-block; padding: 4px 13px; border-radius: 999px; color: #ffffff !important; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 14px; letter-spacing: 1px; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.18); }
+  .result-col.win > .result-pill { background: #16a34a; }
+  .result-col.loss > .result-pill { background: #b91e2d; }
+  .result-col.tie > .result-pill { background: #0d1a33; }
 
   /* FOOTER */
   .footer { margin-top: 36px; padding-top: 22px; border-top: 2px solid #b91e2d; display: flex; justify-content: space-between; align-items: center; }
@@ -827,6 +837,7 @@
           <td class="opp-col">@ <span class="opp-name">Wow Factor/Toronto Blue Jays Scout Team</span><span class="probable-pitchers"><span class="pp-label">Probable Pitchers</span><span class="pp-names">Leo Reina · Ethan Savinon</span></span></td>
           <td class="venue-col">Cacti Park of the Palm Beaches · Astros 3 · West Palm Beach, FL</td>
           <td class="pool-col"><span class="pool-play-tag">Pool Play</span></td>
+          <td class="result-col win"><span class="result-pill">W 5-4</span></td>
         </tr>
         <tr data-team="2030-scout-madsen">
           <td class="time-col">2:40 PM</td>
