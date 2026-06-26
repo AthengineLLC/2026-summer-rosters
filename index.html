@@ -49,7 +49,9 @@
 
     .teams-section { max-width: 1400px; margin: 0 auto; padding: 80px 40px; }
     .year-block { margin-bottom: 70px; }
-    .year-title { font-family: 'Barlow Condensed', sans-serif; font-size: 48px; font-weight: 900; color: var(--white); letter-spacing: 2px; margin-bottom: 6px; }
+    .year-title { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; font-family: 'Barlow Condensed', sans-serif; font-size: 48px; font-weight: 900; color: var(--white); letter-spacing: 2px; margin-bottom: 6px; }
+    .year-record-total { display: inline-flex; align-items: baseline; gap: 9px; font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 900; letter-spacing: 1px; color: #fff; background: linear-gradient(135deg, var(--red), #7a1420); border: 2px solid rgba(255,255,255,0.18); border-radius: 28px; padding: 4px 20px; box-shadow: 0 5px 18px rgba(185,30,45,0.55); white-space: nowrap; transform: translateY(-4px); }
+    .year-record-total .yr-label { font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.72); }
     .year-line { height: 3px; width: 80px; background: var(--red); margin-bottom: 30px; }
     .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     .team-card { background: var(--navy); border-radius: 12px; padding: 28px; text-decoration: none; border: 1px solid rgba(255,255,255,0.07); transition: all 0.3s; display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; }
@@ -364,7 +366,7 @@
 
   <div class="teams-section">
     <div class="year-block">
-      <div class="year-title">2027 Teams</div>
+      <div class="year-title">2027 Teams<span class="year-record-total" aria-label="Combined 2027 record"></span></div>
       <div class="year-line"></div>
       <div class="team-grid">
         <a href="olasin_roster.html" class="team-card scout-card"><div class="card-hat-badge"><span class="hat-img"></span><span class="hat-count">13</span></div><div class="team-type scout">Scout Team</div><div class="team-name">Olasin</div><div class="record-row"><div class="team-record">13-8-2</div><span class="trophy-badge">🏆</span></div><div class="team-arrow">→</div></a>
@@ -378,7 +380,7 @@
       </div>
     </div>
     <div class="year-block">
-      <div class="year-title">2028 Teams</div>
+      <div class="year-title">2028 Teams<span class="year-record-total" aria-label="Combined 2028 record"></span></div>
       <div class="year-line"></div>
       <div class="team-grid">
         <a href="scout_lawson_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">Lawson</div><div class="record-row"><div class="team-record">10-2-1</div><span class="trophy-badge">🏆</span><span class="trophy-badge">🥉</span></div><div class="team-arrow">→</div></a>
@@ -392,7 +394,7 @@
       </div>
     </div>
     <div class="year-block">
-      <div class="year-title">2029 Teams</div>
+      <div class="year-title">2029 Teams<span class="year-record-total" aria-label="Combined 2029 record"></span></div>
       <div class="year-line"></div>
       <div class="team-grid">
         <a href="pascual_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">Pascual</div><div class="team-record">4-4-2</div><div class="team-arrow">→</div></a>
@@ -405,7 +407,7 @@
       </div>
     </div>
     <div class="year-block">
-      <div class="year-title">2030 Teams</div>
+      <div class="year-title">2030 Teams<span class="year-record-total" aria-label="Combined 2030 record"></span></div>
       <div class="year-line"></div>
       <div class="team-grid">
         <a href="madsen_roster.html" class="team-card scout-card"><div class="team-type scout">Scout Team</div><div class="team-name">Madsen</div><div class="record-row"><div class="team-record">10-4</div><span class="trophy-badge">🏆</span></div><div class="team-arrow">→</div></a>
@@ -432,6 +434,11 @@
       var hats=0; document.querySelectorAll('.team-card .hat-count').forEach(function(h){ hats+=parseInt(h.textContent,10)||0; });
       var parts=[]; if(gold)parts.push('<span>🏆 '+gold+'</span>'); if(silver)parts.push('<span>🥈 '+silver+'</span>'); if(bronze)parts.push('<span>🥉 '+bronze+'</span>'); if(hats)parts.push('<span class="cbu-hats"><span class="hat-img"></span>'+hats+'</span>');
       var m=document.getElementById('cbuMedals'); if(m) m.innerHTML = parts.join('') || '<span style="color:rgba(255,255,255,0.4);font-size:18px;">No hardware yet</span>';
+      document.querySelectorAll('.year-block').forEach(function(block){
+        var w=0,l=0,t=0;
+        block.querySelectorAll('.team-grid .team-record').forEach(function(el){ var p=el.textContent.trim().split('-'); if(p.length>=2 && p[0]!==''){ w+=parseInt(p[0],10)||0; l+=parseInt(p[1],10)||0; t+=parseInt(p[2],10)||0; } });
+        var badge=block.querySelector('.year-record-total'); if(badge){ badge.innerHTML='<span class="yr-label">Combined</span>'+(t>0?w+'-'+l+'-'+t:w+'-'+l); }
+      });
     })();
   </script>
 </body>
