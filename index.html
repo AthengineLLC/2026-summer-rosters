@@ -23,7 +23,7 @@
     .nav-item { position: relative; }
     .nav-link { color: var(--white); text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.3s; display: flex; align-items: center; gap: 8px; }
     .nav-link:hover { color: var(--red); }
-    .dropdown-menu { position: absolute; top: 100%; left: 0; background: var(--navy); border-top: 3px solid var(--red); min-width: 240px; list-style: none; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .dropdown-menu { position: absolute; top: 100%; left: 0; background: var(--navy); border-top: 3px solid var(--red); min-width: 240px; max-height: 76vh; overflow-y: auto; overflow-x: hidden; list-style: none; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
     .nav-item:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
     .dropdown-item { color: var(--white); padding: 14px 20px; text-decoration: none; display: block; font-weight: 500; font-size: 14px; text-transform: uppercase; transition: all 0.2s; border-left: 3px solid transparent; }
     .dropdown-item:hover { background: rgba(185,30,45,0.1); border-left-color: var(--red); color: var(--red); }
