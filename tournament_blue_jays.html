@@ -635,6 +635,24 @@
     .poster { width: 100%; max-width: 1200px; margin: 0 auto; padding: 40px 30px !important; border-radius: 12px; }
     .cbu-logo { width: 300px !important; }
     @media (max-width: 768px) { .poster { padding: 20px 15px !important; } table { font-size: 13px; display: block; overflow-x: auto; } .time-col { width: 80px !important; font-size: 16px !important; } .team-col { width: 160px !important; } .team-col strong { font-size: 15px !important; } }
+  /* === composite-mobile-contain: keep schedule within viewport, no horizontal page scroll === */
+  @media (max-width: 1100px) {
+    html { overflow-x: hidden; }
+    body { width: 100% !important; }
+    .cbu-logo { max-width: 88%; }
+  }
+  @media (max-width: 768px) {
+    .schedule-container { padding: 24px 12px !important; }
+    .poster { padding: 24px 14px 28px !important; }
+    table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .footer { flex-direction: column; gap: 16px; text-align: center; }
+    .footer-tags { justify-content: center; flex-wrap: wrap; }
+    .hashtag { font-size: 28px; letter-spacing: 0; }
+    .event-title { font-size: 34px; }
+  }
+  @media (max-width: 400px) {
+    .hashtag { font-size: 22px; }
+  }
   </style>
 </head>
 <body>
