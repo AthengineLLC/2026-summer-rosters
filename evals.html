@@ -297,6 +297,13 @@
       .form-group select, .form-group input { font-size: 16px; }
       .objectives-toggle-section { flex-direction: column; align-items: flex-start; gap: 12px; }
     }
+
+    /* PLAYER STATUS-DOT LEGEND */
+    .dot-legend { margin-top: 10px; font-size: 12.5px; color: #475569; line-height: 1.5;
+      background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 9px 12px; }
+    .dot-legend strong { color: var(--navy); }
+    .dot-legend .dl-seq { font-weight: 700; color: var(--navy); white-space: nowrap; }
+    .dot-legend .dl-key { display: inline-block; margin-left: 10px; font-weight: 600; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -352,6 +359,12 @@
               <select id="playerSelect" onchange="selectPlayer()" required>
                 <option value="">Select Player</option>
               </select>
+              <div class="dot-legend">
+                Each name shows <strong>3 status dots</strong> in order
+                <span class="dl-seq">Objectives · Coach Eval · Director Eval</span> —
+                <span class="dl-key">🟢 written</span>
+                <span class="dl-key">🔴 not yet</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1038,6 +1051,41 @@
       }
     }
 
+    // --- Player status dots (Objectives · Coach Eval · Director Eval) ---
+    const DIRECTORS = ['Addison Maruszak', 'Nick James', 'Wayne Stofsky', 'Richie Warren', 'Maddux Faber'];
+    function evalIsDirector(name) {
+      return DIRECTORS.some(d => name && name.toLowerCase().includes(d.toLowerCase().split(' ')[0]));
+    }
+    function statusDots(evals) {
+      // evals = all evaluation rows for one player
+      const objEval = evals.find(e => e.is_objectives_only);
+      let objDone = false;
+      if (objEval) {
+        objDone = [objEval.fundamental_objectives, objEval.physical_objectives, objEval.mental_emotional_objectives].filter(Boolean).length === 3;
+      }
+      const coachDone = evals.some(e => !e.is_objectives_only && !evalIsDirector(e.director_name));
+      const dirDone   = evals.some(e => !e.is_objectives_only &&  evalIsDirector(e.director_name));
+      const dot = ok => ok ? '🟢' : '🔴'; // 🟢 / 🔴
+      return dot(objDone) + dot(coachDone) + dot(dirDone);
+    }
+    async function fetchEvalStatus(team) {
+      initSupabase();
+      if (!dbClient) return {};
+      try {
+        const { data, error } = await dbClient
+          .from('player_evaluations')
+          .select('player_first_name, player_last_name, director_name, is_objectives_only, fundamental_objectives, physical_objectives, mental_emotional_objectives')
+          .eq('team_name', team);
+        if (error) { console.error(error); return {}; }
+        const byPlayer = {};
+        (data || []).forEach(e => {
+          const k = ((e.player_first_name || '') + '|' + (e.player_last_name || '')).toLowerCase().trim();
+          (byPlayer[k] = byPlayer[k] || []).push(e);
+        });
+        return byPlayer;
+      } catch (err) { console.error('eval status fetch failed', err); return {}; }
+    }
+
     function updateVisibility() {
       const checked = Array.from(document.querySelectorAll('input[name="position"]:checked')).map(cb => cb.value);
       const hasPitcher = checked.some(p => p === 'RHP' || p === 'LHP');
@@ -1250,19 +1298,33 @@
       loadPlayers();
     }
 
-    function loadPlayers() {
+    async function loadPlayers() {
       const team = document.getElementById('teamName').value;
       const playerSelect = document.getElementById('playerSelect');
       playerSelect.innerHTML = '<option value="">Select Player</option>';
 
-      if (team && playersByTeam[team]) {
-        playersByTeam[team].forEach(player => {
-          const option = document.createElement('option');
-          option.value = JSON.stringify({ firstName: player.firstName, lastName: player.lastName, jersey: player.jersey });
-          option.textContent = `#${player.jersey} — ${player.fullName}`;
-          playerSelect.appendChild(option);
-        });
-      }
+      if (!(team && playersByTeam[team])) return;
+
+      // Build options immediately (no dots), then fill in status dots once evals load.
+      const optByKey = {};
+      playersByTeam[team].forEach(player => {
+        const option = document.createElement('option');
+        option.value = JSON.stringify({ firstName: player.firstName, lastName: player.lastName, jersey: player.jersey });
+        option.dataset.baseLabel = `#${player.jersey} — ${player.fullName}`;
+        option.textContent = option.dataset.baseLabel;
+        playerSelect.appendChild(option);
+        const k = ((player.firstName || '') + '|' + (player.lastName || '')).toLowerCase().trim();
+        optByKey[k] = option;
+      });
+
+      // Fetch eval status and prepend the three dots to each name.
+      const byPlayer = await fetchEvalStatus(team);
+      // Guard against a newer team selection replacing this dropdown mid-fetch.
+      if (document.getElementById('teamName').value !== team) return;
+      Object.keys(optByKey).forEach(k => {
+        const dots = statusDots(byPlayer[k] || []);
+        optByKey[k].textContent = `${dots}  ${optByKey[k].dataset.baseLabel}`;
+      });
     }
 
     function selectPlayer() {
