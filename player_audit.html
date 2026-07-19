@@ -158,6 +158,33 @@
     .audit-table tbody tr:hover { background: #f8fafc; cursor: pointer; }
     .audit-table td.center { text-align: center; }
 
+    /* HORIZONTAL SCROLL + FROZEN # / PLAYER COLUMNS */
+    .audit-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .audit-table th:nth-child(1),
+    .audit-table td:nth-child(1),
+    .audit-table th:nth-child(2),
+    .audit-table td:nth-child(2) {
+      position: sticky; z-index: 2; background: var(--white);
+    }
+    .audit-table th:nth-child(1),
+    .audit-table td:nth-child(1) {
+      left: 0;
+      width: 58px !important; min-width: 58px; max-width: 58px;
+      padding-left: 12px; padding-right: 12px;
+    }
+    .audit-table th:nth-child(2),
+    .audit-table td:nth-child(2) {
+      left: 58px;
+      min-width: 120px;
+      box-shadow: inset -1px 0 0 #e5e7eb, 6px 0 8px -6px rgba(0,0,0,0.25);
+    }
+    .audit-table thead th:nth-child(1),
+    .audit-table thead th:nth-child(2) { background: #f3f4f6; z-index: 4; }
+    /* keep full-width loading/empty rows from being squished by the frozen-col width */
+    .audit-table tbody tr.status-row td {
+      position: static; width: auto !important; min-width: 0; max-width: none; box-shadow: none;
+    }
+
     .player-name { font-weight: 700; color: var(--navy); font-size: 15px; }
     .jersey-badge {
       display: inline-flex; align-items: center; justify-content: center;
@@ -321,6 +348,7 @@
 
     <!-- Audit table -->
     <div class="audit-wrapper" id="auditWrapper" style="display:none;">
+      <div class="audit-scroll">
       <table class="audit-table" id="auditTable">
         <thead>
           <tr>
@@ -335,6 +363,7 @@
           <tr class="status-row"><td colspan="5"><span class="spinner"></span> Loading…</td></tr>
         </tbody>
       </table>
+      </div>
     </div>
 
   </div><!-- .main -->
