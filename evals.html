@@ -1323,7 +1323,7 @@
       if (document.getElementById('teamName').value !== team) return;
       Object.keys(optByKey).forEach(k => {
         const dots = statusDots(byPlayer[k] || []);
-        optByKey[k].textContent = `${dots}  ${optByKey[k].dataset.baseLabel}`;
+        optByKey[k].textContent = `${optByKey[k].dataset.baseLabel}  ${dots}`;
       });
     }
 
