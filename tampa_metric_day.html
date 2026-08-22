@@ -58,34 +58,15 @@
     .big-card .desc { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 6px; line-height: 1.35; }
     .big-card.results-card { grid-column: 1 / -1; background: rgba(185,30,45,0.12); border-color: rgba(185,30,45,0.5); }
 
-    .team-list { display: flex; flex-direction: column; gap: 10px; }
-    .team-row { background: var(--navy); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 18px 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-    .team-row:active { border-color: var(--red); }
-    .team-row .tname { font-family: 'Barlow Condensed', sans-serif; font-size: 21px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
-    .team-row .tcount { font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 600; }
-
-    /* PLAYER LIST */
-    .player-list { display: flex; flex-direction: column; gap: 8px; }
-    .player-row { background: var(--navy); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-    .player-row:active { border-color: var(--red); }
-    .player-row.done { border-color: rgba(34,197,94,0.55); background: rgba(34,197,94,0.07); }
-    .pcheck { flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: transparent; }
-    .player-row.done .pcheck { background: #22c55e; border-color: #22c55e; color: #fff; }
-    .pname { font-size: 16px; font-weight: 700; flex: 1; min-width: 0; }
-    .pname .last { text-transform: uppercase; }
-    .pmetrics { font-size: 12px; color: rgba(255,255,255,0.55); font-weight: 600; text-align: right; white-space: nowrap; }
-    .list-note { font-size: 12px; color: rgba(255,255,255,0.45); text-align: center; margin: 14px 0 4px; }
-
-    /* INPUT SHEET (modal) */
-    .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
-    .sheet-overlay.open { display: flex; }
-    .sheet { background: #ffffff; color: var(--navy); width: 100%; max-width: 700px; border-radius: 18px 18px 0 0; padding: 0 0 max(20px, env(safe-area-inset-bottom)); max-height: 92vh; overflow-y: auto; }
-    .sheet-head { padding: 18px 20px 14px; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; background: #fff; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .sheet-head .who { min-width: 0; }
-    .sheet-head .who .nm { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; line-height: 1; }
-    .sheet-head .who .ctx { font-size: 12px; color: #6b7280; font-weight: 600; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .sheet-close { flex: 0 0 auto; background: #f3f4f6; border: none; width: 38px; height: 38px; border-radius: 50%; font-size: 18px; font-weight: 700; color: #6b7280; cursor: pointer; }
-    .sheet-body { padding: 18px 20px; }
+    /* ENTRY CARD (team + player dropdowns with metric inputs below) */
+    .entry-card { background: #ffffff; color: var(--navy); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); padding: 20px; }
+    .metric-select { width: 100%; padding: 15px 14px; border: 1.5px solid #e5e7eb; background: #f9fafb; color: var(--navy); border-radius: 10px; font-size: 17px; font-weight: 700; font-family: 'Inter', sans-serif; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%236b7280' stroke-width='2'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; }
+    .metric-select:focus { outline: none; border-color: var(--red); background-color: #fff; }
+    .metric-select:disabled { color: #9ca3af; background-color: #f3f4f6; }
+    .entry-divider { height: 1px; background: #e5e7eb; margin: 6px 0 18px; }
+    .entry-actions { margin-top: 8px; }
+    .form-hint { text-align: center; color: #9ca3af; padding: 20px 0; font-size: 14px; font-weight: 600; }
+    .entry-card .sheet-msg { padding: 6px 0 0; }
 
     .metric-group { margin-bottom: 18px; }
     .metric-group:last-child { margin-bottom: 0; }
@@ -163,24 +144,6 @@
     </div>
 
     <div id="viewRoot"></div>
-  </div>
-
-  <!-- INPUT SHEET -->
-  <div class="sheet-overlay" id="sheetOverlay">
-    <div class="sheet">
-      <div class="sheet-head">
-        <div class="who">
-          <div class="nm" id="sheetName"></div>
-          <div class="ctx" id="sheetCtx"></div>
-        </div>
-        <button class="sheet-close" onclick="closeSheet()">&#10005;</button>
-      </div>
-      <div class="sheet-body" id="sheetBody"></div>
-      <div class="sheet-msg" id="sheetMsg"></div>
-      <div class="sheet-actions">
-        <button class="btn-save" id="btnSave" onclick="saveMetrics()">Save</button>
-      </div>
-    </div>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -349,9 +312,8 @@
     const COL_LABELS = { ten_yard:"10yd", thirty_yard:"30yd", sixty_yard:"60yd", throw_velo:"Throw Velo", exit_velo:"Exit Velo", exit_type:"Tee/Live", height:"HT", weight:"WT" };
 
     /* ── state ── */
-    let state = { view: "stations", station: null, team: null, resTeam: "__leaders__" };
+    let state = { view: "stations", station: null, teamIdx: "", playerSel: "", resTeam: "__leaders__" };
     let doneMap = {};      // "team|first|last" -> merged latest metrics for current station
-    let currentPlayer = null;
 
     const $ = (id) => document.getElementById(id);
     const pkey = (team, p) => `${team}|${p.first}|${p.last}`;
@@ -371,10 +333,7 @@
       render();
     }
     function back() {
-      if (state.view === "players") go("teams", { team: null });
-      else if (state.view === "teams") go("stations", { station: null });
-      else if (state.view === "results") go("stations", { station: null });
-      else go("stations");
+      go("stations", { station: null, teamIdx: "", playerSel: "" });
       window.scrollTo(0, 0);
     }
     $('btnBack').addEventListener('click', back);
@@ -392,7 +351,7 @@
         $('appSub').textContent = "Pick your station to start entering metrics";
         root.innerHTML = `<div class="card-grid">` +
           Object.entries(STATIONS).map(([key, s]) =>
-            `<div class="big-card" onclick="go('teams',{station:'${key}'})">
+            `<div class="big-card" onclick="go('entry',{station:'${key}'})">
                <div class="icon">${s.icon}</div>
                <div class="title">${s.label}</div>
                <div class="desc">${s.desc}</div>
@@ -402,18 +361,8 @@
              <div class="title">View Results</div>
              <div class="desc">Live results by team + event leaders</div>
            </div></div>`;
-      } else if (state.view === "teams") {
-        const s = STATIONS[state.station];
-        setCrumb(`Station: <b>${s.label}</b> &mdash; pick a team`);
-        $('appSub').textContent = "Select the team coming through your station";
-        root.innerHTML = `<div class="team-list">` +
-          TEAMS.map((t, i) =>
-            `<div class="team-row" onclick="go('players',{team:${i}})">
-               <div class="tname">${esc(t.name)}</div>
-               <div class="tcount">${t.players.length} players</div>
-             </div>`).join("") + `</div>`;
-      } else if (state.view === "players") {
-        renderPlayers();
+      } else if (state.view === "entry") {
+        renderEntry();
       } else if (state.view === "results") {
         renderResults();
       }
@@ -425,31 +374,78 @@
         a.last.localeCompare(b.last) || a.first.localeCompare(b.first));
     }
 
-    async function renderPlayers() {
+    async function renderEntry() {
       const s = STATIONS[state.station];
-      const team = TEAMS[state.team];
-      setCrumb(`<b>${s.label}</b> &mdash; ${esc(team.name)}`);
-      $('appSub').textContent = "Tap a player to enter metrics · green = already recorded";
+      setCrumb(`Station: <b>${s.label}</b>`);
+      $('appSub').textContent = "Select team, then player — enter metrics below";
       const root = $('viewRoot');
-      const players = sortedPlayers(team);
-      root.innerHTML = `<div class="player-list">` +
-        players.map(p =>
-          `<div class="player-row" id="pr-${cssId(p)}" onclick="openSheet('${esc(p.first)}','${esc(p.last)}')">
-             <div class="pcheck">✓</div>
-             <div class="pname"><span class="last">${esc(p.last)}</span>, ${esc(p.first)}</div>
-             <div class="pmetrics"></div>
-           </div>`).join("") +
-        `</div><div class="list-note">Entries save instantly to the shared database. Re-saving a player overwrites with the newest values.</div>`;
-      await refreshDone();
+      root.innerHTML = `<div class="entry-card">
+        <div class="metric-group"><label>Team</label>
+          <select class="metric-select" id="selTeam" onchange="onTeamChange()">
+            <option value="">Select team…</option>` +
+            TEAMS.map((t, i) => `<option value="${i}"${state.teamIdx === String(i) ? " selected" : ""}>${esc(t.name)}</option>`).join("") +
+          `</select></div>
+        <div class="metric-group"><label>Player <small>(by last name · ✓ = recorded)</small></label>
+          <select class="metric-select" id="selPlayer" onchange="onPlayerChange()" disabled>
+            <option value="">Select player…</option>
+          </select></div>
+        <div class="entry-divider"></div>
+        <div id="entryForm"></div>
+        <div class="sheet-msg" id="sheetMsg"></div>
+        <div class="entry-actions"><button class="btn-save" id="btnSave" onclick="saveMetrics()">Save</button></div>
+      </div>`;
+      renderForm();
+      if (state.teamIdx !== "") {
+        await refreshDone();
+        populatePlayers();
+        renderForm();
+      }
     }
 
-    function cssId(p) { return (p.first + "-" + p.last).replace(/[^a-zA-Z0-9-]/g, "_"); }
+    async function onTeamChange() {
+      state.teamIdx = $('selTeam').value;
+      state.playerSel = "";
+      renderForm();
+      const sel = $('selPlayer');
+      if (state.teamIdx === "") {
+        sel.disabled = true;
+        sel.innerHTML = `<option value="">Select player…</option>`;
+        return;
+      }
+      await refreshDone();
+      populatePlayers();
+    }
+
+    function onPlayerChange() {
+      state.playerSel = $('selPlayer').value;
+      renderForm();
+    }
+
+    function populatePlayers() {
+      const sel = $('selPlayer');
+      if (!sel || state.teamIdx === "") return;
+      const team = TEAMS[+state.teamIdx];
+      sel.disabled = false;
+      sel.innerHTML = `<option value="">Select player…</option>` +
+        sortedPlayers(team).map(p => {
+          const m = doneMap[pkey(team.name, p)];
+          const done = m && Object.keys(m).length;
+          const v = `${p.first}|${p.last}`;
+          return `<option value="${esc(v)}"${state.playerSel === v ? " selected" : ""}>${esc(p.last)}, ${esc(p.first)}${done ? " ✓" : ""}</option>`;
+        }).join("");
+    }
+
+    function currentPlayer() {
+      if (state.teamIdx === "" || !state.playerSel) return null;
+      const [first, last] = state.playerSel.split("|");
+      return { first, last, team: TEAMS[+state.teamIdx] };
+    }
 
     // Pull existing rows for this team+station, merge latest non-null per column
     async function refreshDone() {
       doneMap = {};
-      const team = TEAMS[state.team];
-      const s = STATIONS[state.station];
+      if (state.teamIdx === "") return;
+      const team = TEAMS[+state.teamIdx];
       try {
         const { data, error } = await dbClient.from(TABLE)
           .select('*')
@@ -464,50 +460,25 @@
             if (row[col] !== null && row[col] !== undefined && row[col] !== "") doneMap[k][col] = row[col];
           }
         }
-        for (const p of team.players) {
-          const el = $('pr-' + cssId(p));
-          if (!el) continue;
-          const m = doneMap[pkey(team.name, p)];
-          if (m && Object.keys(m).length) {
-            el.classList.add('done');
-            el.querySelector('.pmetrics').textContent = summaryFor(m);
-          } else {
-            el.classList.remove('done');
-            el.querySelector('.pmetrics').textContent = "";
-          }
-        }
       } catch (err) {
         toast("⚠️ Could not load saved data");
         console.error(err);
       }
     }
 
-    function summaryFor(m) {
-      const bits = [];
-      if (state.station === "running") {
-        if (m.ten_yard != null) bits.push(m.ten_yard + "s/10");
-        if (m.thirty_yard != null) bits.push(m.thirty_yard + "s/30");
-        if (m.sixty_yard != null) bits.push(m.sixty_yard + "s/60");
-      } else if (state.station === "throwing") {
-        if (m.throw_velo != null) bits.push(m.throw_velo + " mph");
-      } else if (state.station === "hitting") {
-        if (m.exit_velo != null) bits.push(m.exit_velo + " mph" + (m.exit_type ? " (" + m.exit_type + ")" : ""));
-      } else if (state.station === "gym") {
-        if (m.height) bits.push(m.height);
-        if (m.weight != null) bits.push(m.weight + " lbs");
-      }
-      return bits.join(" · ");
-    }
-
-    /* ── input sheet ── */
-    function openSheet(first, last) {
+    /* ── metric form (always below the dropdowns) ── */
+    function renderForm() {
       const s = STATIONS[state.station];
-      const team = TEAMS[state.team];
-      currentPlayer = { first, last };
-      const prev = doneMap[`${team.name}|${first}|${last}`] || {};
-      $('sheetName').textContent = `${last}, ${first}`;
-      $('sheetCtx').textContent = `${s.label} · ${team.name}`;
+      const body = $('entryForm');
+      const p = currentPlayer();
       $('sheetMsg').textContent = ""; $('sheetMsg').className = "sheet-msg";
+      if (!p) {
+        body.innerHTML = `<div class="form-hint">${state.teamIdx === "" ? "Pick a team to get started." : "Now pick a player."}</div>`;
+        $('btnSave').disabled = true;
+        $('btnSave').textContent = "Save";
+        return;
+      }
+      const prev = doneMap[`${p.team.name}|${p.first}|${p.last}`] || {};
 
       let html = "";
       if (s.heightWeight) {
@@ -533,13 +504,9 @@
             `</div></div>`;
         }
       }
-      $('sheetBody').innerHTML = html;
+      body.innerHTML = html;
       $('btnSave').disabled = false;
-      $('btnSave').textContent = "Save";
-      $('sheetOverlay').classList.add('open');
-      // focus first input for fast entry
-      const firstInput = $('sheetBody').querySelector('input');
-      if (firstInput) setTimeout(() => firstInput.focus(), 150);
+      $('btnSave').textContent = `Save — ${p.last}, ${p.first}`;
     }
 
     function pickToggle(el) {
@@ -547,20 +514,14 @@
       el.classList.add('selected');
     }
 
-    function closeSheet() {
-      $('sheetOverlay').classList.remove('open');
-      currentPlayer = null;
-    }
-    $('sheetOverlay').addEventListener('click', (e) => { if (e.target === $('sheetOverlay')) closeSheet(); });
-
     async function saveMetrics() {
-      if (!currentPlayer) return;
+      const p = currentPlayer();
+      if (!p) return;
       const s = STATIONS[state.station];
-      const team = TEAMS[state.team];
       const row = {
-        team: team.name,
-        first_name: currentPlayer.first,
-        last_name: currentPlayer.last,
+        team: p.team.name,
+        first_name: p.first,
+        last_name: p.last,
         station: state.station,
       };
       let hasValue = false;
@@ -594,13 +555,14 @@
       try {
         const { error } = await dbClient.from(TABLE).insert([row]);
         if (error) throw error;
-        toast(`✓ Saved ${currentPlayer.last}, ${currentPlayer.first}`);
-        closeSheet();
+        toast(`✓ Saved ${p.last}, ${p.first}`);
         await refreshDone();
+        populatePlayers();   // updates the ✓ marks, keeps current selection
+        renderForm();        // clears inputs, shows the new saved values
       } catch (err) {
         showSheetErr("Save failed: " + err.message);
         $('btnSave').disabled = false;
-        $('btnSave').textContent = "Save";
+        $('btnSave').textContent = `Save — ${p.last}, ${p.first}`;
       }
     }
 
