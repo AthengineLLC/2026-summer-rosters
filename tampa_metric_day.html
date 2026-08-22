@@ -150,19 +150,8 @@
     </div>
   </nav>
 
-  <!-- LOGIN -->
-  <div id="loginScreen" class="login-container">
-    <h1>Tampa Metric Day</h1>
-    <div class="login-group">
-      <label>Password</label>
-      <input type="password" id="loginPassword" placeholder="Enter password" />
-    </div>
-    <div class="login-error" id="loginError"></div>
-    <button class="btn-login" onclick="authenticate()">Access Stations</button>
-  </div>
-
   <!-- APP -->
-  <div id="appScreen" class="app" style="display:none;">
+  <div id="appScreen" class="app">
     <div class="app-header">
       <h1>CBU <span>Tampa</span> Metric Day</h1>
       <div class="sub" id="appSub">Pick your station to start entering metrics</div>
@@ -200,15 +189,8 @@
   <script>
     const SUPABASE_URL = "https://lymuuvixgdjwczviejie.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5bXV1dml4Z2Rqd2N6dmllamllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODc0ODksImV4cCI6MjA5NTA2MzQ4OX0.YxJk28Zk3Lhv6MQe4z4PG3cVpp6cKLANRYtDwCX3Dt8";
-    const METRIC_PASSWORD = "tampa2026metrics";
     const TABLE = "tampa_metrics";
     let dbClient = null;
-
-    // localStorage can throw (private mode, sandboxed previews) — never let that kill the page
-    const store = {
-      get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
-      set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
-    };
 
     /* ═══════════════════════════════════════════════════════════════
        PLAYER LIST — CBU Tampa Metric Day
@@ -374,19 +356,6 @@
     const $ = (id) => document.getElementById(id);
     const pkey = (team, p) => `${team}|${p.first}|${p.last}`;
     const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-
-    function authenticate() {
-      const password = $('loginPassword').value;
-      if (password === METRIC_PASSWORD) {
-        dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        store.set('tampaMetricAuth', 'true');
-        $('loginScreen').style.display = 'none';
-        $('appScreen').style.display = 'block';
-        render();
-      } else {
-        $('loginError').textContent = 'Invalid password.';
-      }
-    }
 
     function toast(msg) {
       const t = $('toast');
@@ -729,15 +698,8 @@
 
     /* ── boot ── */
     window.addEventListener('load', () => {
-      if (store.get('tampaMetricAuth') === 'true') {
-        dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        $('loginScreen').style.display = 'none';
-        $('appScreen').style.display = 'block';
-        render();
-      }
-      $('loginPassword').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') authenticate();
-      });
+      dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      render();
     });
   </script>
 </body>
