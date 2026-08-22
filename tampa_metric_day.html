@@ -64,7 +64,10 @@
     .metric-select:focus { outline: none; border-color: var(--red); background-color: #fff; }
     .metric-select:disabled { color: #9ca3af; background-color: #f3f4f6; }
     .entry-divider { height: 1px; background: #e5e7eb; margin: 6px 0 18px; }
-    .entry-actions { margin-top: 8px; }
+    .entry-actions { margin-top: 8px; display: flex; gap: 10px; }
+    .entry-actions .btn-save { flex: 1; }
+    .btn-cancel { flex: 0 0 auto; padding: 17px 22px; background: #fff; color: var(--navy); border: 1.5px solid #e5e7eb; border-radius: 12px; font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .btn-cancel:active { background: #f3f4f6; }
     .form-hint { text-align: center; color: #9ca3af; padding: 20px 0; font-size: 14px; font-weight: 600; }
     .entry-card .sheet-msg { padding: 6px 0 0; }
 
@@ -91,6 +94,7 @@
     .sheet-msg { padding: 6px 20px 0; font-size: 13px; font-weight: 700; min-height: 20px; }
     .sheet-msg.ok { color: #16a34a; }
     .sheet-msg.err { color: #b91c1c; }
+    .sheet-msg.warn { color: #b45309; background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 10px; padding: 12px 14px; margin-top: 4px; }
 
     /* toast */
     .toast { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(80px); background: #16a34a; color: #fff; font-weight: 700; font-size: 14px; padding: 12px 22px; border-radius: 30px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); transition: transform 0.25s; z-index: 3000; pointer-events: none; white-space: nowrap; }
@@ -314,6 +318,7 @@
     /* ── state ── */
     let state = { view: "stations", station: null, teamIdx: "", playerSel: "", resTeam: "__leaders__" };
     let doneMap = {};      // "team|first|last" -> merged latest metrics for current station
+    let pendingPartial = false;  // true while the "empty fields — save anyway?" question is showing
 
     const $ = (id) => document.getElementById(id);
     const pkey = (team, p) => `${team}|${p.first}|${p.last}`;
@@ -392,8 +397,10 @@
         <div class="entry-divider"></div>
         <div id="entryForm"></div>
         <div class="sheet-msg" id="sheetMsg"></div>
-        <div class="entry-actions"><button class="btn-save" id="btnSave" onclick="saveMetrics()">Save</button></div>
+        <div class="entry-actions"><button class="btn-cancel" id="btnCancel" onclick="cancelPartial()" style="display:none;">Cancel</button><button class="btn-save" id="btnSave" onclick="saveMetrics()">Save</button></div>
       </div>`;
+      // typing in any field withdraws a pending "save anyway?" question
+      $('entryForm').addEventListener('input', () => { if (pendingPartial) cancelPartial(); });
       renderForm();
       if (state.teamIdx !== "") {
         await refreshDone();
@@ -472,6 +479,9 @@
       const body = $('entryForm');
       const p = currentPlayer();
       $('sheetMsg').textContent = ""; $('sheetMsg').className = "sheet-msg";
+      pendingPartial = false;
+      const bc = $('btnCancel');
+      if (bc) bc.style.display = "none";
       if (!p) {
         body.innerHTML = `<div class="form-hint">${state.teamIdx === "" ? "Pick a team to get started." : "Now pick a player."}</div>`;
         $('btnSave').disabled = true;
@@ -525,6 +535,7 @@
         station: state.station,
       };
       let hasValue = false;
+      const emptyLabels = [];
 
       if (s.heightWeight) {
         const ft = $('in-height-ft').value.trim();
@@ -533,13 +544,17 @@
           if (ft === "") { showSheetErr("Enter feet for height."); return; }
           row.height = `${parseInt(ft, 10)}'${inch === "" ? 0 : parseInt(inch, 10)}`;
           hasValue = true;
+        } else {
+          emptyLabels.push("Height");
         }
         const wt = $('in-weight').value.trim();
         if (wt !== "") { row.weight = parseFloat(wt); hasValue = true; }
+        else emptyLabels.push("Weight");
       } else {
         for (const f of s.fields) {
           const v = $('in-' + f.col).value.trim();
           if (v !== "") { row[f.col] = parseFloat(v); hasValue = true; }
+          else emptyLabels.push(f.label);
         }
         if (s.toggle) {
           const sel = document.querySelector(`#toggle-${s.toggle.col} .toggle-opt.selected`);
@@ -549,6 +564,17 @@
       }
 
       if (!hasValue) { showSheetErr("Enter at least one value."); return; }
+
+      // some fields blank — ask the coach to confirm before saving a partial entry
+      if (emptyLabels.length && !pendingPartial) {
+        pendingPartial = true;
+        const m = $('sheetMsg');
+        m.innerHTML = `⚠️ You're saving with no value for: <b>${emptyLabels.join(", ")}</b>. Is this correct?`;
+        m.className = "sheet-msg warn";
+        $('btnSave').textContent = "Yes — Save Anyway";
+        $('btnCancel').style.display = "block";
+        return;
+      }
 
       $('btnSave').disabled = true;
       $('btnSave').textContent = "Saving...";
@@ -564,6 +590,15 @@
         $('btnSave').disabled = false;
         $('btnSave').textContent = `Save — ${p.last}, ${p.first}`;
       }
+    }
+
+    function cancelPartial() {
+      pendingPartial = false;
+      $('btnCancel').style.display = "none";
+      const m = $('sheetMsg');
+      m.textContent = ""; m.className = "sheet-msg";
+      const p = currentPlayer();
+      $('btnSave').textContent = p ? `Save — ${p.last}, ${p.first}` : "Save";
     }
 
     function showSheetErr(msg) {
