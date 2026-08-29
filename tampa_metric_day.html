@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CBU Tampa Metric Day</title>
+  <title>CBU Metric Day</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -42,6 +42,10 @@
     .app-header h1 { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
     .app-header h1 span { color: var(--red); }
     .app-header .sub { font-size: 13px; color: rgba(255,255,255,0.55); margin-top: 4px; }
+    .event-picker { margin-top: 12px; }
+    .event-picker select { padding: 10px 36px 10px 16px; border-radius: 22px; border: 1.5px solid rgba(255,255,255,0.25); background-color: rgba(255,255,255,0.07); color: var(--white); font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
+    .event-picker select:focus { outline: none; border-color: var(--red); }
+    .event-picker select option { background: var(--navy); color: var(--white); }
 
     .crumb-bar { display: flex; align-items: center; gap: 10px; margin: 14px 0 16px; min-height: 44px; }
     .btn-back { flex: 0 0 auto; background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.18); color: var(--white); font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; padding: 10px 16px; border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
@@ -138,7 +142,10 @@
   <!-- APP -->
   <div id="appScreen" class="app">
     <div class="app-header">
-      <h1>CBU <span>Tampa</span> Metric Day</h1>
+      <h1 id="appTitle">CBU <span>Tampa</span> Metric Day</h1>
+      <div class="event-picker">
+        <select id="selEvent" onchange="onEventChange()"></select>
+      </div>
       <div class="sub" id="appSub">Pick your station to start entering metrics</div>
     </div>
 
@@ -164,126 +171,273 @@
        Source: cbu_uniform_orders_tampa.csv (uniform orders list).
        Players display sorted by last name automatically.
        ═══════════════════════════════════════════════════════════════ */
-    const TEAMS = [
-      { name: "CBU 14U United Faber Red", players: [
-        { first: "Ricky", last: "Moore" },
-        { first: "Becker", last: "Doyle" },
-        { first: "Trip", last: "Hafner" },
-        { first: "Brody", last: "LeCornu" },
-        { first: "Trenton", last: "McLeod" },
-        { first: "Jaxson", last: "Lavigne" },
-        { first: "Kiran", last: "Saroj" },
-        { first: "Jayce", last: "Mera" },
-        { first: "Lucas", last: "Perez" },
+    const EVENTS = [
+      { name: "CBU Tampa", short: "Tampa", teams: [
+        { name: "CBU 14U United Faber Red", players: [
+          { first: "Ricky", last: "Moore" },
+          { first: "Becker", last: "Doyle" },
+          { first: "Trip", last: "Hafner" },
+          { first: "Brody", last: "LeCornu" },
+          { first: "Trenton", last: "McLeod" },
+          { first: "Jaxson", last: "Lavigne" },
+          { first: "Kiran", last: "Saroj" },
+          { first: "Jayce", last: "Mera" },
+          { first: "Lucas", last: "Perez" },
+        ]},
+        { name: "CBU 14U United Faber Navy", players: [
+          { first: "Jack", last: "Markiewicz" },
+          { first: "Tanner", last: "Noel" },
+          { first: "Blake", last: "Martin" },
+          { first: "Trey", last: "Nugent" },
+          { first: "Beckham", last: "Brock" },
+          { first: "Benjamin", last: "Miller" },
+          { first: "Nicolas", last: "Rodriguez" },
+          { first: "Cruz", last: "Delgado" },
+          { first: "AJ", last: "Dyer" },
+          { first: "Levi", last: "Back" },
+        ]},
+        { name: "CBU 13U United Abreu", players: [
+          { first: "Knox", last: "Follett" },
+          { first: "Roman", last: "Valletta" },
+          { first: "Liam", last: "Alonso" },
+          { first: "Jack", last: "Otis" },
+          { first: "Jonathan", last: "Fernandez" },
+          { first: "Aaron", last: "Welch" },
+          { first: "Joshua", last: "Roston" },
+          { first: "Greyson", last: "Craine" },
+          { first: "Delvin", last: "Castillo" },
+          { first: "Christian", last: "Hopstad" },
+          { first: "Elijah", last: "Martinez" },
+          { first: "Adam", last: "Collado" },
+          { first: "Eshan", last: "Aglave" },
+        ]},
+        { name: "CBU 11U United Gonzalez", players: [
+          { first: "B Nixon", last: "Bishop" },
+          { first: "Andrew", last: "Deitzer" },
+          { first: "Derek", last: "Andrews Jr." },
+          { first: "Maximus", last: "Vignau" },
+          { first: "Maximus", last: "Falkowski" },
+          { first: "Luke", last: "Lefeber" },
+          { first: "Brady", last: "Del Rio" },
+          { first: "Liam", last: "McChesney" },
+          { first: "Cole", last: "Friedlein" },
+          { first: "Maverick", last: "Horack" },
+          { first: "Angel", last: "Martinez" },
+        ]},
+        { name: "CBU 11U United Maruszak", players: [
+          { first: "Addison", last: "Maruszak" },
+          { first: "Isaiah", last: "Maruszak" },
+          { first: "Henry", last: "Thomas" },
+          { first: "Kash", last: "Langford" },
+          { first: "Carter", last: "Engle" },
+          { first: "Jc", last: "Garcia" },
+          { first: "Jaxson", last: "Ferguson" },
+          { first: "Gunnar", last: "Wickland" },
+          { first: "Isaac", last: "Calhoun" },
+          { first: "Cai", last: "Torres" },
+          { first: "Kam", last: "Torres" },
+          { first: "Jordan", last: "Lugo" },
+        ]},
+        { name: "CBU 11U United Olasin", players: [
+          { first: "Owen", last: "De La Rosa" },
+          { first: "Wyatt", last: "Allen" },
+          { first: "Gunner", last: "Pless" },
+          { first: "Garner", last: "Carroll" },
+          { first: "Xander", last: "Shoup" },
+          { first: "Crews", last: "Kelly" },
+          { first: "Aarmani", last: "Hernandez" },
+          { first: "Easton", last: "Gregg" },
+          { first: "Nolan", last: "Coffman" },
+          { first: "Benjamin", last: "Gonzalez" },
+          { first: "Giovanni", last: "Muller" },
+          { first: "Brantley", last: "Dixon" },
+        ]},
+        { name: "CBU 10U United Burgess Navy", players: [
+          { first: "Dominic", last: "Floyd" },
+          { first: "Luca", last: "Salicco" },
+          { first: "Bodhi", last: "Chmurzynski" },
+          { first: "Clay", last: "Andrews" },
+          { first: "Greyson", last: "Fowler" },
+          { first: "Colton", last: "Ringley" },
+          { first: "Khalil", last: "Shabazz" },
+          { first: "Mason", last: "Brogan" },
+          { first: "Carson", last: "Douglas" },
+          { first: "Parker", last: "Stumpf" },
+          { first: "Azekiel", last: "Johnson" },
+        ]},
+        { name: "CBU 10U United Burgess Red", players: [
+          { first: "Colton", last: "Fox" },
+          { first: "Damien", last: "Sanchez" },
+          { first: "Greyson", last: "Knauf" },
+          { first: "Chandler", last: "Aldridge" },
+          { first: "Michael", last: "Burgess Jr." },
+          { first: "Tytus", last: "Anderson" },
+          { first: "Alonzo", last: "Williams" },
+          { first: "Taeden", last: "Marsteller" },
+          { first: "Leo Brady", last: "De Leon" },
+          { first: "Mathias", last: "Gonzalez" },
+          { first: "Carter", last: "Garrett" },
+          { first: "Colton", last: "Ham" },
+        ]},
+        { name: "CBU 9U United Gonzalez", players: [
+          { first: "Tyler", last: "Alcock" },
+          { first: "Caleb", last: "Roston" },
+          { first: "Jackson", last: "Adams" },
+          { first: "Ezra", last: "Donovan" },
+          { first: "Bradley", last: "Gaj" },
+          { first: "Lincoln", last: "Clark" },
+          { first: "Miller", last: "Dickerson" },
+          { first: "Brooklyn", last: "Brock" },
+          { first: "Alexander", last: "Wazni" },
+          { first: "Parker", last: "Dambrosi" },
+        ]},
       ]},
-      { name: "CBU 14U United Faber Navy", players: [
-        { first: "Jack", last: "Markiewicz" },
-        { first: "Tanner", last: "Noel" },
-        { first: "Blake", last: "Martin" },
-        { first: "Trey", last: "Nugent" },
-        { first: "Beckham", last: "Brock" },
-        { first: "Benjamin", last: "Miller" },
-        { first: "Nicolas", last: "Rodriguez" },
-        { first: "Cruz", last: "Delgado" },
-        { first: "AJ", last: "Dyer" },
-        { first: "Levi", last: "Back" },
-      ]},
-      { name: "CBU 13U United Abreu", players: [
-        { first: "Knox", last: "Follett" },
-        { first: "Roman", last: "Valletta" },
-        { first: "Liam", last: "Alonso" },
-        { first: "Jack", last: "Otis" },
-        { first: "Jonathan", last: "Fernandez" },
-        { first: "Aaron", last: "Welch" },
-        { first: "Joshua", last: "Roston" },
-        { first: "Greyson", last: "Craine" },
-        { first: "Delvin", last: "Castillo" },
-        { first: "Christian", last: "Hopstad" },
-        { first: "Elijah", last: "Martinez" },
-        { first: "Adam", last: "Collado" },
-        { first: "Eshan", last: "Aglave" },
-      ]},
-      { name: "CBU 11U United Gonzalez", players: [
-        { first: "B Nixon", last: "Bishop" },
-        { first: "Andrew", last: "Deitzer" },
-        { first: "Derek", last: "Andrews Jr." },
-        { first: "Maximus", last: "Vignau" },
-        { first: "Maximus", last: "Falkowski" },
-        { first: "Luke", last: "Lefeber" },
-        { first: "Brady", last: "Del Rio" },
-        { first: "Liam", last: "McChesney" },
-        { first: "Cole", last: "Friedlein" },
-        { first: "Maverick", last: "Horack" },
-        { first: "Angel", last: "Martinez" },
-      ]},
-      { name: "CBU 11U United Maruszak", players: [
-        { first: "Addison", last: "Maruszak" },
-        { first: "Isaiah", last: "Maruszak" },
-        { first: "Henry", last: "Thomas" },
-        { first: "Kash", last: "Langford" },
-        { first: "Carter", last: "Engle" },
-        { first: "Jc", last: "Garcia" },
-        { first: "Jaxson", last: "Ferguson" },
-        { first: "Gunnar", last: "Wickland" },
-        { first: "Isaac", last: "Calhoun" },
-        { first: "Cai", last: "Torres" },
-        { first: "Kam", last: "Torres" },
-        { first: "Jordan", last: "Lugo" },
-      ]},
-      { name: "CBU 11U United Olasin", players: [
-        { first: "Owen", last: "De La Rosa" },
-        { first: "Wyatt", last: "Allen" },
-        { first: "Gunner", last: "Pless" },
-        { first: "Garner", last: "Carroll" },
-        { first: "Xander", last: "Shoup" },
-        { first: "Crews", last: "Kelly" },
-        { first: "Aarmani", last: "Hernandez" },
-        { first: "Easton", last: "Gregg" },
-        { first: "Nolan", last: "Coffman" },
-        { first: "Benjamin", last: "Gonzalez" },
-        { first: "Giovanni", last: "Muller" },
-        { first: "Brantley", last: "Dixon" },
-      ]},
-      { name: "CBU 10U United Burgess Navy", players: [
-        { first: "Dominic", last: "Floyd" },
-        { first: "Luca", last: "Salicco" },
-        { first: "Bodhi", last: "Chmurzynski" },
-        { first: "Clay", last: "Andrews" },
-        { first: "Greyson", last: "Fowler" },
-        { first: "Colton", last: "Ringley" },
-        { first: "Khalil", last: "Shabazz" },
-        { first: "Mason", last: "Brogan" },
-        { first: "Carson", last: "Douglas" },
-        { first: "Parker", last: "Stumpf" },
-        { first: "Azekiel", last: "Johnson" },
-      ]},
-      { name: "CBU 10U United Burgess Red", players: [
-        { first: "Colton", last: "Fox" },
-        { first: "Damien", last: "Sanchez" },
-        { first: "Greyson", last: "Knauf" },
-        { first: "Chandler", last: "Aldridge" },
-        { first: "Michael", last: "Burgess Jr." },
-        { first: "Tytus", last: "Anderson" },
-        { first: "Alonzo", last: "Williams" },
-        { first: "Taeden", last: "Marsteller" },
-        { first: "Leo Brady", last: "De Leon" },
-        { first: "Mathias", last: "Gonzalez" },
-        { first: "Carter", last: "Garrett" },
-        { first: "Colton", last: "Ham" },
-      ]},
-      { name: "CBU 9U United Gonzalez", players: [
-        { first: "Tyler", last: "Alcock" },
-        { first: "Caleb", last: "Roston" },
-        { first: "Jackson", last: "Adams" },
-        { first: "Ezra", last: "Donovan" },
-        { first: "Bradley", last: "Gaj" },
-        { first: "Lincoln", last: "Clark" },
-        { first: "Miller", last: "Dickerson" },
-        { first: "Brooklyn", last: "Brock" },
-        { first: "Alexander", last: "Wazni" },
-        { first: "Parker", last: "Dambrosi" },
+      { name: "CBU Weekend", short: "Weekend", teams: [
+        { name: "CBU 14U United Chappell", players: [
+          { first: "Jacob", last: "Kennedy" },
+          { first: "Collin", last: "Sobolewski" },
+          { first: "Zia", last: "Jan" },
+          { first: "Steven", last: "Pimentel" },
+          { first: "Keegan", last: "Ryals" },
+          { first: "Wyatt", last: "Weldon" },
+          { first: "Finn", last: "Reilly" },
+          { first: "Greysen", last: "Dailey" },
+          { first: "Sean", last: "Flanagan" },
+          { first: "Carson", last: "Joyce" },
+          { first: "Quinn", last: "Dever" },
+          { first: "Colton", last: "Anderson" },
+        ]},
+        { name: "CBU 14U United Fontaine", players: [
+          { first: "Fischer", last: "McCown" },
+          { first: "Eli", last: "Kahn" },
+          { first: "Bradley", last: "Willerer" },
+          { first: "Ledger", last: "Bond" },
+          { first: "Gavin", last: "Barnes" },
+          { first: "Griffin", last: "Myers" },
+          { first: "Merrick", last: "Proly" },
+          { first: "Leland", last: "Thorpe" },
+          { first: "Logan", last: "Woltman" },
+          { first: "Landry", last: "Perry" },
+          { first: "Noah", last: "Walls" },
+          { first: "Tyler Tito", last: "Morton jr" },
+          { first: "Josue", last: "Gonzalez" },
+          { first: "Bannon", last: "Shier" },
+        ]},
+        { name: "CBU 14U United Reich", players: [
+          { first: "Mason", last: "Stone" },
+          { first: "Spencer", last: "Sacks" },
+          { first: "Mason", last: "Bringger" },
+          { first: "Jonah", last: "Larsh" },
+          { first: "Samuel", last: "Potter" },
+          { first: "Max", last: "Bolan" },
+          { first: "Evan", last: "Ziemba" },
+          { first: "Elijah", last: "Sanders" },
+          { first: "Levi", last: "Preast" },
+          { first: "Kellan", last: "Marks" },
+          { first: "Liam", last: "Hassan" },
+          { first: "Ryan", last: "Maceda" },
+          { first: "Beckett", last: "McCormick" },
+        ]},
+        { name: "CBU 13U United Boss", players: [
+          { first: "Kallum", last: "Russell" },
+          { first: "Matthew", last: "Viggiani" },
+          { first: "Jacob", last: "Sanford" },
+          { first: "Tripp", last: "Terry" },
+          { first: "Ethan", last: "Caudill" },
+          { first: "Hudson", last: "Toole" },
+          { first: "Reece", last: "Roberts" },
+          { first: "Whit", last: "Leddy" },
+          { first: "Dexter", last: "Rutenberg" },
+          { first: "Brody", last: "Glasgow" },
+          { first: "Austin", last: "Riley #8" },
+          { first: "Tripp", last: "Boss" },
+        ]},
+        { name: "CBU 13U United Fleming", players: [
+          { first: "Kingston", last: "Williams" },
+          { first: "Bryer", last: "Leino" },
+          { first: "Logan", last: "Dill" },
+          { first: "Max", last: "Csar" },
+          { first: "Brayden", last: "Walker" },
+          { first: "Easton", last: "Adams" },
+          { first: "Lep", last: "Adams" },
+          { first: "William", last: "Doran" },
+          { first: "Vance", last: "Skinner" },
+          { first: "Rockland", last: "Lopez" },
+          { first: "Dakobe", last: "Ragan" },
+          { first: "Braxton", last: "Rochester" },
+        ]},
+        { name: "CBU 13U United Santiago", players: [
+          { first: "Kade", last: "Thomas" },
+          { first: "Gage", last: "Shott" },
+          { first: "Corbin", last: "Bush" },
+          { first: "Ryan", last: "Waite" },
+          { first: "Reed", last: "Bass" },
+          { first: "Carter", last: "Reddish" },
+          { first: "Hudson", last: "Spicer" },
+          { first: "Blake", last: "Dean" },
+          { first: "Anderson", last: "Dover" },
+          { first: "Dalton", last: "Hedrick" },
+          { first: "Jack", last: "Wilson" },
+          { first: "Emory", last: "Worsham" },
+          { first: "Lucas", last: "Smith" },
+        ]},
+        { name: "CBU 12U United Sanchez", players: [
+          { first: "Huck", last: "Clements" },
+          { first: "Miles Moose", last: "Weidlich" },
+          { first: "Ashton", last: "Kendall" },
+          { first: "Johnny", last: "Ventimiglia" },
+          { first: "J. Edward ‘Brother’", last: "Hogan, Jr." },
+          { first: "Ryland", last: "Dixon" },
+          { first: "Karter", last: "Phillips" },
+          { first: "Derek", last: "Madsen" },
+          { first: "Owen", last: "Lewis" },
+          { first: "Gladden", last: "Pohle" },
+          { first: "Downy", last: "Casey" },
+          { first: "LeZeriaughn", last: "Robinson" },
+        ]},
+        { name: "CBU 10U United Amar", players: [
+          { first: "Usman", last: "Jan" },
+          { first: "Brooks", last: "Allen" },
+          { first: "Ethan", last: "Rowlands" },
+          { first: "Kyro", last: "Dawson" },
+          { first: "Cullen", last: "Turney" },
+          { first: "Grayson", last: "Poff" },
+          { first: "Lucas", last: "Hernandez" },
+          { first: "Carter", last: "Murphy" },
+          { first: "Christopher", last: "Bautista" },
+          { first: "Knox", last: "Williams" },
+          { first: "Stetson", last: "Pike" },
+        ]},
+        { name: "CBU 10U United Boss", players: [
+          { first: "Oliver", last: "Hevesi" },
+          { first: "Jordan", last: "Thompson" },
+          { first: "Hoss", last: "Reddish" },
+          { first: "Elijah", last: "Saoud" },
+          { first: "Wyatt", last: "Heaton" },
+          { first: "Griffin", last: "Liles" },
+          { first: "Levi", last: "Kianian" },
+          { first: "Robert (Beck)", last: "Sacks" },
+          { first: "Griffin", last: "Turner" },
+          { first: "Mateo", last: "Santos" },
+          { first: "Jameson", last: "Sanborn" },
+          { first: "Rhett", last: "Boss" },
+        ]},
+        { name: "CBU 10U United Murphy", players: [
+          { first: "Rhett", last: "Shuman" },
+          { first: "Isaiah", last: "Ortiz" },
+          { first: "Timothy", last: "Smithers" },
+          { first: "Gavin", last: "Condrey" },
+          { first: "Tanner", last: "Surrency" },
+          { first: "Kevin", last: "Brown IV" },
+          { first: "Greyson", last: "Ebreo" },
+          { first: "Briggs", last: "Glasgow" },
+          { first: "Elijah", last: "Rivera" },
+          { first: "Titus", last: "Murphy" },
+          { first: "Rowan", last: "Shier" },
+        ]},
       ]},
     ];
+    let TEAMS = EVENTS[0].teams;
 
     const STATIONS = {
       running: {
@@ -315,14 +469,45 @@
     const METRIC_COLS = ["ten_yard","thirty_yard","sixty_yard","throw_velo","exit_velo","exit_type","height","weight"];
     const COL_LABELS = { ten_yard:"10yd", thirty_yard:"30yd", sixty_yard:"60yd", throw_velo:"Throw Velo", exit_velo:"Exit Velo", exit_type:"Tee/Live", height:"HT", weight:"WT" };
 
+    // localStorage can throw (private mode, sandboxed previews) — never let that kill the page
+    const store = {
+      get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+      set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+    };
+
     /* ── state ── */
-    let state = { view: "stations", station: null, teamIdx: "", playerSel: "", resTeam: "__leaders__" };
+    let state = { view: "stations", station: null, eventIdx: 0, teamIdx: "", playerSel: "", resTeam: "__leaders__" };
     let doneMap = {};      // "team|first|last" -> merged latest metrics for current station
     let pendingPartial = false;  // true while the "empty fields — save anyway?" question is showing
 
     const $ = (id) => document.getElementById(id);
     const pkey = (team, p) => `${team}|${p.first}|${p.last}`;
     const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+    /* ── event picker (top of page) ── */
+    function initEvent() {
+      const saved = parseInt(store.get('metricDayEvent') || '0', 10);
+      state.eventIdx = (saved >= 0 && saved < EVENTS.length) ? saved : 0;
+      TEAMS = EVENTS[state.eventIdx].teams;
+      updateEventUI();
+    }
+
+    function onEventChange() {
+      state.eventIdx = +$('selEvent').value;
+      store.set('metricDayEvent', String(state.eventIdx));
+      TEAMS = EVENTS[state.eventIdx].teams;
+      state.teamIdx = ""; state.playerSel = ""; state.resTeam = "__leaders__";
+      doneMap = {};
+      updateEventUI();
+      render();
+    }
+
+    function updateEventUI() {
+      const ev = EVENTS[state.eventIdx];
+      $('appTitle').innerHTML = `CBU <span>${ev.short}</span> Metric Day`;
+      $('selEvent').innerHTML = EVENTS.map((e, i) =>
+        `<option value="${i}"${i === state.eventIdx ? " selected" : ""}>${e.name} Metric Day</option>`).join("");
+    }
 
     function toast(msg) {
       const t = $('toast');
@@ -640,7 +825,9 @@
           if (r[col] !== null && r[col] !== undefined && r[col] !== "") merged[k][col] = r[col];
         }
       }
-      const all = Object.values(merged);
+      // only this event's teams — the table holds every event's rows
+      const eventTeams = new Set(TEAMS.map(t => t.name));
+      const all = Object.values(merged).filter(p => eventTeams.has(p.team));
 
       if (state.resTeam === "__leaders__") {
         renderLeaders(all);
@@ -696,6 +883,7 @@
     /* ── boot ── */
     window.addEventListener('load', () => {
       dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      initEvent();
       render();
     });
   </script>
