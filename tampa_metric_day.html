@@ -172,7 +172,7 @@
        Players display sorted by last name automatically.
        ═══════════════════════════════════════════════════════════════ */
     const EVENTS = [
-      { name: "CBU Tampa", short: "Tampa", teams: [
+      { name: "CBU Tampa", short: "Tampa", start: "2026-08-21", end: "2026-08-28", teams: [
         { name: "CBU 14U United Faber Red", players: [
           { first: "Ricky", last: "Moore" },
           { first: "Becker", last: "Doyle" },
@@ -292,7 +292,7 @@
           { first: "Parker", last: "Dambrosi" },
         ]},
       ]},
-      { name: "CBU Weekend", short: "Weekend", teams: [
+      { name: "CBU Weekend", short: "Weekend", start: "2026-08-29", end: "2026-08-31", teams: [
         { name: "CBU 14U United Chappell", players: [
           { first: "Jacob", last: "Kennedy" },
           { first: "Collin", last: "Sobolewski" },
@@ -492,6 +492,24 @@
 
     const $ = (id) => document.getElementById(id);
     const pkey = (team, p) => `${team}|${p.first}|${p.last}`;
+
+    // ── metric-day date windows ──────────────────────────────────────
+    // Rows are timestamped in UTC; a metric day is defined by EASTERN
+    // calendar dates. The entry screen only surfaces TODAY's entries
+    // (fresh slate every event day); the results view shows the
+    // selected event's whole date window. Nothing is ever deleted —
+    // older days stay in the table as growth history.
+    const etDate = (ts) => new Date(ts).toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+    const inEventWindow = (ts) => {
+      const ev = EVENTS[state.eventIdx];
+      const d = etDate(ts);
+      return d >= ev.start && d <= ev.end;
+    };
+    function fmtDay(d) {
+      const [y, m, dd] = d.split('-');
+      return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m - 1] + " " + (+dd);
+    }
+    const fmtWindow = (ev) => ev.start === ev.end ? fmtDay(ev.start) : fmtDay(ev.start) + " – " + fmtDay(ev.end);
     const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 
     /* ── event picker (top of page) ── */
@@ -577,7 +595,7 @@
     async function renderEntry() {
       const s = STATIONS[state.station];
       setCrumb(`Station: <b>${s.label}</b>`);
-      $('appSub').textContent = "Select team, then player — enter metrics below";
+      $('appSub').textContent = "Select team, then player — ✓ marks show today's entries";
       const root = $('viewRoot');
       root.innerHTML = `<div class="entry-card">
         <div class="metric-group"><label>Team</label>
@@ -655,7 +673,8 @@
           .eq('station', state.station)
           .order('created_at', { ascending: true });
         if (error) throw error;
-        for (const row of (data || [])) {
+        const today = etDate(new Date());
+        for (const row of (data || []).filter(r => etDate(r.created_at) === today)) {
           const k = `${row.team}|${row.first_name}|${row.last_name}`;
           if (!doneMap[k]) doneMap[k] = {};
           for (const col of METRIC_COLS) {
@@ -804,8 +823,9 @@
 
     /* ── results ── */
     async function renderResults() {
-      setCrumb(`<b>Results</b>`);
-      $('appSub').textContent = "Live results — latest saved value per player";
+      const ev = EVENTS[state.eventIdx];
+      setCrumb(`<b>Results</b> &mdash; ${fmtWindow(ev)}`);
+      $('appSub').textContent = `${ev.name} Metric Day (${fmtWindow(ev)}) — latest value per player`;
       const root = $('viewRoot');
       root.innerHTML = `<div class="res-tabs">
           <button class="res-tab${state.resTeam === "__leaders__" ? " active" : ""}" onclick="go('results',{resTeam:'__leaders__'})">🏆 Leaders</button>` +
@@ -819,7 +839,7 @@
           .select('*')
           .order('created_at', { ascending: true });
         if (error) throw error;
-        rows = data || [];
+        rows = (data || []).filter(r => inEventWindow(r.created_at));
       } catch (err) {
         $('resLoading').textContent = "Could not load results: " + err.message;
         return;
