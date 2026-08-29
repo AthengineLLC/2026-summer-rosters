@@ -484,7 +484,7 @@
         label: "Power", icon: "⚡", desc: "Vertical · broad jump · dyno grip",
         fields: [
           { col: "vertical",   label: "Vertical Jump",     unit: "in",  step: "0.5",  ph: "18.5" },
-          { col: "broad_jump", label: "Broad Jump",        unit: "in",  step: "0.5",  ph: "64" },
+          { col: "broad_jump", label: "Broad Jump",        unit: "ft/in", ftIn: true },
           { col: "dyno_left",  label: "Dyno — Left Hand",  unit: "lbs", step: "0.01", ph: "55.25" },
           { col: "dyno_right", label: "Dyno — Right Hand", unit: "lbs", step: "0.01", ph: "57.50" },
         ],
@@ -524,6 +524,16 @@
       return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m - 1] + " " + (+dd);
     }
     const fmtWindow = (ev) => ev.start === ev.end ? fmtDay(ev.start) : fmtDay(ev.start) + " – " + fmtDay(ev.end);
+
+    // total inches -> display like 6'2 or 6'2.5 (broad jump is stored as inches)
+    function ftIn(v) {
+      if (v === null || v === undefined || v === "") return v;
+      const n = parseFloat(v);
+      if (isNaN(n)) return v;
+      const ft = Math.floor(n / 12);
+      const rem = parseFloat((n - ft * 12).toFixed(2));
+      return `${ft}'${rem}`;
+    }
 
     /* ── offline-safe save queue ─────────────────────────────────────
        Saves are instant for the coach: the entry goes into a local
@@ -811,9 +821,18 @@
           ${prev.weight != null ? `<div class="prev-val">Saved: ${prev.weight} lbs</div>` : ""}</div>`;
       } else {
         for (const f of s.fields) {
-          html += `<div class="metric-group"><label>${f.label} <small>(${f.unit})</small></label>
-            <input class="metric-input" id="in-${f.col}" type="number" inputmode="decimal" step="${f.step}" placeholder="${f.ph}" />
-            ${prev[f.col] != null ? `<div class="prev-val">Saved: ${prev[f.col]} ${f.unit}</div>` : ""}</div>`;
+          if (f.ftIn) {
+            html += `<div class="metric-group"><label>${f.label} <small>(feet + inches)</small></label>
+              <div class="hw-split">
+                <input class="metric-input" id="in-${f.col}-ft" type="number" inputmode="numeric" min="0" max="12" placeholder="ft" />
+                <input class="metric-input" id="in-${f.col}-in" type="number" inputmode="decimal" step="0.5" min="0" max="11.99" placeholder="in" />
+              </div>
+              ${prev[f.col] != null ? `<div class="prev-val">Saved: ${ftIn(prev[f.col])}</div>` : ""}</div>`;
+          } else {
+            html += `<div class="metric-group"><label>${f.label} <small>(${f.unit})</small></label>
+              <input class="metric-input" id="in-${f.col}" type="number" inputmode="decimal" step="${f.step}" placeholder="${f.ph}" />
+              ${prev[f.col] != null ? `<div class="prev-val">Saved: ${prev[f.col]} ${f.unit}</div>` : ""}</div>`;
+          }
         }
         if (s.toggle) {
           // stays pressed from player to player — a coach runs one setup all
@@ -864,6 +883,16 @@
         else emptyLabels.push("Weight");
       } else {
         for (const f of s.fields) {
+          if (f.ftIn) {
+            const ft = $('in-' + f.col + '-ft').value.trim();
+            const inch = $('in-' + f.col + '-in').value.trim();
+            if (ft !== "" || inch !== "") {
+              if (ft === "") { showSheetErr(`Enter feet for ${f.label.toLowerCase()}.`); return; }
+              row[f.col] = parseInt(ft, 10) * 12 + (inch === "" ? 0 : parseFloat(inch));
+              hasValue = true;
+            } else emptyLabels.push(f.label);
+            continue;
+          }
           const v = $('in-' + f.col).value.trim();
           if (v !== "") { row[f.col] = parseFloat(v); hasValue = true; }
           else emptyLabels.push(f.label);
@@ -983,7 +1012,7 @@
           fmtCell(p.ten_yard) + fmtCell(p.thirty_yard) + fmtCell(p.sixty_yard) + fmtCell(p.timing_type) +
           fmtCell(p.throw_velo) + fmtCell(p.exit_velo) + fmtCell(p.exit_type) +
           fmtCell(p.height) + fmtCell(p.weight) +
-          fmtCell(p.vertical) + fmtCell(p.broad_jump) + fmtCell(p.dyno_left) + fmtCell(p.dyno_right) + `</tr>`).join("") +
+          fmtCell(p.vertical) + fmtCell(p.broad_jump != null ? ftIn(p.broad_jump) : p.broad_jump) + fmtCell(p.dyno_left) + fmtCell(p.dyno_right) + `</tr>`).join("") +
         `</tbody></table></div>`;
     }
 
@@ -995,7 +1024,7 @@
         { title: "Top Throwing Velo", col: "throw_velo", dir: "desc", suffix: " mph" },
         { title: "Top Exit Velo", col: "exit_velo", dir: "desc", suffix: " mph" },
         { title: "Top Vertical", col: "vertical", dir: "desc", suffix: " in" },
-        { title: "Top Broad Jump", col: "broad_jump", dir: "desc", suffix: " in" },
+        { title: "Top Broad Jump", col: "broad_jump", dir: "desc", suffix: "", fmt: ftIn },
         { title: "Top Dyno Left", col: "dyno_left", dir: "desc", suffix: " lbs" },
         { title: "Top Dyno Right", col: "dyno_right", dir: "desc", suffix: " lbs" },
       ];
@@ -1013,7 +1042,7 @@
           <div class="res-wrap"><table class="res-table" style="min-width:420px;">
           <thead><tr><th style="width:44px;">#</th><th>Player</th><th>Team</th><th>Mark</th>${tc ? `<th>${COL_LABELS[tc]}</th>` : ""}</tr></thead><tbody>` +
           ranked.map((p, i) =>
-            `<tr><td class="num">${i + 1}</td><td><span class="lname">${esc(p.last)}</span>, ${esc(p.first)}</td><td>${esc(p.team)}</td><td class="num">${esc(p[b.col])}${b.suffix}</td>${tc ? fmtCell(p[tc]) : ""}</tr>`).join("") +
+            `<tr><td class="num">${i + 1}</td><td><span class="lname">${esc(p.last)}</span>, ${esc(p.first)}</td><td>${esc(p.team)}</td><td class="num">${esc(b.fmt ? b.fmt(p[b.col]) : p[b.col])}${b.suffix}</td>${tc ? fmtCell(p[tc]) : ""}</tr>`).join("") +
           `</tbody></table></div></div>`;
       }
       body.innerHTML = html || `<div class="res-loading">No metrics recorded yet.</div>`;
