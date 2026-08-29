@@ -478,9 +478,18 @@
         label: "Height & Weight", icon: "🏋️", desc: "Measured in the gym",
         heightWeight: true,
       },
+      power: {
+        label: "Power", icon: "⚡", desc: "Vertical · broad jump · dyno grip",
+        fields: [
+          { col: "vertical",   label: "Vertical Jump",     unit: "in",  step: "0.5",  ph: "18.5" },
+          { col: "broad_jump", label: "Broad Jump",        unit: "in",  step: "0.5",  ph: "64" },
+          { col: "dyno_left",  label: "Dyno — Left Hand",  unit: "lbs", step: "0.01", ph: "55.25" },
+          { col: "dyno_right", label: "Dyno — Right Hand", unit: "lbs", step: "0.01", ph: "57.50" },
+        ],
+      },
     };
-    const METRIC_COLS = ["ten_yard","thirty_yard","sixty_yard","throw_velo","exit_velo","exit_type","height","weight"];
-    const COL_LABELS = { ten_yard:"10yd", thirty_yard:"30yd", sixty_yard:"60yd", throw_velo:"Throw Velo", exit_velo:"Exit Velo", exit_type:"Tee/Live", height:"HT", weight:"WT" };
+    const METRIC_COLS = ["ten_yard","thirty_yard","sixty_yard","throw_velo","exit_velo","exit_type","height","weight","vertical","broad_jump","dyno_left","dyno_right"];
+    const COL_LABELS = { ten_yard:"10yd", thirty_yard:"30yd", sixty_yard:"60yd", throw_velo:"Throw Velo", exit_velo:"Exit Velo", exit_type:"Tee/Live", height:"HT", weight:"WT", vertical:"Vert", broad_jump:"Broad", dyno_left:"Dyno L", dyno_right:"Dyno R" };
 
     // localStorage can throw (private mode, sandboxed previews) — never let that kill the page
     const store = {
@@ -944,13 +953,14 @@
         .sort((a, b) => a.last.localeCompare(b.last) || a.first.localeCompare(b.first));
       const body = $('resBody');
       if (!players.length) { body.innerHTML = `<div class="res-loading">No metrics recorded for ${esc(teamName)} yet.</div>`; return; }
-      body.innerHTML = `<div class="res-wrap"><table class="res-table">
-        <thead><tr><th>Player</th><th>10yd</th><th>30yd</th><th>60yd</th><th>Throw Velo</th><th>Exit Velo</th><th>Tee/Live</th><th>HT</th><th>WT</th></tr></thead>
+      body.innerHTML = `<div class="res-wrap"><table class="res-table" style="min-width:1000px;">
+        <thead><tr><th>Player</th><th>10yd</th><th>30yd</th><th>60yd</th><th>Throw Velo</th><th>Exit Velo</th><th>Tee/Live</th><th>HT</th><th>WT</th><th>Vert</th><th>Broad</th><th>Dyno L</th><th>Dyno R</th></tr></thead>
         <tbody>` + players.map(p =>
           `<tr><td><span class="lname">${esc(p.last)}</span>, ${esc(p.first)}</td>` +
           fmtCell(p.ten_yard) + fmtCell(p.thirty_yard) + fmtCell(p.sixty_yard) +
           fmtCell(p.throw_velo) + fmtCell(p.exit_velo) + fmtCell(p.exit_type) +
-          fmtCell(p.height) + fmtCell(p.weight) + `</tr>`).join("") +
+          fmtCell(p.height) + fmtCell(p.weight) +
+          fmtCell(p.vertical) + fmtCell(p.broad_jump) + fmtCell(p.dyno_left) + fmtCell(p.dyno_right) + `</tr>`).join("") +
         `</tbody></table></div>`;
     }
 
@@ -961,6 +971,10 @@
         { title: "Fastest 10-Yard", col: "ten_yard", dir: "asc", suffix: " sec" },
         { title: "Top Throwing Velo", col: "throw_velo", dir: "desc", suffix: " mph" },
         { title: "Top Exit Velo", col: "exit_velo", dir: "desc", suffix: " mph" },
+        { title: "Top Vertical", col: "vertical", dir: "desc", suffix: " in" },
+        { title: "Top Broad Jump", col: "broad_jump", dir: "desc", suffix: " in" },
+        { title: "Top Dyno Left", col: "dyno_left", dir: "desc", suffix: " lbs" },
+        { title: "Top Dyno Right", col: "dyno_right", dir: "desc", suffix: " lbs" },
       ];
       const body = $('resBody');
       let html = "";
