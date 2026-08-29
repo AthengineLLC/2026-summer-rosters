@@ -461,6 +461,7 @@
           { col: "thirty_yard", label: "30-Yard Sprint",  unit: "sec", step: "0.01", ph: "4.10" },
           { col: "sixty_yard",  label: "60-Yard Sprint",  unit: "sec", step: "0.01", ph: "7.20" },
         ],
+        toggle: { col: "timing_type", label: "Timed with...", options: ["Laser", "Stopwatch"] },
       },
       throwing: {
         label: "Throwing Velo", icon: "💪", desc: "Max throwing velocity",
@@ -489,8 +490,8 @@
         ],
       },
     };
-    const METRIC_COLS = ["ten_yard","thirty_yard","sixty_yard","throw_velo","exit_velo","exit_type","height","weight","vertical","broad_jump","dyno_left","dyno_right"];
-    const COL_LABELS = { ten_yard:"10yd", thirty_yard:"30yd", sixty_yard:"60yd", throw_velo:"Throw Velo", exit_velo:"Exit Velo", exit_type:"Exit Type", height:"HT", weight:"WT", vertical:"Vert", broad_jump:"Broad", dyno_left:"Dyno L", dyno_right:"Dyno R" };
+    const METRIC_COLS = ["ten_yard","thirty_yard","sixty_yard","timing_type","throw_velo","exit_velo","exit_type","height","weight","vertical","broad_jump","dyno_left","dyno_right"];
+    const COL_LABELS = { ten_yard:"10yd", thirty_yard:"30yd", sixty_yard:"60yd", timing_type:"Timing", throw_velo:"Throw Velo", exit_velo:"Exit Velo", exit_type:"Exit Type", height:"HT", weight:"WT", vertical:"Vert", broad_jump:"Broad", dyno_left:"Dyno L", dyno_right:"Dyno R" };
 
     // localStorage can throw (private mode, sandboxed previews) — never let that kill the page
     const store = {
@@ -571,6 +572,17 @@
         flushing = false;
         if (saveQueue.length) flushQueue();
       } catch (err) {
+        // a column the DB doesn't know can never deliver — strip it from the
+        // queue and retry, so one unknown key can't wedge every other save
+        const missing = /find the '(\w+)' column/.exec(err.message || "");
+        if (missing) {
+          console.warn('DB has no column', missing[1], '— dropping it from queued saves');
+          saveQueue.forEach(r => { delete r[missing[1]]; });
+          persistQueue();
+          flushing = false;
+          flushQueue();
+          return;
+        }
         console.warn('save delivery retry in', flushDelay, 'ms —', err.message);
         flushing = false;
         flushTimer = setTimeout(flushQueue, flushDelay);
@@ -804,10 +816,13 @@
             ${prev[f.col] != null ? `<div class="prev-val">Saved: ${prev[f.col]} ${f.unit}</div>` : ""}</div>`;
         }
         if (s.toggle) {
+          // stays pressed from player to player — a coach runs one setup all
+          // day, so the last-used choice (persisted on-device) pre-selects
+          const tsel = prev[s.toggle.col] || store.get('lastToggle_' + s.toggle.col) || "";
           html += `<div class="metric-group"><label>${s.toggle.label}</label>
             <div class="toggle-row" id="toggle-${s.toggle.col}">` +
             s.toggle.options.map(o =>
-              `<div class="toggle-opt${prev[s.toggle.col] === o ? " selected" : ""}" data-val="${o}" onclick="pickToggle(this)">${o}</div>`).join("") +
+              `<div class="toggle-opt${tsel === o ? " selected" : ""}" data-val="${o}" onclick="pickToggle(this)">${o}</div>`).join("") +
             `</div></div>`;
         }
       }
@@ -855,8 +870,15 @@
         }
         if (s.toggle) {
           const sel = document.querySelector(`#toggle-${s.toggle.col} .toggle-opt.selected`);
-          if (sel) row[s.toggle.col] = sel.dataset.val;
-          if (hasValue && !sel) { showSheetErr("Select Tee, Live Arm, or Machine."); return; }
+          if (sel) {
+            row[s.toggle.col] = sel.dataset.val;
+            store.set('lastToggle_' + s.toggle.col, sel.dataset.val);
+          }
+          if (hasValue && !sel) {
+            const opts = s.toggle.options;
+            showSheetErr(`Select ${opts.slice(0, -1).join(", ")} or ${opts[opts.length - 1]}.`);
+            return;
+          }
         }
       }
 
@@ -954,11 +976,11 @@
         .sort((a, b) => a.last.localeCompare(b.last) || a.first.localeCompare(b.first));
       const body = $('resBody');
       if (!players.length) { body.innerHTML = `<div class="res-loading">No metrics recorded for ${esc(teamName)} yet.</div>`; return; }
-      body.innerHTML = `<div class="res-wrap"><table class="res-table" style="min-width:1000px;">
-        <thead><tr><th>Player</th><th>10yd</th><th>30yd</th><th>60yd</th><th>Throw Velo</th><th>Exit Velo</th><th>Exit Type</th><th>HT</th><th>WT</th><th>Vert</th><th>Broad</th><th>Dyno L</th><th>Dyno R</th></tr></thead>
+      body.innerHTML = `<div class="res-wrap"><table class="res-table" style="min-width:1080px;">
+        <thead><tr><th>Player</th><th>10yd</th><th>30yd</th><th>60yd</th><th>Timing</th><th>Throw Velo</th><th>Exit Velo</th><th>Exit Type</th><th>HT</th><th>WT</th><th>Vert</th><th>Broad</th><th>Dyno L</th><th>Dyno R</th></tr></thead>
         <tbody>` + players.map(p =>
           `<tr><td><span class="lname">${esc(p.last)}</span>, ${esc(p.first)}</td>` +
-          fmtCell(p.ten_yard) + fmtCell(p.thirty_yard) + fmtCell(p.sixty_yard) +
+          fmtCell(p.ten_yard) + fmtCell(p.thirty_yard) + fmtCell(p.sixty_yard) + fmtCell(p.timing_type) +
           fmtCell(p.throw_velo) + fmtCell(p.exit_velo) + fmtCell(p.exit_type) +
           fmtCell(p.height) + fmtCell(p.weight) +
           fmtCell(p.vertical) + fmtCell(p.broad_jump) + fmtCell(p.dyno_left) + fmtCell(p.dyno_right) + `</tr>`).join("") +
@@ -978,17 +1000,20 @@
         { title: "Top Dyno Right", col: "dyno_right", dir: "desc", suffix: " lbs" },
       ];
       const body = $('resBody');
+      // sprint marks note laser vs stopwatch; exit velo notes tee/live/machine
+      const TYPE_COL = { ten_yard: "timing_type", thirty_yard: "timing_type", sixty_yard: "timing_type", exit_velo: "exit_type" };
       let html = "";
       for (const b of boards) {
+        const tc = TYPE_COL[b.col];
         const ranked = all.filter(p => p[b.col] !== null && p[b.col] !== undefined)
           .sort((x, y) => b.dir === "asc" ? x[b.col] - y[b.col] : y[b.col] - x[b.col])
           .slice(0, 10);
         if (!ranked.length) continue;
         html += `<div class="leader-section"><h3><span>★</span> ${b.title}</h3>
           <div class="res-wrap"><table class="res-table" style="min-width:420px;">
-          <thead><tr><th style="width:44px;">#</th><th>Player</th><th>Team</th><th>Mark</th>${b.col === "exit_velo" ? "<th>Exit Type</th>" : ""}</tr></thead><tbody>` +
+          <thead><tr><th style="width:44px;">#</th><th>Player</th><th>Team</th><th>Mark</th>${tc ? `<th>${COL_LABELS[tc]}</th>` : ""}</tr></thead><tbody>` +
           ranked.map((p, i) =>
-            `<tr><td class="num">${i + 1}</td><td><span class="lname">${esc(p.last)}</span>, ${esc(p.first)}</td><td>${esc(p.team)}</td><td class="num">${esc(p[b.col])}${b.suffix}</td>${b.col === "exit_velo" ? fmtCell(p.exit_type) : ""}</tr>`).join("") +
+            `<tr><td class="num">${i + 1}</td><td><span class="lname">${esc(p.last)}</span>, ${esc(p.first)}</td><td>${esc(p.team)}</td><td class="num">${esc(p[b.col])}${b.suffix}</td>${tc ? fmtCell(p[tc]) : ""}</tr>`).join("") +
           `</tbody></table></div></div>`;
       }
       body.innerHTML = html || `<div class="res-loading">No metrics recorded yet.</div>`;
