@@ -103,6 +103,7 @@
     /* toast */
     .toast { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(80px); background: #16a34a; color: #fff; font-weight: 700; font-size: 14px; padding: 12px 22px; border-radius: 30px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); transition: transform 0.25s; z-index: 3000; pointer-events: none; white-space: nowrap; }
     .toast.show { transform: translateX(-50%) translateY(0); }
+    .pending-badge { position: fixed; left: 12px; bottom: 20px; background: #b45309; color: #fff; font-size: 12px; font-weight: 700; padding: 8px 14px; border-radius: 20px; z-index: 2999; box-shadow: 0 4px 14px rgba(0,0,0,0.4); pointer-events: none; }
 
     /* RESULTS */
     .res-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
@@ -158,6 +159,7 @@
   </div>
 
   <div class="toast" id="toast"></div>
+  <div class="pending-badge" id="pendingBadge" style="display:none;"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -172,7 +174,7 @@
        Players display sorted by last name automatically.
        ═══════════════════════════════════════════════════════════════ */
     const EVENTS = [
-      { name: "CBU Tampa", short: "Tampa", start: "2026-08-21", end: "2026-08-28", teams: [
+      { name: "CBU Tampa", short: "Tampa", start: "2026-08-21", end: "2026-08-27", teams: [
         { name: "CBU 14U United Faber Red", players: [
           { first: "Ricky", last: "Moore" },
           { first: "Becker", last: "Doyle" },
@@ -511,6 +513,75 @@
       return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m - 1] + " " + (+dd);
     }
     const fmtWindow = (ev) => ev.start === ev.end ? fmtDay(ev.start) : fmtDay(ev.start) + " – " + fmtDay(ev.end);
+
+    /* ── offline-safe save queue ─────────────────────────────────────
+       Saves are instant for the coach: the entry goes into a local
+       queue (persisted on-device) and the UI updates immediately.
+       A background loop delivers the queue to Supabase, retrying with
+       backoff on bad signal and resuming after reloads or when the
+       connection returns. Coaches never wait and never lose an entry. */
+    let saveQueue = [];
+    try { saveQueue = JSON.parse(store.get('metricSaveQueue') || '[]') || []; } catch (e) { saveQueue = []; }
+    let flushing = false, flushTimer = null, flushDelay = 1000;
+
+    function persistQueue() {
+      store.set('metricSaveQueue', JSON.stringify(saveQueue));
+      updatePendingBadge();
+    }
+
+    function updatePendingBadge() {
+      const b = $('pendingBadge');
+      if (!b) return;
+      if (saveQueue.length === 0) { b.style.display = 'none'; return; }
+      b.style.display = 'block';
+      b.textContent = `⏳ ${saveQueue.length} ${saveQueue.length === 1 ? 'entry' : 'entries'} sending — keep page open`;
+    }
+
+    function enqueueSave(row) {
+      saveQueue.push(row);
+      persistQueue();
+      flushDelay = 1000;
+      flushQueue();
+    }
+
+    async function flushQueue() {
+      if (flushing || !dbClient || saveQueue.length === 0) return;
+      flushing = true;
+      clearTimeout(flushTimer); flushTimer = null;
+      const batch = saveQueue.slice();
+      try {
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 10000);
+        const { error } = await dbClient.from(TABLE).insert(batch).abortSignal(ctrl.signal);
+        clearTimeout(t);
+        if (error) throw error;
+        saveQueue = saveQueue.slice(batch.length);   // keep anything queued mid-flight
+        persistQueue();
+        flushDelay = 1000;
+        flushing = false;
+        if (saveQueue.length) flushQueue();
+      } catch (err) {
+        console.warn('save delivery retry in', flushDelay, 'ms —', err.message);
+        flushing = false;
+        flushTimer = setTimeout(flushQueue, flushDelay);
+        flushDelay = Math.min(flushDelay * 2, 15000);
+      }
+    }
+    window.addEventListener('online', () => { flushDelay = 1000; flushQueue(); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) flushQueue(); });
+
+    // overlay not-yet-delivered entries onto the merged view so ✓ marks
+    // and Saved: values are right even before the network catches up
+    function overlayQueue(team) {
+      for (const row of saveQueue) {
+        if (row.team !== team.name || row.station !== state.station) continue;
+        const k = `${row.team}|${row.first_name}|${row.last_name}`;
+        if (!doneMap[k]) doneMap[k] = {};
+        for (const col of METRIC_COLS) {
+          if (row[col] !== null && row[col] !== undefined && row[col] !== "") doneMap[k][col] = row[col];
+        }
+      }
+    }
     const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 
     /* ── event picker (top of page) ── */
@@ -686,6 +757,7 @@
         toast("⚠️ Could not load saved data");
         console.error(err);
       }
+      overlayQueue(team);
     }
 
     /* ── metric form (always below the dropdowns) ── */
@@ -791,20 +863,16 @@
         return;
       }
 
-      $('btnSave').disabled = true;
-      $('btnSave').textContent = "Saving...";
-      try {
-        const { error } = await dbClient.from(TABLE).insert([row]);
-        if (error) throw error;
-        toast(`✓ Saved ${p.last}, ${p.first}`);
-        await refreshDone();
-        populatePlayers();   // updates the ✓ marks, keeps current selection
-        renderForm();        // clears inputs, shows the new saved values
-      } catch (err) {
-        showSheetErr("Save failed: " + err.message);
-        $('btnSave').disabled = false;
-        $('btnSave').textContent = `Save — ${p.last}, ${p.first}`;
+      // instant save: queue for guaranteed background delivery, update UI now
+      enqueueSave(row);
+      const k = `${p.team.name}|${p.first}|${p.last}`;
+      if (!doneMap[k]) doneMap[k] = {};
+      for (const col of METRIC_COLS) {
+        if (row[col] !== null && row[col] !== undefined && row[col] !== "") doneMap[k][col] = row[col];
       }
+      toast(`✓ Saved ${p.last}, ${p.first}`);
+      populatePlayers();   // updates the ✓ marks, keeps current selection
+      renderForm();        // clears inputs, shows the new saved values
     }
 
     function cancelPartial() {
@@ -916,6 +984,8 @@
       dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       initEvent();
       render();
+      updatePendingBadge();
+      flushQueue();          // deliver anything left over from a previous visit
     });
   </script>
 </body>
