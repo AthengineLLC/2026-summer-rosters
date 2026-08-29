@@ -603,6 +603,29 @@
     window.addEventListener('online', () => { flushDelay = 1000; flushQueue(); });
     document.addEventListener('visibilitychange', () => { if (!document.hidden) flushQueue(); });
 
+    // merge one row into a per-player record. Newest non-null value wins,
+    // EXCEPT velocities: they're tested in rounds, so the BEST mark stays
+    // on the scorecard — a lower second round never knocks out the peak.
+    // The tee/live/machine tag travels with whichever swing set the peak.
+    function mergeRow(m, row) {
+      for (const col of METRIC_COLS) {
+        const v = row[col];
+        if (v === null || v === undefined || v === "") continue;
+        if (col === "throw_velo") {
+          if (m.throw_velo == null || v > m.throw_velo) m.throw_velo = v;
+        } else if (col === "exit_velo") {
+          if (m.exit_velo == null || v > m.exit_velo) {
+            m.exit_velo = v;
+            if (row.exit_type) m.exit_type = row.exit_type;
+          }
+        } else if (col === "exit_type") {
+          if (m.exit_velo == null) m.exit_type = v;
+        } else {
+          m[col] = v;
+        }
+      }
+    }
+
     // overlay not-yet-delivered entries onto the merged view so ✓ marks
     // and Saved: values are right even before the network catches up
     function overlayQueue(team) {
@@ -610,9 +633,7 @@
         if (row.team !== team.name || row.station !== state.station) continue;
         const k = `${row.team}|${row.first_name}|${row.last_name}`;
         if (!doneMap[k]) doneMap[k] = {};
-        for (const col of METRIC_COLS) {
-          if (row[col] !== null && row[col] !== undefined && row[col] !== "") doneMap[k][col] = row[col];
-        }
+        mergeRow(doneMap[k], row);
       }
     }
     const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -782,9 +803,7 @@
         for (const row of (data || []).filter(r => etDate(r.created_at) === today)) {
           const k = `${row.team}|${row.first_name}|${row.last_name}`;
           if (!doneMap[k]) doneMap[k] = {};
-          for (const col of METRIC_COLS) {
-            if (row[col] !== null && row[col] !== undefined && row[col] !== "") doneMap[k][col] = row[col];
-          }
+          mergeRow(doneMap[k], row);
         }
       } catch (err) {
         toast("⚠️ Could not load saved data");
@@ -929,9 +948,7 @@
       enqueueSave(row);
       const k = `${p.team.name}|${p.first}|${p.last}`;
       if (!doneMap[k]) doneMap[k] = {};
-      for (const col of METRIC_COLS) {
-        if (row[col] !== null && row[col] !== undefined && row[col] !== "") doneMap[k][col] = row[col];
-      }
+      mergeRow(doneMap[k], row);
       toast(`✓ Saved ${p.last}, ${p.first}`);
       populatePlayers();   // updates the ✓ marks, keeps current selection
       renderForm();        // clears inputs, shows the new saved values
@@ -982,9 +999,7 @@
       for (const r of rows) {
         const k = `${r.team}|${r.first_name}|${r.last_name}`;
         if (!merged[k]) merged[k] = { team: r.team, first: r.first_name, last: r.last_name };
-        for (const col of METRIC_COLS) {
-          if (r[col] !== null && r[col] !== undefined && r[col] !== "") merged[k][col] = r[col];
-        }
+        mergeRow(merged[k], r);
       }
       // only this event's teams — the table holds every event's rows
       const eventTeams = new Set(TEAMS.map(t => t.name));
