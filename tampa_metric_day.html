@@ -495,7 +495,7 @@
         html += `<div class="metric-group"><label>Height</label>
           <div class="hw-split">
             <input class="metric-input" id="in-height-ft" type="number" inputmode="numeric" min="3" max="7" placeholder="ft" />
-            <input class="metric-input" id="in-height-in" type="number" inputmode="numeric" min="0" max="11" placeholder="in" />
+            <input class="metric-input" id="in-height-in" type="number" inputmode="decimal" step="0.01" min="0" max="11.99" placeholder="in" />
           </div>${prev.height ? `<div class="prev-val">Saved: ${esc(prev.height)}</div>` : ""}</div>`;
         html += `<div class="metric-group"><label>Weight <small>(lbs)</small></label>
           <input class="metric-input" id="in-weight" type="number" inputmode="decimal" step="0.1" placeholder="155" />
@@ -542,7 +542,7 @@
         const inch = $('in-height-in').value.trim();
         if (ft !== "" || inch !== "") {
           if (ft === "") { showSheetErr("Enter feet for height."); return; }
-          row.height = `${parseInt(ft, 10)}'${inch === "" ? 0 : parseInt(inch, 10)}`;
+          row.height = `${parseInt(ft, 10)}'${inch === "" ? 0 : parseFloat(inch)}`;
           hasValue = true;
         } else {
           emptyLabels.push("Height");
