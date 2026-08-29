@@ -469,11 +469,11 @@
         ],
       },
       hitting: {
-        label: "Exit Velo", icon: "⚾", desc: "Max exit velo · tee or live arm",
+        label: "Exit Velo", icon: "⚾", desc: "Max exit velo · tee, live arm, or machine",
         fields: [
           { col: "exit_velo", label: "Max Exit Velocity", unit: "mph", step: "0.1", ph: "88" },
         ],
-        toggle: { col: "exit_type", label: "Off a...", options: ["Tee", "Live Arm"] },
+        toggle: { col: "exit_type", label: "Off a...", options: ["Tee", "Live Arm", "Machine"] },
       },
       gym: {
         label: "Height & Weight", icon: "🏋️", desc: "Measured in the gym",
@@ -490,7 +490,7 @@
       },
     };
     const METRIC_COLS = ["ten_yard","thirty_yard","sixty_yard","throw_velo","exit_velo","exit_type","height","weight","vertical","broad_jump","dyno_left","dyno_right"];
-    const COL_LABELS = { ten_yard:"10yd", thirty_yard:"30yd", sixty_yard:"60yd", throw_velo:"Throw Velo", exit_velo:"Exit Velo", exit_type:"Tee/Live", height:"HT", weight:"WT", vertical:"Vert", broad_jump:"Broad", dyno_left:"Dyno L", dyno_right:"Dyno R" };
+    const COL_LABELS = { ten_yard:"10yd", thirty_yard:"30yd", sixty_yard:"60yd", throw_velo:"Throw Velo", exit_velo:"Exit Velo", exit_type:"Exit Type", height:"HT", weight:"WT", vertical:"Vert", broad_jump:"Broad", dyno_left:"Dyno L", dyno_right:"Dyno R" };
 
     // localStorage can throw (private mode, sandboxed previews) — never let that kill the page
     const store = {
@@ -856,7 +856,7 @@
         if (s.toggle) {
           const sel = document.querySelector(`#toggle-${s.toggle.col} .toggle-opt.selected`);
           if (sel) row[s.toggle.col] = sel.dataset.val;
-          if (hasValue && !sel) { showSheetErr("Select Tee or Live Arm."); return; }
+          if (hasValue && !sel) { showSheetErr("Select Tee, Live Arm, or Machine."); return; }
         }
       }
 
@@ -955,7 +955,7 @@
       const body = $('resBody');
       if (!players.length) { body.innerHTML = `<div class="res-loading">No metrics recorded for ${esc(teamName)} yet.</div>`; return; }
       body.innerHTML = `<div class="res-wrap"><table class="res-table" style="min-width:1000px;">
-        <thead><tr><th>Player</th><th>10yd</th><th>30yd</th><th>60yd</th><th>Throw Velo</th><th>Exit Velo</th><th>Tee/Live</th><th>HT</th><th>WT</th><th>Vert</th><th>Broad</th><th>Dyno L</th><th>Dyno R</th></tr></thead>
+        <thead><tr><th>Player</th><th>10yd</th><th>30yd</th><th>60yd</th><th>Throw Velo</th><th>Exit Velo</th><th>Exit Type</th><th>HT</th><th>WT</th><th>Vert</th><th>Broad</th><th>Dyno L</th><th>Dyno R</th></tr></thead>
         <tbody>` + players.map(p =>
           `<tr><td><span class="lname">${esc(p.last)}</span>, ${esc(p.first)}</td>` +
           fmtCell(p.ten_yard) + fmtCell(p.thirty_yard) + fmtCell(p.sixty_yard) +
@@ -986,7 +986,7 @@
         if (!ranked.length) continue;
         html += `<div class="leader-section"><h3><span>★</span> ${b.title}</h3>
           <div class="res-wrap"><table class="res-table" style="min-width:420px;">
-          <thead><tr><th style="width:44px;">#</th><th>Player</th><th>Team</th><th>Mark</th>${b.col === "exit_velo" ? "<th>Tee/Live</th>" : ""}</tr></thead><tbody>` +
+          <thead><tr><th style="width:44px;">#</th><th>Player</th><th>Team</th><th>Mark</th>${b.col === "exit_velo" ? "<th>Exit Type</th>" : ""}</tr></thead><tbody>` +
           ranked.map((p, i) =>
             `<tr><td class="num">${i + 1}</td><td><span class="lname">${esc(p.last)}</span>, ${esc(p.first)}</td><td>${esc(p.team)}</td><td class="num">${esc(p[b.col])}${b.suffix}</td>${b.col === "exit_velo" ? fmtCell(p.exit_type) : ""}</tr>`).join("") +
           `</tbody></table></div></div>`;
